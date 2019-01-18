@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/WinFormsUI/.vs/WinFormsUI/v15
+/WinFormsUI/obj/Debug
+/Puzzle/bin/Debug
+/Puzzle/obj
