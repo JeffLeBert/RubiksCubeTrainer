@@ -3,11 +3,12 @@ using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.WinFormsUI
 {
-    public static class PuzzleRenderer3x3
+    public static class FlatPuzzleRenderer3x3
     {
         private static readonly Brush[] brushColors =
             new Brush[]
             {
+                // NOTE: These must match the order in PuzzleColor enum.
                 new SolidBrush(Color.White),
                 new SolidBrush(Color.Blue),
                 new SolidBrush(Color.Yellow),
@@ -22,29 +23,36 @@ namespace RubiksCubeTrainer.WinFormsUI
                 availableSize.Width / 4 / Face.Size,
                 availableSize.Height / 3 / Face.Size);
 
-            DrawFace(graphics, puzzle[FaceName.Up], 1, 0, squareSizeWithBorder);
-            DrawFace(graphics, puzzle[FaceName.Left], 0, 1, squareSizeWithBorder);
-            DrawFace(graphics, puzzle[FaceName.Front], 1, 1, squareSizeWithBorder);
-            DrawFace(graphics, puzzle[FaceName.Down], 1, 2, squareSizeWithBorder);
-            DrawFace(graphics, puzzle[FaceName.Right], 2, 1, squareSizeWithBorder);
-            DrawFace(graphics, puzzle[FaceName.Back], 3, 1, squareSizeWithBorder);
+            DrawFace(graphics, puzzle[FaceName.Up], 1, 0, squareSizeWithBorder, 1, -1);
+            DrawFace(graphics, puzzle[FaceName.Left], 0, 1, squareSizeWithBorder, -1, -1);
+            DrawFace(graphics, puzzle[FaceName.Front], 1, 1, squareSizeWithBorder, 1, -1);
+            DrawFace(graphics, puzzle[FaceName.Down], 1, 2, squareSizeWithBorder, 1, 1);
+            DrawFace(graphics, puzzle[FaceName.Right], 2, 1, squareSizeWithBorder, 1, -1);
+            DrawFace(graphics, puzzle[FaceName.Back], 3, 1, squareSizeWithBorder, -1, -1);
         }
 
-        private static void DrawFace(Graphics graphics, Face face, int faceX, int faceY, SizeF squareSizeWithBorder)
+        private static void DrawFace(
+            Graphics graphics,
+            Face face,
+            int faceX,
+            int faceY,
+            SizeF squareSizeWithBorder,
+            int transformX,
+            int transformY)
         {
             var startPoint = GetSquareStartPoint(faceX, faceY, squareSizeWithBorder);
 
             var coloredSize = new SizeF(squareSizeWithBorder.Width - 1, squareSizeWithBorder.Height - 1);
-            for (int x = 0; x < Face.Size; x++)
+            for (int x = -1; x <= 1; x++)
             {
-                var xStart = startPoint.X + x * squareSizeWithBorder.Width;
-                for (int y = 0; y < Face.Size; y++)
+                var xStart = startPoint.X + (x + 1) * squareSizeWithBorder.Width;
+                for (int y = -1; y <= 1; y++)
                 {
-                    var brush = brushColors[(int)face[x, y]];
+                    var brush = brushColors[(int)face[x * transformX, y * transformY]];
                     graphics.FillRectangle(
                         brush,
                         xStart,
-                        startPoint.Y + y * squareSizeWithBorder.Height,
+                        startPoint.Y + (y + 1) * squareSizeWithBorder.Height,
                         coloredSize.Width,
                         coloredSize.Height);
                 }

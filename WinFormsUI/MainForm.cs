@@ -1,11 +1,12 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.WinFormsUI
 {
     public partial class MainForm : Form
     {
-        private Puzzle puzzle = Puzzle.Solved.ClockwiseRotateLayer(LayerName.Up);
+        private Puzzle puzzle = Puzzle.Solved;
 
         public MainForm()
         {
@@ -16,7 +17,28 @@ namespace RubiksCubeTrainer.WinFormsUI
         {
             this.picPuzzle.Invalidate();
 
-            PuzzleRenderer3x3.Draw(e.Graphics, this.puzzle, this.picPuzzle.Size);
+            FlatPuzzleRenderer3x3.Draw(e.Graphics, this.puzzle, this.picPuzzle.Size);
+        }
+
+        private void txtScramble_TextChanged(object sender, EventArgs e)
+        {
+            this.puzzle = Puzzle.Solved;
+            try
+            {
+                foreach (var move in NotationParser.EnumerateMoves(this.txtScramble.Text))
+                {
+                    this.puzzle = Rotator.ApplyMove(this.puzzle, move);
+                }
+            }
+            catch
+            {
+                // For now just don't say anything and blank out the cube display.
+                this.picPuzzle.Visible = false;
+                return;
+            }
+
+            this.picPuzzle.Invalidate();
+            this.picPuzzle.Visible = true;
         }
     }
 }
