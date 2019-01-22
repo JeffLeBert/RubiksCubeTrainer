@@ -41,9 +41,9 @@
             this.txtScramble.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtScramble.Location = new System.Drawing.Point(63, 3);
             this.txtScramble.Name = "txtScramble";
-            this.txtScramble.Size = new System.Drawing.Size(734, 20);
+            this.txtScramble.Size = new System.Drawing.Size(881, 20);
             this.txtScramble.TabIndex = 0;
-            this.txtScramble.Text = "F\' U B\' L\' F U\' D2 F R\' L\' B\' R D\' L2 B D R\' U2 D\' F2";
+            this.txtScramble.TextChanged += new System.EventHandler(this.txtScramble_TextChanged);
             // 
             // picPuzzle
             // 
@@ -52,7 +52,7 @@
             this.picPuzzle.InitialImage = null;
             this.picPuzzle.Location = new System.Drawing.Point(63, 29);
             this.picPuzzle.Name = "picPuzzle";
-            this.picPuzzle.Size = new System.Drawing.Size(734, 418);
+            this.picPuzzle.Size = new System.Drawing.Size(881, 588);
             this.picPuzzle.TabIndex = 1;
             this.picPuzzle.TabStop = false;
             this.picPuzzle.Paint += new System.Windows.Forms.PaintEventHandler(this.picPuzzle_Paint);
@@ -71,7 +71,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 450);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(947, 620);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // lblScramble
@@ -90,10 +90,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(947, 620);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "MainForm";
-            this.Text = "Rubik\'s ";
+            this.Text = "Rubik\'s Cube Trainer";
             ((System.ComponentModel.ISupportInitialize)(this.picPuzzle)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
