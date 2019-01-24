@@ -1,4 +1,6 @@
-﻿namespace RubiksCubeTrainer.Puzzle3x3
+﻿using System;
+
+namespace RubiksCubeTrainer.Puzzle3x3
 {
     [System.Diagnostics.DebuggerDisplay("{Name} - {Type}")]
     public struct NotationMoveType
@@ -27,5 +29,23 @@
 
         public NotationMoveType With(NotationRotationType rotationType)
             => new NotationMoveType(this.Name, rotationType);
+
+        public NotationMoveType WithSwapDirection()
+        {
+            switch (this.Type)
+            {
+                case NotationRotationType.Clockwise:
+                    return this.With(NotationRotationType.CounterClockwise);
+
+                case NotationRotationType.CounterClockwise:
+                    return this.With(NotationRotationType.Clockwise);
+
+                case NotationRotationType.Double:
+                    return this;
+
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
     }
 }

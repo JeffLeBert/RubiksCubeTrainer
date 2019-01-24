@@ -70,8 +70,8 @@ namespace RubiksCubeTrainer.Puzzle3x3
                 case 'M': return NotationRotationNames.MiddleM;
                 case 'S': return NotationRotationNames.MiddleS;
                 case 'x': return NotationRotationNames.AllUp;
-                case 'y': return NotationRotationNames.AllRight;
-                case 'z': return NotationRotationNames.AllClockwise;
+                case 'y': return NotationRotationNames.AllClockwise;
+                case 'z': return NotationRotationNames.AllRight;
 
                 default: throw new InvalidOperationException();
             }

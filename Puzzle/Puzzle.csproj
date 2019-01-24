@@ -6,8 +6,4 @@
     <RootNamespace>RubiksCubeTrainer</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
-  </ItemGroup>
-
 </Project>

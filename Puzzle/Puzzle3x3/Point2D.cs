@@ -1,10 +1,16 @@
-﻿namespace RubiksCubeTrainer.Puzzle3x3
+﻿using System.Diagnostics;
+
+namespace RubiksCubeTrainer.Puzzle3x3
 {
-    [System.Diagnostics.DebuggerDisplay("({X}, {Y})")]
+    [DebuggerDisplay("({X}, {Y})")]
     public struct Point2D
     {
         public Point2D(int x, int y)
         {
+            Debug.Assert(
+                x >= -1 && x <= 1 && y >= -1 && y <= 1,
+                "X and Y co-ordinates must be between -1 and 1.");
+
             this.X = x;
             this.Y = y;
         }

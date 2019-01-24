@@ -30,8 +30,12 @@ namespace RubiksCubeTrainer.WinFormsUI
                     this.puzzle = Rotator.ApplyMove(this.puzzle, move);
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                this.BeginInvoke(
+                    (Action)
+                    (() => { MessageBox.Show("Something went wrong:\r\n" + ex.ToString()); }));
+
                 // For now just don't say anything and blank out the cube display.
                 this.picPuzzle.Visible = false;
                 return;

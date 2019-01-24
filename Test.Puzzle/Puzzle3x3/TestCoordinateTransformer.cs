@@ -13,39 +13,39 @@ namespace RubiksCubeTrainer.Puzzle3x3
     public class When_getting_2D_coordinates_from_3D
     {
         [Theory]
-        [InlineData(FaceName.Left)]
-        [InlineData(FaceName.Right)]
-        public void Mapping_X_face_works(FaceName faceName)
+        [InlineData(FaceName.Left, -1)]
+        [InlineData(FaceName.Right, 1)]
+        public void Mapping_X_face_works(FaceName faceName, int xValue)
         {
             var mapper = CoordinateMapper.GetMapperForFace(faceName);
-            var point = mapper.Map(new Point3D(1, 2, 3));
+            var point = mapper.Map(new Point3D(xValue, -1, 1));
 
-            Assert.Equal(2, point.X);
-            Assert.Equal(3, point.Y);
+            Assert.Equal(-1, point.X);
+            Assert.Equal(1, point.Y);
         }
 
         [Theory]
-        [InlineData(FaceName.Front)]
-        [InlineData(FaceName.Back)]
-        public void Mapping_Y_face_works(FaceName faceName)
+        [InlineData(FaceName.Front, -1)]
+        [InlineData(FaceName.Back, 1)]
+        public void Mapping_Y_face_works(FaceName faceName, int yValue)
         {
             var mapper = CoordinateMapper.GetMapperForFace(faceName);
-            var point = mapper.Map(new Point3D(1, 2, 3));
+            var point = mapper.Map(new Point3D(-1, yValue, 1));
 
-            Assert.Equal(1, point.X);
-            Assert.Equal(3, point.Y);
+            Assert.Equal(-1, point.X);
+            Assert.Equal(1, point.Y);
         }
 
         [Theory]
-        [InlineData(FaceName.Up)]
-        [InlineData(FaceName.Down)]
-        public void Mapping_Z_face_works(FaceName faceName)
+        [InlineData(FaceName.Up, 1)]
+        [InlineData(FaceName.Down, -1)]
+        public void Mapping_Z_face_works(FaceName faceName, int zValue)
         {
             var mapper = CoordinateMapper.GetMapperForFace(faceName);
-            var point = mapper.Map(new Point3D(1, 2, 3));
+            var point = mapper.Map(new Point3D(-1, 1, zValue));
 
-            Assert.Equal(1, point.X);
-            Assert.Equal(2, point.Y);
+            Assert.Equal(-1, point.X);
+            Assert.Equal(1, point.Y);
         }
     }
 
@@ -55,54 +55,54 @@ namespace RubiksCubeTrainer.Puzzle3x3
         public void Mapping_left_face_works()
         {
             var mapper = CoordinateMapper.GetMapperForFace(FaceName.Left);
-            var point = mapper.Map(new Point2D(100, 101));
+            var point = mapper.Map(new Point2D(0, 1));
 
             Assert.Equal(-1, point.X);
-            Assert.Equal(100, point.Y);
-            Assert.Equal(101, point.Z);
+            Assert.Equal(0, point.Y);
+            Assert.Equal(1, point.Z);
         }
 
         [Fact]
         public void Mapping_right_face_works()
         {
             var mapper = CoordinateMapper.GetMapperForFace(FaceName.Right);
-            var point = mapper.Map(new Point2D(100, 101));
+            var point = mapper.Map(new Point2D(-1, 0));
 
             Assert.Equal(1, point.X);
-            Assert.Equal(100, point.Y);
-            Assert.Equal(101, point.Z);
+            Assert.Equal(-1, point.Y);
+            Assert.Equal(0, point.Z);
         }
 
         [Fact]
         public void Mapping_front_face_works()
         {
             var mapper = CoordinateMapper.GetMapperForFace(FaceName.Front);
-            var point = mapper.Map(new Point2D(100, 101));
+            var point = mapper.Map(new Point2D(0, 1));
 
-            Assert.Equal(100, point.X);
+            Assert.Equal(0, point.X);
             Assert.Equal(-1, point.Y);
-            Assert.Equal(101, point.Z);
+            Assert.Equal(1, point.Z);
         }
 
         [Fact]
         public void Mapping_back_face_works()
         {
             var mapper = CoordinateMapper.GetMapperForFace(FaceName.Back);
-            var point = mapper.Map(new Point2D(100, 101));
+            var point = mapper.Map(new Point2D(-1, 0));
 
-            Assert.Equal(100, point.X);
+            Assert.Equal(-1, point.X);
             Assert.Equal(1, point.Y);
-            Assert.Equal(101, point.Z);
+            Assert.Equal(0, point.Z);
         }
 
         [Fact]
         public void Mapping_up_face_works()
         {
             var mapper = CoordinateMapper.GetMapperForFace(FaceName.Up);
-            var point = mapper.Map(new Point2D(100, 101));
+            var point = mapper.Map(new Point2D(-1, 0));
 
-            Assert.Equal(100, point.X);
-            Assert.Equal(101, point.Y);
+            Assert.Equal(-1, point.X);
+            Assert.Equal(0, point.Y);
             Assert.Equal(1, point.Z);
         }
 
@@ -110,10 +110,10 @@ namespace RubiksCubeTrainer.Puzzle3x3
         public void Mapping_down_face_works()
         {
             var mapper = CoordinateMapper.GetMapperForFace(FaceName.Down);
-            var point = mapper.Map(new Point2D(100, 101));
+            var point = mapper.Map(new Point2D(0, 1));
 
-            Assert.Equal(100, point.X);
-            Assert.Equal(101, point.Y);
+            Assert.Equal(0, point.X);
+            Assert.Equal(1, point.Y);
             Assert.Equal(-1, point.Z);
         }
     }
