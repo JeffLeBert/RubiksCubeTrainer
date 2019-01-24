@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Immutable;
+using System.Diagnostics;
 
 namespace RubiksCubeTrainer.Puzzle3x3
 {
@@ -9,23 +9,22 @@ namespace RubiksCubeTrainer.Puzzle3x3
     public abstract class CoordinateMapper
     {
         // This must be in the same order as FaceName.
-        private static readonly ImmutableArray<CoordinateMapper> coordinateMappers = ImmutableArray.Create<CoordinateMapper>(
-            new ZFaceMapper(FaceName.Up, 1),
-            new YFaceMapper(FaceName.Front, -1),
-            new ZFaceMapper(FaceName.Down, -1),
-            new YFaceMapper(FaceName.Back, 1),
-            new XFaceMapper(FaceName.Left, -1),
-            new XFaceMapper(FaceName.Right, 1));
+        private static readonly CoordinateMapper[] coordinateMappers = new CoordinateMapper[]
+            {
+                new ZFaceMapper(FaceName.Up, 1),
+                new YFaceMapper(FaceName.Front, -1),
+                new ZFaceMapper(FaceName.Down, -1),
+                new YFaceMapper(FaceName.Back, 1),
+                new XFaceMapper(FaceName.Left, -1),
+                new XFaceMapper(FaceName.Right, 1)
+            };
 
         private CoordinateMapper(FaceName faceName, int faceSide)
         {
-            this.FaceName = faceName;
             this.FaceSide = faceSide;
         }
 
         public Point3D CenterPoint => this.Map(new Point2D(0, 0));
-
-        public FaceName FaceName { get; }
 
         public int FaceSide { get; }
 
@@ -82,7 +81,12 @@ namespace RubiksCubeTrainer.Puzzle3x3
             public override FaceName GetAdjacentFaceForEdge(Point2D edge)
                 => GetFaceFromCenterPoint(new Point3D(0, edge.X, edge.Y));
 
-            public override Point2D Map(Point3D point3D) => new Point2D(point3D.Y, point3D.Z);
+            public override Point2D Map(Point3D point3D)
+            {
+                Debug.Assert(point3D.X == this.FaceSide, "Invalid 3D co-ordinate for face.");
+
+                return new Point2D(point3D.Y, point3D.Z);
+            }
 
             public override Point3D Map(Point2D point2D) => new Point3D(this.FaceSide, point2D.X, point2D.Y);
         }
@@ -96,7 +100,12 @@ namespace RubiksCubeTrainer.Puzzle3x3
             public override FaceName GetAdjacentFaceForEdge(Point2D edge)
                 => GetFaceFromCenterPoint(new Point3D(edge.X, 0, edge.Y));
 
-            public override Point2D Map(Point3D point3D) => new Point2D(point3D.X, point3D.Z);
+            public override Point2D Map(Point3D point3D)
+            {
+                Debug.Assert(point3D.Y == this.FaceSide, "Invalid 3D co-ordinate for face.");
+
+                return new Point2D(point3D.X, point3D.Z);
+            }
 
             public override Point3D Map(Point2D point2D) => new Point3D(point2D.X, this.FaceSide, point2D.Y);
         }
@@ -110,7 +119,12 @@ namespace RubiksCubeTrainer.Puzzle3x3
             public override FaceName GetAdjacentFaceForEdge(Point2D edge)
                 => GetFaceFromCenterPoint(new Point3D(edge.X, edge.Y, 0));
 
-            public override Point2D Map(Point3D point3D) => new Point2D(point3D.X, point3D.Y);
+            public override Point2D Map(Point3D point3D)
+            {
+                Debug.Assert(point3D.Z == this.FaceSide, "Invalid 3D co-ordinate for face.");
+
+                return new Point2D(point3D.X, point3D.Y);
+            }
 
             public override Point3D Map(Point2D point2D) => new Point3D(point2D.X, point2D.Y, this.FaceSide);
         }
