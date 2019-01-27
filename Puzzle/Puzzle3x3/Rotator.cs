@@ -5,123 +5,129 @@ namespace RubiksCubeTrainer.Puzzle3x3
 {
     public static class Rotator
     {
-        // Points for edge rotations.
-        private static readonly Point2D[] upEdgePoints = new[] { new Point2D(-1, -1), new Point2D(0, -1), new Point2D(1, -1) };
+        public static Puzzle ApplyMoves(Puzzle puzzle, IEnumerable<NotationMoveType> moves)
+        {
+            foreach (var move in moves)
+            {
+                puzzle = ApplyMove(puzzle, move);
+            }
 
-        private static readonly Point2D[] rightEdgePoints = new[] { new Point2D(-1, 1), new Point2D(-1, 0), new Point2D(-1, -1) };
-        private static readonly Point2D[] downEdgePoints = new[] { new Point2D(1, 1), new Point2D(0, 1), new Point2D(-1, 1) };
-        private static readonly Point2D[] leftEdgePoints = new[] { new Point2D(1, -1), new Point2D(1, 0), new Point2D(1, 1) };
+            return puzzle;
+        }
 
         public static Puzzle ApplyMove(Puzzle puzzle, NotationMoveType move)
         {
             switch (move.Name)
             {
                 // Edge rotations.
-                case NotationRotationNames.Back: return RotateYSlice(puzzle, move);
-                case NotationRotationNames.Down: return RotateZSlice(puzzle, move);
-                case NotationRotationNames.Front: return RotateYSlice(puzzle, move);
-                case NotationRotationNames.Left: return RotateXSlice(puzzle, move);
-                case NotationRotationNames.Right: return RotateXSlice(puzzle, move);
-                case NotationRotationNames.Up: return RotateZSlice(puzzle, move);
+                case NotationRotationNames.Back:
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateYSlice(oldPuzzle, newPuzzle, move));
+                case NotationRotationNames.Down:
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateZSlice(oldPuzzle, newPuzzle, move));
+                case NotationRotationNames.Front:
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateYSlice(oldPuzzle, newPuzzle, move));
+                case NotationRotationNames.Left:
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateXSlice(oldPuzzle, newPuzzle, move));
+                case NotationRotationNames.Right:
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateXSlice(oldPuzzle, newPuzzle, move));
+                case NotationRotationNames.Up:
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateZSlice(oldPuzzle, newPuzzle, move));
 
                 // Middle rotations.
-                case NotationRotationNames.MiddleE: return RotateZSlice(puzzle, move);
-                case NotationRotationNames.MiddleM: return RotateXSlice(puzzle, move);
-                case NotationRotationNames.MiddleS: return RotateYSlice(puzzle, move);
+                case NotationRotationNames.MiddleE:
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateZSlice(oldPuzzle, newPuzzle, move));
+                case NotationRotationNames.MiddleM:
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateXSlice(oldPuzzle, newPuzzle, move));
+                case NotationRotationNames.MiddleS:
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateYSlice(oldPuzzle, newPuzzle, move));
 
                 // Wide rotations.
                 case NotationRotationNames.WideUp:
-                    {
-                        var newPuzzle = puzzle.Clone();
-                        RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Up));
-                        RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE).WithSwapDirection());
-
-                        return newPuzzle;
-                    }
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Up)),
+                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE).WithSwapDirection()));
                 case NotationRotationNames.WideDown:
-                    {
-                        var newPuzzle = puzzle.Clone();
-                        RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE));
-                        RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Down));
-
-                        return newPuzzle;
-                    }
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE)),
+                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Down)));
                 case NotationRotationNames.WideLeft:
-                    {
-                        var newPuzzle = puzzle.Clone();
-                        RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Left));
-                        RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleM));
-
-                        return newPuzzle;
-                    }
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Left)),
+                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleM)));
                 case NotationRotationNames.WideRight:
-                    {
-                        var newPuzzle = puzzle.Clone();
-                        RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Right));
-                        RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleM).WithSwapDirection());
-
-                        return newPuzzle;
-                    }
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Right)),
+                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleM).WithSwapDirection()));
                 case NotationRotationNames.WideBack:
-                    {
-                        var newPuzzle = puzzle.Clone();
-                        RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Back));
-                        RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS).WithSwapDirection());
-
-                        return newPuzzle;
-                    }
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Back)),
+                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS).WithSwapDirection()));
                 case NotationRotationNames.WideFront:
-                    {
-                        var newPuzzle = puzzle.Clone();
-                        RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Front));
-                        RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS));
-
-                        return newPuzzle;
-                    }
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Front)),
+                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS)));
 
                 // Full cube rotations.
                 case NotationRotationNames.AllClockwise:
-                    {
-                        var newPuzzle = puzzle.Clone();
-                        RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Up));
-                        RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE).WithSwapDirection());
-                        RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Down).WithSwapDirection());
-
-                        return newPuzzle;
-                    }
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Up)),
+                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE).WithSwapDirection()),
+                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Down).WithSwapDirection()));
                 case NotationRotationNames.AllRight:
-                    {
-                        var newPuzzle = puzzle.Clone();
-                        RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Front));
-                        RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS));
-                        RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Back).WithSwapDirection());
-
-                        return newPuzzle;
-                    }
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Front)),
+                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS)),
+                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Back).WithSwapDirection()));
                 case NotationRotationNames.AllUp:
-                    {
-                        var newPuzzle = puzzle.Clone();
-                        RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Right));
-                        RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleM).WithSwapDirection());
-                        RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Left).WithSwapDirection());
-
-                        return newPuzzle;
-                    }
+                    return DoWithNewPuzzle(
+                        puzzle,
+                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Right)),
+                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleM).WithSwapDirection()),
+                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Left).WithSwapDirection()));
 
                 default:
                     throw new InvalidOperationException();
             }
         }
 
-        #region X Slice
-
-        private static Puzzle RotateXSlice(Puzzle oldPuzzle, NotationMoveType move)
+        private static Puzzle DoWithNewPuzzle(Puzzle oldPuzzle, params Action<Puzzle, Puzzle>[] actions)
         {
             var newPuzzle = oldPuzzle.Clone();
-            RotateXSlice(oldPuzzle, newPuzzle, move);
+            foreach (var action in actions)
+            {
+                action(oldPuzzle, newPuzzle);
+            }
 
             return newPuzzle;
         }
+
+        #region X Slice
 
         private static void RotateXSlice(Puzzle oldPuzzle, Puzzle newPuzzle, NotationMoveType move)
         {
@@ -261,14 +267,6 @@ namespace RubiksCubeTrainer.Puzzle3x3
 
         #region Y Slice
 
-        private static Puzzle RotateYSlice(Puzzle oldPuzzle, NotationMoveType move)
-        {
-            var newPuzzle = oldPuzzle.Clone();
-            RotateYSlice(oldPuzzle, newPuzzle, move);
-
-            return newPuzzle;
-        }
-
         private static void RotateYSlice(Puzzle oldPuzzle, Puzzle newPuzzle, NotationMoveType move)
         {
             var rotations = GetRotationForYSlice(move);
@@ -340,9 +338,9 @@ namespace RubiksCubeTrainer.Puzzle3x3
             };
             var left = new[]
             {
-                new Location(FaceName.Left, -1, yLayer, 1),
+                new Location(FaceName.Left, -1, yLayer, -1),
                 new Location(FaceName.Left, -1, yLayer, 0),
-                new Location(FaceName.Left, -1, yLayer, -1)
+                new Location(FaceName.Left, -1, yLayer, 1)
             };
 
             switch (rotations)
@@ -406,14 +404,6 @@ namespace RubiksCubeTrainer.Puzzle3x3
         #endregion Y Slice
 
         #region Z Slice
-
-        private static Puzzle RotateZSlice(Puzzle oldPuzzle, NotationMoveType move)
-        {
-            var newPuzzle = oldPuzzle.Clone();
-            RotateZSlice(oldPuzzle, newPuzzle, move);
-
-            return newPuzzle;
-        }
 
         private static void RotateZSlice(Puzzle oldPuzzle, Puzzle newPuzzle, NotationMoveType move)
         {

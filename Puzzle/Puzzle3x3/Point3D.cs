@@ -5,6 +5,8 @@ namespace RubiksCubeTrainer.Puzzle3x3
     [DebuggerDisplay("({X}, {Y}, {Z})")]
     public struct Point3D
     {
+        public static Point3D Empty { get; } = new Point3D(0, 0, 0);
+
         public Point3D(int x, int y, int z)
         {
             Debug.Assert(
