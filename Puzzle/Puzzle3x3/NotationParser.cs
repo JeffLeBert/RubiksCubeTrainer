@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RubiksCubeTrainer.Puzzle3x3
 {
@@ -47,6 +48,54 @@ namespace RubiksCubeTrainer.Puzzle3x3
             if (!move.Empty)
             {
                 yield return move;
+            }
+        }
+
+        public static string FormatMoves(IEnumerable<NotationMoveType> moves)
+            => string.Join(
+                " ",
+                from move in moves
+                select FormatMove(move));
+
+        public static string FormatMove(NotationMoveType move)
+            => FormatMoveName(move.Name) + FormatRotationType(move.Type);
+
+        private static string FormatMoveName(NotationRotationNames rotationName)
+        {
+            switch (rotationName)
+            {
+                case NotationRotationNames.Right: return "R";
+                case NotationRotationNames.Left: return "L";
+                case NotationRotationNames.Up: return "U";
+                case NotationRotationNames.Down: return "D";
+                case NotationRotationNames.Front: return "F";
+                case NotationRotationNames.Back: return "B";
+                case NotationRotationNames.WideRight: return "r";
+                case NotationRotationNames.WideLeft: return "l";
+                case NotationRotationNames.WideUp: return "u";
+                case NotationRotationNames.WideDown: return "d";
+                case NotationRotationNames.WideFront: return "f";
+                case NotationRotationNames.WideBack: return "b";
+                case NotationRotationNames.MiddleE: return "E";
+                case NotationRotationNames.MiddleM: return "M";
+                case NotationRotationNames.MiddleS: return "S";
+                case NotationRotationNames.AllUp: return "x";
+                case NotationRotationNames.AllClockwise: return "y";
+                case NotationRotationNames.AllRight: return "z";
+
+                default: throw new InvalidOperationException();
+            }
+        }
+
+        private static string FormatRotationType(NotationRotationType rotationType)
+        {
+            switch (rotationType)
+            {
+                case NotationRotationType.Clockwise: return string.Empty;
+                case NotationRotationType.CounterClockwise: return "'";
+                case NotationRotationType.Double: return "2";
+
+                default: throw new InvalidOperationException();
             }
         }
 

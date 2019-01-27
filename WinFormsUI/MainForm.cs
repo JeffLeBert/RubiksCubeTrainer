@@ -11,13 +11,15 @@ namespace RubiksCubeTrainer.WinFormsUI
         public MainForm()
         {
             this.InitializeComponent();
+            this.ScramblePuzzle();
         }
 
         private void picPuzzle_Paint(object sender, PaintEventArgs e)
         {
             this.picPuzzle.Invalidate();
 
-            FlatPuzzleRenderer3x3.Draw(e.Graphics, this.puzzle, this.picPuzzle.Size);
+            var renderer = new FlatPuzzleRenderer3x3(this.puzzle);
+            renderer.Draw(e.Graphics, this.picPuzzle.Size);
         }
 
         private void txtScramble_TextChanged(object sender, EventArgs e)
@@ -43,6 +45,17 @@ namespace RubiksCubeTrainer.WinFormsUI
 
             this.picPuzzle.Invalidate();
             this.picPuzzle.Visible = true;
+        }
+
+        private void cmdScramble_Click(object sender, EventArgs e)
+        {
+            this.ScramblePuzzle();
+        }
+
+        private void ScramblePuzzle()
+        {
+            this.txtScramble.Text = Scrambler.Scamble(10);
+            this.txtScramble.SelectionStart = int.MaxValue;
         }
     }
 }
