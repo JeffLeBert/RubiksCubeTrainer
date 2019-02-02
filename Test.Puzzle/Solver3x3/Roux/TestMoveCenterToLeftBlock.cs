@@ -9,7 +9,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         public void No_algorithms_if_already_at_goal()
         {
             var step = new MoveCenterToLeftBlock(Puzzle.Solved);
-            var algorithms = step.GetPossibleAlgorithms();
+            var algorithms = step.GetPossibleSteps();
             Assert.Empty(algorithms);
         }
 
@@ -24,10 +24,10 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             var scrambledPuzzle = Rotator.ApplyMoves(Puzzle.Solved, NotationParser.EnumerateMoves(scrambleMoves));
 
             var step = new MoveCenterToLeftBlock(scrambledPuzzle);
-            var algorithms = step.GetPossibleAlgorithms();
+            var possibleSteps = step.GetPossibleSteps();
 
-            var algorithm = Assert.Single(algorithms);
-            Assert.Equal(solveMoves, NotationParser.FormatMoves(algorithm.Moves));
+            var possibleStep = Assert.Single(possibleSteps);
+            Assert.Equal(solveMoves, NotationParser.FormatMoves(possibleStep.Algorithm.Moves));
         }
     }
 }

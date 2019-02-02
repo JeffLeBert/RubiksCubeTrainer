@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RubiksCubeTrainer.Puzzle3x3
 {
     public static class Scrambler
     {
         public static string Scamble(int depth)
-            => string.Join(" ", EnumerateMoves(depth));
+            => string.Join(" ", EnumerateMoveNames().Take(depth));
 
-        private static IEnumerable<string> EnumerateMoves(int depth)
+        private static IEnumerable<string> EnumerateMoveNames()
+            => from move in EnumerateMoves()
+               select NotationParser.FormatMove(move);
+
+        internal static IEnumerable<NotationMoveType> EnumerateMoves()
         {
             var randomGenerator = new Random();
             var lastRotation = NotationRotationNames.None;
-            for (int i = 0; i < depth; i++)
+            while (true)
             {
                 var nextMove = new NotationMoveType(
                     GetRandomRotationName(randomGenerator, lastRotation),
                     GetRandomRotationType(randomGenerator));
                 lastRotation = nextMove.Name;
 
-                yield return NotationParser.FormatMove(nextMove);
+                yield return nextMove;
             }
         }
 

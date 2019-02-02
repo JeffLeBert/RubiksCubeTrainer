@@ -5,13 +5,16 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public abstract class StepBase
     {
-        protected StepBase(Puzzle puzzle)
+        protected StepBase(Puzzle startPuzzle, Goal startGoal)
         {
-            this.Puzzle = puzzle;
+            this.StartPuzzle = startPuzzle;
+            this.StartGoal = startGoal;
         }
 
-        public Puzzle Puzzle { get; }
+        public Goal StartGoal { get; }
 
-        public abstract IEnumerable<Algorithm> GetPossibleAlgorithms();
+        public Puzzle StartPuzzle { get; }
+
+        public abstract IEnumerable<StepInformation> GetPossibleSteps();
     }
 }
