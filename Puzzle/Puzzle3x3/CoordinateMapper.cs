@@ -66,6 +66,14 @@ namespace RubiksCubeTrainer.Puzzle3x3
         public static CoordinateMapper GetMapperForFace(FaceName faceName)
             => coordinateMappers[(int)faceName];
 
+        public static Location GetLocationForOtherEdgeFace(Location location)
+        {
+            var mapper = GetMapperForFace(location.FaceName);
+            var otherFace = mapper.GetAdjacentFaceForEdge(location.Point2D);
+
+            return new Location(otherFace, location.Point3D);
+        }
+
         public abstract FaceName GetAdjacentFaceForEdge(Point2D edge);
 
         public abstract Point2D Map(Point3D point3D);

@@ -53,9 +53,6 @@
             return new Face(this.FaceName, newColors);
         }
 
-        internal void With(Point3D point, PuzzleColor color)
-            => this[this.Mapper.Map(point)] = color;
-
         internal Face RotateForward()
             => new Face(
                 this.FaceName,

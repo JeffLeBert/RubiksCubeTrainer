@@ -42,16 +42,14 @@ namespace RubiksCubeTrainer.Puzzle3x3
         }
 
         public bool IsCorner
-        {
-            get
-            {
-                return this.Point3D.X != 0 && this.Point3D.Y != 0 && this.Point3D.Z != 0;
-            }
-        }
+            => this.Point3D.X != 0 && this.Point3D.Y != 0 && this.Point3D.Z != 0;
 
         public Point2D Point2D
             => this.lazyPoint2D.Value;
 
         public Point3D Point3D { get; }
+
+        public Location With(FaceName faceName)
+            => new Location(faceName, this.Point3D);
     }
 }
