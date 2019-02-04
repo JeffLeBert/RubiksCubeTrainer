@@ -1,20 +1,25 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
 {
     public abstract class StepBase
     {
-        protected StepBase(Puzzle startPuzzle, Goal startGoal)
+        protected StepBase()
         {
-            this.StartPuzzle = startPuzzle;
-            this.StartGoal = startGoal;
+            this.EndGoal = this.BuildEndGoal();
+            this.AllAlgorithms = this.BuildAllAlgorithms();
         }
 
-        public Goal StartGoal { get; }
+        public IEnumerable<AlgorithmInformation> AllAlgorithms { get; }
 
-        public Puzzle StartPuzzle { get; }
+        public Goal EndGoal { get; }
 
-        public abstract IEnumerable<StepInformation> GetPossibleSteps();
+        public abstract IEnumerable<AlgorithmInformation> GetPossibleAlgorithms(Puzzle puzzle);
+
+        protected abstract AlgorithmInformation[] BuildAllAlgorithms();
+
+        protected abstract Goal BuildEndGoal();
     }
 }

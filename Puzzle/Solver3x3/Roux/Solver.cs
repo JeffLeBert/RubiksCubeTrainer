@@ -1,21 +1,40 @@
-﻿using RubiksCubeTrainer.Puzzle3x3;
+﻿using System.Collections.Generic;
+using System.Linq;
+using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3.Roux
 {
     public class Solver : SolverBase
     {
-        private Solver(SolverBase parentSolver, StepBase step)
-            : base(parentSolver, step)
+        public Solver()
+            : base()
         {
         }
 
-        public static SolverBase Create(Puzzle puzzle)
-            => new Solver(null, new MoveCenterToLeftBlock(puzzle));
+        public static Puzzle Solved { get; } = BuildSolvedPuzzle();
 
-        public override SolverBase NextSolver(StepInformation stepInformation)
+        public override IEnumerable<StepBase> NextSteps(Puzzle puzzle)
         {
-            var newPuzzle = Rotator.ApplyMoves(this.CurrentStep.StartPuzzle, stepInformation.Algorithm.Moves);
-            return new Solver(this, stepInformation.NextStep(newPuzzle));
+            if (!MoveCenterToLeftFaceStep.Instance.EndGoal.Check(puzzle))
+            {
+                return new StepBase[] { MoveCenterToLeftFaceStep.Instance };
+            }
+
+            if (!FirstPieceToBottomLeftEdgeStep.Instance.EndGoal.Check(puzzle))
+            {
+                return new StepBase[] { FirstPieceToBottomLeftEdgeStep.Instance };
+            }
+
+            return Enumerable.Empty<StepBase>();
         }
+
+        private static Puzzle BuildSolvedPuzzle()
+            => new Puzzle(
+                new Face(FaceName.Up, PuzzleColor.Yellow),
+                new Face(FaceName.Front, PuzzleColor.Red),
+                new Face(FaceName.Down, PuzzleColor.White),
+                new Face(FaceName.Back, PuzzleColor.Orange),
+                new Face(FaceName.Left, PuzzleColor.Blue),
+                new Face(FaceName.Right, PuzzleColor.Green));
     }
 }

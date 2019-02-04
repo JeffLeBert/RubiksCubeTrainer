@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using RubiksCubeTrainer.Puzzle3x3;
 using RubiksCubeTrainer.Solver3x3;
-using RubiksCubeTrainer.Solver3x3.Roux;
 
 namespace RubiksCubeTrainer.WinFormsUI
 {
     public partial class MainForm : Form
     {
-        private Puzzle puzzle = Puzzle.Solved;
+        private Puzzle puzzle = Solver3x3.Roux.Solver.Solved;
 
         public MainForm()
         {
@@ -41,7 +39,7 @@ namespace RubiksCubeTrainer.WinFormsUI
 
         private void UpdateWithMoves(string moves)
         {
-            this.puzzle = Puzzle.Solved;
+            this.puzzle = Solver3x3.Roux.Solver.Solved;
             try
             {
                 foreach (var move in NotationParser.EnumerateMoves(moves))
@@ -80,27 +78,35 @@ namespace RubiksCubeTrainer.WinFormsUI
 
         private void cmdSolve_Click(object sender, EventArgs e)
         {
-            var solver = Solver.Create(this.puzzle);
+            var solver = new Solver3x3.Roux.Solver();
             var solutionMoves = string.Empty;
             var solutionDescription = string.Empty;
-            while (solver.CurrentStep != null)
+            var currentPuzzle = this.puzzle;
+            while (true)
             {
-                var firstStep = solver.CurrentStep.GetPossibleSteps().FirstOrDefault();
-                if (firstStep == null)
+                var nextStep = solver.NextSteps(currentPuzzle).FirstOrDefault();
+                if (nextStep == null)
                 {
-                    this.txtSolutionDescription.Text += "Unable to find solution.";
+                    solutionDescription += "No steps found.";
                     break;
                 }
 
-                var moves = NotationParser.FormatMoves(firstStep.Algorithm.Moves);
+                var firstAlgorithmInfo = nextStep.GetPossibleAlgorithms(currentPuzzle).FirstOrDefault();
+                if (firstAlgorithmInfo == null)
+                {
+                    solutionDescription += "No algorithms found.";
+                    break;
+                }
+
+                currentPuzzle = Rotator.ApplyMoves(currentPuzzle, firstAlgorithmInfo.Algorithm.Moves);
+
+                var moves = NotationParser.FormatMoves(firstAlgorithmInfo.Algorithm.Moves);
                 solutionMoves += moves + " ";
-                solutionDescription += firstStep.Algorithm.Description
+                solutionDescription += firstAlgorithmInfo.Algorithm.Description
                     + Environment.NewLine
                     + moves
                     + Environment.NewLine
                     + Environment.NewLine;
-
-                solver = solver.NextSolver(firstStep);
             }
 
             this.txtSolutionMoves.Text = solutionMoves;
@@ -109,22 +115,37 @@ namespace RubiksCubeTrainer.WinFormsUI
             this.Refresh();
         }
 
-        private void cmdFindFailure_Click(object sender, EventArgs e)
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var solver = Solver.Create(this.puzzle);
-            solver = SolverFailureFinder.FindFailure(solver);
-
-            this.txtScrambleMoves.Text = FormatSolution(solver);
+            this.Close();
         }
 
-        private string FormatSolution(SolverBase endSolver)
+        private void findFailureToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var builder = new StringBuilder();
-            foreach (var solver in endSolver.AncestorSolversAndSelf.Reverse())
+            var currentPuzzle = Rotator.ApplyMoves(
+                Solver3x3.Roux.Solver.Solved,
+                NotationParser.EnumerateMoves(this.txtScrambleMoves.Text));
+
+            var solver = new Solver3x3.Roux.Solver();
+            var failureInfo = SolverFailureFinder.FindFailure(solver, currentPuzzle);
+
+            var movesText = NotationParser.FormatMoves(failureInfo.Moves);
+            if (failureInfo.NoMoreSteps)
             {
+                this.txtSolutionDescription.Text = "Solution found.";
+            }
+            else if (failureInfo.NoMoreAlgorithms)
+            {
+                this.txtSolutionDescription.Text = "No more algorithms found.";
+            }
+            else
+            {
+                throw new InvalidOperationException();
             }
 
-            return string.Empty;
+            this.txtSolutionMoves.Text = movesText;
+
+            this.Refresh();
         }
     }
 }

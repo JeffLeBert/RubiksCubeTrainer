@@ -1,9 +1,12 @@
-﻿using Xunit;
+﻿using System;
+using Xunit;
 
 namespace RubiksCubeTrainer.Puzzle3x3
 {
     public class When_rotating_the_puzzle
     {
+        private static readonly Puzzle Solved = BuildOldSolvedPuzzle();
+
         [Theory]
         [InlineData(
             NotationRotationNames.Right,
@@ -658,7 +661,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             string line0, string line1, string line2, string line3, string line4, string line5, string line6, string line7, string line8)
         {
             var puzzle = Rotator.ApplyMove(
-                Puzzle.Solved,
+                Solved,
                 new NotationMoveType(rotationName, rotationType));
 
             PuzzleAssert.AssertSame(puzzle, line0, line1, line2, line3, line4, line5, line6, line7, line8);
@@ -685,7 +688,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             string line0, string line1, string line2, string line3, string line4, string line5, string line6, string line7, string line8)
         {
             var puzzle = Rotator.ApplyMoves(
-                Puzzle.Solved,
+                Solved,
                 new[]
                 {
                     new NotationMoveType(rotationName1, rotationType1),
@@ -694,5 +697,15 @@ namespace RubiksCubeTrainer.Puzzle3x3
 
             PuzzleAssert.AssertSame(puzzle, line0, line1, line2, line3, line4, line5, line6, line7, line8);
         }
+
+        // I changed the colors after writing the above tests so just use the old colors.
+        private static Puzzle BuildOldSolvedPuzzle()
+            => new Puzzle(
+                new Face(FaceName.Up, PuzzleColor.White),
+                new Face(FaceName.Front, PuzzleColor.Orange),
+                new Face(FaceName.Down, PuzzleColor.Yellow),
+                new Face(FaceName.Back, PuzzleColor.Red),
+                new Face(FaceName.Left, PuzzleColor.Blue),
+                new Face(FaceName.Right, PuzzleColor.Green));
     }
 }

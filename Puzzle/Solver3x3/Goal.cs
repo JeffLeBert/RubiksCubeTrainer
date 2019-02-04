@@ -18,9 +18,9 @@ namespace RubiksCubeTrainer.Solver3x3
         {
             foreach (var checker in this.Checkers)
             {
-                if (checker.Check(puzzle))
+                if (!checker.Check(puzzle))
                 {
-                    return true;
+                    return false;
                 }
             }
 

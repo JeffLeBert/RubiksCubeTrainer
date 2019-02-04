@@ -36,8 +36,14 @@
             this.cmdScramble = new System.Windows.Forms.Button();
             this.txtSolutionDescription = new System.Windows.Forms.TextBox();
             this.cmdSolve = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.findFailureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.picPuzzle)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtScrambleMoves
@@ -59,7 +65,7 @@
             this.picPuzzle.InitialImage = null;
             this.picPuzzle.Location = new System.Drawing.Point(63, 61);
             this.picPuzzle.Name = "picPuzzle";
-            this.picPuzzle.Size = new System.Drawing.Size(881, 595);
+            this.picPuzzle.Size = new System.Drawing.Size(881, 576);
             this.picPuzzle.TabIndex = 1;
             this.picPuzzle.TabStop = false;
             this.picPuzzle.Paint += new System.Windows.Forms.PaintEventHandler(this.picPuzzle_Paint);
@@ -78,7 +84,7 @@
             this.tableLayoutPanel1.Controls.Add(this.txtScrambleMoves, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.cmdSolve, 2, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 24);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -86,7 +92,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(947, 810);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(947, 786);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // txtSolutionMoves
@@ -130,11 +136,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.SetColumnSpan(this.txtSolutionDescription, 2);
-            this.txtSolutionDescription.Location = new System.Drawing.Point(63, 662);
+            this.txtSolutionDescription.Location = new System.Drawing.Point(63, 643);
             this.txtSolutionDescription.Multiline = true;
             this.txtSolutionDescription.Name = "txtSolutionDescription";
             this.txtSolutionDescription.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtSolutionDescription.Size = new System.Drawing.Size(881, 145);
+            this.txtSolutionDescription.Size = new System.Drawing.Size(881, 140);
             this.txtSolutionDescription.TabIndex = 999;
             // 
             // cmdSolve
@@ -149,18 +155,64 @@
             this.cmdSolve.UseVisualStyleBackColor = true;
             this.cmdSolve.Click += new System.EventHandler(this.cmdSolve_Click);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.toolsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(947, 24);
+            this.menuStrip1.TabIndex = 3;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "&File";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.findFailureToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // findFailureToolStripMenuItem
+            // 
+            this.findFailureToolStripMenuItem.Name = "findFailureToolStripMenuItem";
+            this.findFailureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.findFailureToolStripMenuItem.Text = "&Find Failure";
+            this.findFailureToolStripMenuItem.Click += new System.EventHandler(this.findFailureToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(947, 810);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Rubik\'s Cube Trainer";
             ((System.ComponentModel.ISupportInitialize)(this.picPuzzle)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -174,5 +226,10 @@
         private System.Windows.Forms.TextBox txtSolutionDescription;
         private System.Windows.Forms.Button cmdSolve;
         private System.Windows.Forms.TextBox txtSolutionMoves;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem findFailureToolStripMenuItem;
     }
 }

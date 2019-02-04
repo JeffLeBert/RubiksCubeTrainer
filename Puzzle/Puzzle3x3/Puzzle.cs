@@ -9,8 +9,6 @@
             this.faces = faces;
         }
 
-        public static Puzzle Solved { get; } = BuildSolvedPuzzle();
-
         public Face this[FaceName faceName]
             => this.faces[(int)faceName];
 
@@ -35,14 +33,5 @@
 
         public void With(Face face)
             => this.faces[(int)face.FaceName] = face;
-
-        private static Puzzle BuildSolvedPuzzle()
-            => new Puzzle(
-                new Face(FaceName.Up, PuzzleColor.White),
-                new Face(FaceName.Front, PuzzleColor.Orange),
-                new Face(FaceName.Down, PuzzleColor.Yellow),
-                new Face(FaceName.Back, PuzzleColor.Red),
-                new Face(FaceName.Left, PuzzleColor.Blue),
-                new Face(FaceName.Right, PuzzleColor.Green));
     }
 }

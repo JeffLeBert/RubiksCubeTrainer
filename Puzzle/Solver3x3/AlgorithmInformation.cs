@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public class StepInformation
+    public class AlgorithmInformation
     {
-        private readonly Func<Puzzle, StepBase> nextStep;
-
-        public StepInformation(
-            Algorithm algorithm,
-            Func<Puzzle, StepBase> nextStep,
-            params CheckerBase[] checkers)
+        public AlgorithmInformation(Algorithm algorithm, params CheckerBase[] checkers)
         {
             this.Checkers = checkers;
             this.Algorithm = algorithm;
-            this.nextStep = nextStep;
         }
 
         public Algorithm Algorithm { get; }
@@ -25,8 +18,5 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public bool PassesAllChecks(Puzzle puzzle)
             => this.Checkers.All(checker => checker.Check(puzzle));
-
-        public StepBase NextStep(Puzzle puzzle)
-            => this.nextStep(puzzle);
     }
 }
