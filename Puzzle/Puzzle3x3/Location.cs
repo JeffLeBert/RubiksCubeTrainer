@@ -12,12 +12,24 @@ namespace RubiksCubeTrainer.Puzzle3x3
         {
         }
 
+        public Location(FaceName faceName, int x, int y)
+            : this(faceName, new Point2D(x, y))
+        {
+        }
+
         public Location(FaceName faceName, Point3D point)
         {
             this.FaceName = faceName;
             this.Point3D = point;
 
             this.lazyPoint2D = new Lazy<Point2D>(() => CoordinateMapper.GetMapperForFace(faceName).Map(point));
+        }
+
+        public Location(FaceName faceName, Point2D point)
+        {
+            this.FaceName = faceName;
+            this.Point3D = CoordinateMapper.GetMapperForFace(faceName).Map(point);
+            this.lazyPoint2D = new Lazy<Point2D>(() => point);
         }
 
         public FaceName FaceName { get; }

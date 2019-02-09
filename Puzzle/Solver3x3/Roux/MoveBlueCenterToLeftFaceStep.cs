@@ -4,25 +4,14 @@ using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3.Roux
 {
-    public class MoveCenterToLeftFaceStep : StepBase
+    public class MoveBlueCenterToLeftFaceStep : StepBase
     {
-        private MoveCenterToLeftFaceStep()
+        private MoveBlueCenterToLeftFaceStep()
             : base()
         {
         }
 
-        public static MoveCenterToLeftFaceStep Instance { get; } = new MoveCenterToLeftFaceStep();
-
-        protected override Goal BuildEndGoal()
-        {
-            var goal = new Goal(null);
-            goal.Checkers.Add(
-                new SingleColorChecker(
-                    new Location(FaceName.Left, -1, 0, 0),
-                    PuzzleColor.Blue));
-
-            return goal;
-        }
+        public static MoveBlueCenterToLeftFaceStep Instance { get; } = new MoveBlueCenterToLeftFaceStep();
 
         public override IEnumerable<AlgorithmInformation> GetPossibleAlgorithms(Puzzle puzzle)
             => from stepInfo in this.AllAlgorithms
@@ -73,5 +62,16 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move blue face from down to left.",
                     new NotationMoveType(NotationRotationNames.AllRight, NotationRotationType.Clockwise)),
                 new SingleColorChecker(new Location(FaceName.Down, 0, 0, -1), PuzzleColor.Blue));
+
+        protected override Goal BuildEndGoal()
+        {
+            var goal = new Goal(null);
+            goal.Checkers.Add(
+                new SingleColorChecker(
+                    new Location(FaceName.Left, -1, 0, 0),
+                    PuzzleColor.Blue));
+
+            return goal;
+        }
     }
 }

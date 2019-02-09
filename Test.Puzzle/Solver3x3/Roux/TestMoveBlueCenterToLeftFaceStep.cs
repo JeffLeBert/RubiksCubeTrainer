@@ -3,12 +3,12 @@ using Xunit;
 
 namespace RubiksCubeTrainer.Solver3x3.Roux
 {
-    public class TestMoveCenterToLeftFaceStep
+    public class TestMoveBlueCenterToLeftFaceStep
     {
         [Fact]
         public void No_algorithms_if_already_at_goal()
         {
-            var algorithms = MoveCenterToLeftFaceStep.Instance.GetPossibleAlgorithms(Solver.Solved);
+            var algorithms = MoveBlueCenterToLeftFaceStep.Instance.GetPossibleAlgorithms(Solver.Solved);
 
             Assert.Empty(algorithms);
         }
@@ -23,13 +23,12 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         {
             var scrambledPuzzle = Rotator.ApplyMoves(Solver.Solved, NotationParser.EnumerateMoves(scrambleMoves));
 
-            var algorithmInfos = MoveCenterToLeftFaceStep.Instance.GetPossibleAlgorithms(scrambledPuzzle);
+            var algorithmInfos = MoveBlueCenterToLeftFaceStep.Instance.GetPossibleAlgorithms(scrambledPuzzle);
 
             var algorithmInfo = Assert.Single(algorithmInfos);
             var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithmInfo.Algorithm.Moves);
 
-            Assert.True(MoveCenterToLeftFaceStep.Instance.EndGoal.Check(solvedPuzzle));
-
+            Assert.True(MoveBlueCenterToLeftFaceStep.Instance.EndGoal.Check(solvedPuzzle));
         }
     }
 }

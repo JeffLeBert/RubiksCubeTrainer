@@ -5,6 +5,9 @@ namespace RubiksCubeTrainer.Puzzle3x3
 {
     public static class Rotator
     {
+        public static Puzzle ApplyMoves(Puzzle puzzle, string moves)
+            => ApplyMoves(puzzle, NotationParser.EnumerateMoves(moves));
+
         public static Puzzle ApplyMoves(Puzzle puzzle, IEnumerable<NotationMoveType> moves)
         {
             foreach (var move in moves)

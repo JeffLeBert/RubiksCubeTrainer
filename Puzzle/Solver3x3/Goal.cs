@@ -12,7 +12,7 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public Goal Parent { get; }
 
-        public IList<CheckerBase> Checkers { get; } = new List<CheckerBase>(); 
+        public IList<IChecker> Checkers { get; } = new List<IChecker>(); 
 
         public bool Check(Puzzle puzzle)
         {

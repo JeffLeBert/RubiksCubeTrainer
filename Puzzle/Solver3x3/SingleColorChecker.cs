@@ -2,7 +2,7 @@
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public class SingleColorChecker : CheckerBase
+    public class SingleColorChecker : IChecker
     {
         public SingleColorChecker(Location location, PuzzleColor color)
         {
@@ -14,7 +14,7 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public Location Location { get; }
 
-        public override bool Check(Puzzle puzzle)
+        public bool Check(Puzzle puzzle)
             => puzzle[this.Location] == this.Color;
     }
 }

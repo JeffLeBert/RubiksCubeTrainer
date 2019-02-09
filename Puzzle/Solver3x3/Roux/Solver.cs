@@ -15,9 +15,9 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public override IEnumerable<StepBase> NextSteps(Puzzle puzzle)
         {
-            if (!MoveCenterToLeftFaceStep.Instance.EndGoal.Check(puzzle))
+            if (!MoveBlueCenterToLeftFaceStep.Instance.EndGoal.Check(puzzle))
             {
-                return new StepBase[] { MoveCenterToLeftFaceStep.Instance };
+                return new StepBase[] { MoveBlueCenterToLeftFaceStep.Instance };
             }
 
             if (!FirstPieceToBottomLeftEdgeStep.Instance.EndGoal.Check(puzzle))

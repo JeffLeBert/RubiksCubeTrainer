@@ -15,9 +15,9 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         protected override Goal BuildEndGoal()
         {
-            var goal = new Goal(MoveCenterToLeftFaceStep.Instance.EndGoal);
+            var goal = new Goal(MoveBlueCenterToLeftFaceStep.Instance.EndGoal);
             goal.Checkers.Add(
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Left, -1, 0, -1),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -66,11 +66,11 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         private static AlgorithmInformation DownFaceLeftSideFlip()
             => new AlgorithmInformation(
                 new Algorithm(
-                    "Move edge from down left.",
+                    "Flip down left edge.",
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Front, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.Clockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Down, -1, 0, -1),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -80,7 +80,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 new Algorithm(
                     "Move edge from back left.",
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.CounterClockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Back, -1, 1, 0),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -91,7 +91,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edit from back left and flip.",
                     new NotationMoveType(NotationRotationNames.Back, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.Clockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Back, -1, 1, 0),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -101,7 +101,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 new Algorithm(
                     "Move edge from top left.",
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.Double)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Left, -1, 0, 1),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -113,7 +113,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.CounterClockwise),
                     new NotationMoveType(NotationRotationNames.Back, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.Clockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Left, -1, 0, 1),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -123,7 +123,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 new Algorithm(
                     "Move edge from front left.",
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.Clockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Front, -1, -1, 0),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -134,7 +134,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from front left and flip.",
                     new NotationMoveType(NotationRotationNames.Front, NotationRotationType.CounterClockwise),
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.CounterClockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Front, -1, -1, 0),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -144,7 +144,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 new Algorithm(
                     "Move edge from back bottom.",
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.Clockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Back, 0, 1, -1),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -155,7 +155,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from back bottom and flip.",
                     new NotationMoveType(NotationRotationNames.Back, NotationRotationType.CounterClockwise),
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.CounterClockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Back, 0, 1, -1),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -166,7 +166,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from back top.",
                     new NotationMoveType(NotationRotationNames.Up, NotationRotationType.CounterClockwise),
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.Double)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Back, 0, 1, 1),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -177,7 +177,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from back top and flip.",
                     new NotationMoveType(NotationRotationNames.Back, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.CounterClockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Back, 0, 1, 1),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -187,7 +187,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 new Algorithm(
                     "Move edge from front bottom.",
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.CounterClockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Front, 0, -1, -1),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -198,7 +198,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from front bottom and flip.",
                     new NotationMoveType(NotationRotationNames.Front, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.Clockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Front, 0, -1, -1),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -209,7 +209,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from front up.",
                     new NotationMoveType(NotationRotationNames.Front, NotationRotationType.Double),
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.CounterClockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Front, 0, -1, 1),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -220,7 +220,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from front up and flip.",
                     new NotationMoveType(NotationRotationNames.Front, NotationRotationType.CounterClockwise),
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.Clockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Front, 0, -1, 1),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -230,7 +230,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 new Algorithm(
                     "Move edge from right down.",
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.Double)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Right, 1, 0, -1),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -242,7 +242,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     new NotationMoveType(NotationRotationNames.Right, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Front, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.CounterClockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Right, 1, 0, -1),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -253,7 +253,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from right back.",
                     new NotationMoveType(NotationRotationNames.Back, NotationRotationType.CounterClockwise),
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.Clockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Right, 1, 1, 0),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -264,7 +264,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from right back and flip.",
                     new NotationMoveType(NotationRotationNames.Right, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.Double)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Right, 1, 1, 0),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -275,7 +275,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from right front.",
                     new NotationMoveType(NotationRotationNames.Right, NotationRotationType.CounterClockwise),
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.Double)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Right, 1, -1, 0),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -286,7 +286,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from right front and flip.",
                     new NotationMoveType(NotationRotationNames.Front, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Down, NotationRotationType.CounterClockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Right, 1, -1, 0),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
@@ -297,7 +297,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     "Move edge from right up.",
                     new NotationMoveType(NotationRotationNames.Up, NotationRotationType.Double),
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.Double)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Right, 1, 0, 1),
                     PuzzleColor.Blue,
                     PuzzleColor.White));
@@ -309,7 +309,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                     new NotationMoveType(NotationRotationNames.Up, NotationRotationType.Clockwise),
                     new NotationMoveType(NotationRotationNames.Front, NotationRotationType.CounterClockwise),
                     new NotationMoveType(NotationRotationNames.Left, NotationRotationType.Clockwise)),
-                new EdgeCheckerer(
+                new EdgeChecker(
                     new Location(FaceName.Right, 1, 0, 1),
                     PuzzleColor.White,
                     PuzzleColor.Blue));
