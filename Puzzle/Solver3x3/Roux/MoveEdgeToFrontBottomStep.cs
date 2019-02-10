@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
@@ -35,7 +36,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public override IEnumerable<AlgorithmInformation> GetPossibleAlgorithms(Puzzle puzzle)
             => from stepInfo in this.AllAlgorithms
-               where stepInfo.PassesAllChecks(puzzle)
+               where stepInfo.Goal(puzzle)
                select stepInfo;
 
         protected override AlgorithmInformation[] BuildAllAlgorithms()
@@ -49,23 +50,16 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 new Algorithm(
                     "Move edge from front top.",
                     new NotationMoveType(NotationRotationNames.Front, NotationRotationType.Double)),
-                this.EndGoal.Checkers);
+                this.EndGoal);
 
-        protected override Goal BuildEndGoal()
+        protected override Func<Puzzle, bool> BuildEndGoal()
         {
-            var goal = new Goal(FirstPieceToBottomLeftEdgeStep.Instance.EndGoal);
-            goal.Checkers.Add(
-                new OrChecker(
-                    new EdgeChecker(
-                        new Location(FaceName.Front, 0, -1, -1),
-                        this.Color1,
-                        this.Color2),
-                    new EdgeChecker(
-                        new Location(FaceName.Front, 0, -1, -1),
-                        this.Color2,
-                        this.Color1)));
+            var goal = Checker.EdgeOrFlipped(
+                new Location(FaceName.Front, 0, -1, -1),
+                this.Color1,
+                this.Color2);
 
-            return goal;
+            return puzzle => goal(puzzle) && FirstPieceToBottomLeftEdgeStep.Instance.EndGoal(puzzle);
         }
     }
 }

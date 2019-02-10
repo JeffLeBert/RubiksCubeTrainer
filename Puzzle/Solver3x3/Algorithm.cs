@@ -7,8 +7,8 @@ namespace RubiksCubeTrainer.Solver3x3
     {
         public Algorithm(string description, params NotationMoveType[] moves)
         {
-            this.Moves = moves;
             this.Description = description;
+            this.Moves = moves;
         }
 
         public string Description { get; }
