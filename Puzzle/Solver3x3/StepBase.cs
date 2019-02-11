@@ -6,9 +6,9 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public abstract class StepBase
     {
-        protected StepBase()
+        protected StepBase(Func<Puzzle, bool> endGoal)
         {
-            this.EndGoal = this.BuildEndGoal();
+            this.EndGoal = endGoal;
             this.AllAlgorithms = this.BuildAllAlgorithms();
         }
 
@@ -19,7 +19,5 @@ namespace RubiksCubeTrainer.Solver3x3
         public abstract IEnumerable<AlgorithmInformation> GetPossibleAlgorithms(Puzzle puzzle);
 
         protected abstract AlgorithmInformation[] BuildAllAlgorithms();
-
-        protected abstract Func<Puzzle, bool> BuildEndGoal();
     }
 }

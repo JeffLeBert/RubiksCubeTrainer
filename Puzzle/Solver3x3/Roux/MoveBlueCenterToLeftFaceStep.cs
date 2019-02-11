@@ -8,7 +8,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
     public class MoveBlueCenterToLeftFaceStep : StepBase
     {
         private MoveBlueCenterToLeftFaceStep()
-            : base()
+            : base(BuildEndGoal())
         {
         }
 
@@ -16,7 +16,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public override IEnumerable<AlgorithmInformation> GetPossibleAlgorithms(Puzzle puzzle)
             => from stepInfo in this.AllAlgorithms
-               where stepInfo.Goal(puzzle)
+               where stepInfo.InitialPosition(puzzle)
                select stepInfo;
 
         protected override AlgorithmInformation[] BuildAllAlgorithms()
@@ -31,40 +31,30 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         private static AlgorithmInformation MoveFaceFromBack()
             => new AlgorithmInformation(
-                new Algorithm(
-                    "Move blue face from back to left.",
-                    new NotationMoveType(NotationRotationNames.AllClockwise, NotationRotationType.CounterClockwise)),
-                Checker.SingleColor(new Location(FaceName.Back, 0, 1, 0), PuzzleColor.Blue));
+                new Algorithm("Move blue face from back to left.", NotationMoveType.AllFrontRight),
+                Checker.SingleColor(Location.BackCenter, PuzzleColor.Blue));
 
         private static AlgorithmInformation MoveFaceFromFront()
             => new AlgorithmInformation(
-                new Algorithm(
-                    "Move blue face from front to left.",
-                    new NotationMoveType(NotationRotationNames.AllClockwise, NotationRotationType.Clockwise)),
-                Checker.SingleColor(new Location(FaceName.Front, 0, -1, 0), PuzzleColor.Blue));
+                new Algorithm("Move blue face from front to left.", NotationMoveType.AllFrontLeft),
+                Checker.SingleColor(Location.FrontCenter, PuzzleColor.Blue));
 
         private static AlgorithmInformation MoveFaceFromRight()
             => new AlgorithmInformation(
-                new Algorithm(
-                    "Move blue face from right to left.",
-                    new NotationMoveType(NotationRotationNames.AllClockwise, NotationRotationType.Double)),
-                Checker.SingleColor(new Location(FaceName.Right, 1, 0, 0), PuzzleColor.Blue));
+                new Algorithm("Move blue face from right to left.", NotationMoveType.AllFrontLeftDouble),
+                Checker.SingleColor(Location.RightCenter, PuzzleColor.Blue));
 
         private static AlgorithmInformation MoveFaceFromUp()
             => new AlgorithmInformation(
-                new Algorithm(
-                    "Move blue face from top to left.",
-                    new NotationMoveType(NotationRotationNames.AllRight, NotationRotationType.CounterClockwise)),
-                Checker.SingleColor(new Location(FaceName.Up, 0, 0, 1), PuzzleColor.Blue));
+                new Algorithm("Move blue face from top to left.", NotationMoveType.AllFrontCounterClockwise),
+                Checker.SingleColor(Location.UpCenter, PuzzleColor.Blue));
 
         private static AlgorithmInformation MoveFaceFromDown()
             => new AlgorithmInformation(
-                new Algorithm(
-                    "Move blue face from down to left.",
-                    new NotationMoveType(NotationRotationNames.AllRight, NotationRotationType.Clockwise)),
-                Checker.SingleColor(new Location(FaceName.Down, 0, 0, -1), PuzzleColor.Blue));
+                new Algorithm("Move blue face from down to left.", NotationMoveType.AllFrontClockwise),
+                Checker.SingleColor(Location.DownCenter, PuzzleColor.Blue));
 
-        protected override Func<Puzzle, bool> BuildEndGoal()
-            => Checker.SingleColor(new Location(FaceName.Left, -1, 0, 0), PuzzleColor.Blue);
+        private static Func<Puzzle, bool> BuildEndGoal()
+            => Checker.SingleColor(Location.LeftCenter, PuzzleColor.Blue);
     }
 }

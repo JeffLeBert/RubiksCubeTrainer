@@ -35,7 +35,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
                 }
                 else if (char.IsLetter(moveChar))
                 {
-                    if (!move.Empty)
+                    if (!move.IsEmpty)
                     {
                         yield return move;
                         move = NotationMoveType.None;
@@ -45,7 +45,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
                 }
             }
 
-            if (!move.Empty)
+            if (!move.IsEmpty)
             {
                 yield return move;
             }
@@ -79,9 +79,9 @@ namespace RubiksCubeTrainer.Puzzle3x3
                 case NotationRotationNames.MiddleE: return "E";
                 case NotationRotationNames.MiddleM: return "M";
                 case NotationRotationNames.MiddleS: return "S";
-                case NotationRotationNames.AllUp: return "x";
-                case NotationRotationNames.AllClockwise: return "y";
-                case NotationRotationNames.AllRight: return "z";
+                case NotationRotationNames.AllFrontUp: return "x";
+                case NotationRotationNames.AllFrontLeft: return "y";
+                case NotationRotationNames.AllFrontClockwise: return "z";
 
                 default: throw new InvalidOperationException();
             }
@@ -118,9 +118,9 @@ namespace RubiksCubeTrainer.Puzzle3x3
                 case 'E': return NotationRotationNames.MiddleE;
                 case 'M': return NotationRotationNames.MiddleM;
                 case 'S': return NotationRotationNames.MiddleS;
-                case 'x': return NotationRotationNames.AllUp;
-                case 'y': return NotationRotationNames.AllClockwise;
-                case 'z': return NotationRotationNames.AllRight;
+                case 'x': return NotationRotationNames.AllFrontUp;
+                case 'y': return NotationRotationNames.AllFrontLeft;
+                case 'z': return NotationRotationNames.AllFrontClockwise;
 
                 default: throw new InvalidOperationException();
             }

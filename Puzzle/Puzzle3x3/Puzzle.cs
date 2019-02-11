@@ -33,5 +33,8 @@
 
         public void With(Face face)
             => this.faces[(int)face.FaceName] = face;
+
+        public override string ToString()
+            => new TextRenderer(this).Draw();
     }
 }

@@ -18,8 +18,8 @@
         MiddleE,                // E
         MiddleM,                // M
         MiddleS,                // S
-        AllUp,                  // x
-        AllRight,               // y
-        AllClockwise            // z
+        AllFrontUp,             // x
+        AllFrontLeft,           // y
+        AllFrontClockwise       // z
     }
 }

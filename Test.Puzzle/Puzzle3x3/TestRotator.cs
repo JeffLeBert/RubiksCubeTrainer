@@ -549,7 +549,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             "    WWW",
             "    YYY")]
         [InlineData(
-            NotationRotationNames.AllUp,
+            NotationRotationNames.AllFrontUp,
             NotationRotationType.Clockwise,
             "    OOO",
             "    OOO",
@@ -561,7 +561,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             "    RRR",
             "    RRR")]
         [InlineData(
-            NotationRotationNames.AllUp,
+            NotationRotationNames.AllFrontUp,
             NotationRotationType.CounterClockwise,
             "    RRR",
             "    RRR",
@@ -573,7 +573,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             "    OOO",
             "    OOO")]
         [InlineData(
-            NotationRotationNames.AllUp,
+            NotationRotationNames.AllFrontUp,
             NotationRotationType.Double,
             "    YYY",
             "    YYY",
@@ -585,7 +585,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             "    WWW",
             "    WWW")]
         [InlineData(
-            NotationRotationNames.AllClockwise,
+            NotationRotationNames.AllFrontLeft,
             NotationRotationType.Clockwise,
             "    WWW",
             "    WWW",
@@ -597,7 +597,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             "    YYY",
             "    YYY")]
         [InlineData(
-            NotationRotationNames.AllClockwise,
+            NotationRotationNames.AllFrontLeft,
             NotationRotationType.CounterClockwise,
             "    WWW",
             "    WWW",
@@ -609,7 +609,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             "    YYY",
             "    YYY")]
         [InlineData(
-            NotationRotationNames.AllClockwise,
+            NotationRotationNames.AllFrontLeft,
             NotationRotationType.Double,
             "    WWW",
             "    WWW",
@@ -621,7 +621,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             "    YYY",
             "    YYY")]
         [InlineData(
-            NotationRotationNames.AllRight,
+            NotationRotationNames.AllFrontClockwise,
             NotationRotationType.Clockwise,
             "    BBB",
             "    BBB",
@@ -633,7 +633,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             "    GGG",
             "    GGG")]
         [InlineData(
-            NotationRotationNames.AllRight,
+            NotationRotationNames.AllFrontClockwise,
             NotationRotationType.CounterClockwise,
             "    GGG",
             "    GGG",
@@ -645,7 +645,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
             "    BBB",
             "    BBB")]
         [InlineData(
-            NotationRotationNames.AllRight,
+            NotationRotationNames.AllFrontClockwise,
             NotationRotationType.Double,
             "    YYY",
             "    YYY",

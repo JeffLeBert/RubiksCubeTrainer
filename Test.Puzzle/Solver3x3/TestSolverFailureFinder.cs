@@ -19,23 +19,24 @@
 //        [Fact]
 //        public void Find_first_failure()
 //        {
-//            var solver = SolverFailureFinder.FindFailure(Solver.Create);
+//            var puzzle = Rotator.ApplyMoves(Solver.Solved, Scrambler.EnumerateMoves());
+//            var failInfo = SolverFailureFinder.FindFailure(new Solver(), puzzle);
 //        }
 
-//        [Fact]
-//        public void TimeSome()
-//        {
-//            const int Iterations = 474552;
-//            var stopwatch = Stopwatch.StartNew();
+//        //[Fact]
+//        //public void TimeSome()
+//        //{
+//        //    const int Iterations = 474552; // 4 random moves.
+//        //    var stopwatch = Stopwatch.StartNew();
 
-//            var puzzle = Puzzle.Solved;
-//            foreach (var move in Scrambler.EnumerateMoves().Take(Iterations))
-//            {
-//                puzzle = Rotator.ApplyMove(puzzle, move);
-//            }
+//        //    var puzzle = Solver.Solved;
+//        //    foreach (var move in Scrambler.EnumerateMoves().Take(Iterations))
+//        //    {
+//        //        puzzle = Rotator.ApplyMove(puzzle, move);
+//        //    }
 
-//            stopwatch.Stop();
-//            output.WriteLine($"{Iterations} took {stopwatch.ElapsedMilliseconds} milliseconds.");
-//        }
+//        //    stopwatch.Stop();
+//        //    output.WriteLine($"{Iterations} took {stopwatch.ElapsedMilliseconds} milliseconds.");
+//        //}
 //    }
 //}

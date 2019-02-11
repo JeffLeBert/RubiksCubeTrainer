@@ -95,19 +95,19 @@ namespace RubiksCubeTrainer.Puzzle3x3
                         (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS)));
 
                 // Full cube rotations.
-                case NotationRotationNames.AllClockwise:
+                case NotationRotationNames.AllFrontLeft:
                     return DoWithNewPuzzle(
                         puzzle,
                         (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Up)),
                         (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE).WithSwapDirection()),
                         (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Down).WithSwapDirection()));
-                case NotationRotationNames.AllRight:
+                case NotationRotationNames.AllFrontClockwise:
                     return DoWithNewPuzzle(
                         puzzle,
                         (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Front)),
                         (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS)),
                         (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Back).WithSwapDirection()));
-                case NotationRotationNames.AllUp:
+                case NotationRotationNames.AllFrontUp:
                     return DoWithNewPuzzle(
                         puzzle,
                         (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Right)),

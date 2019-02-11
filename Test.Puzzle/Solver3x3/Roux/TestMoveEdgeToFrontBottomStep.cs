@@ -11,23 +11,32 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         public void No_algorithm_if_already_at_bottom_front(string moves)
         {
             var puzzle = Rotator.ApplyMoves(Solver.Solved, moves);
-            var algorithms = MoveEdgeToFrontBottomStep.InstanceBlueRed.GetPossibleAlgorithms(Solver.Solved);
+            var algorithms = MoveEdgeToFrontBottomStep.InstanceBlueRed.GetPossibleAlgorithms(puzzle);
 
             Assert.Empty(algorithms);
         }
 
-        //[Theory]
-        //[InlineData("F")]
-        //public void Can_solve(string scrambleMoves)
-        //{
-        //    var scrambledPuzzle = Rotator.ApplyMoves(Solver.Solved, NotationParser.EnumerateMoves(scrambleMoves));
+        [Theory]
+        [InlineData("")]
+        [InlineData("F")]
+        [InlineData("F2")]
+        [InlineData("F U2 B")]
+        [InlineData("F M'")]
+        [InlineData("F M' B'")]
+        [InlineData("F M2")]
+        [InlineData("F2 R'")]
+        [InlineData("F U2")]
+        [InlineData("F U")]
+        public void Can_solve_front_left(string scrambleMoves)
+        {
+            var scrambledPuzzle = Rotator.ApplyMoves(Solver.Solved, NotationParser.EnumerateMoves(scrambleMoves));
 
-        //    var algorithmInfos = MoveEdgeToFrontBottomStep.InstanceBlueRed.GetPossibleAlgorithms(scrambledPuzzle);
+            var algorithmInfos = MoveEdgeToFrontBottomStep.InstanceBlueRed.GetPossibleAlgorithms(scrambledPuzzle);
 
-        //    var algorithmInfo = Assert.Single(algorithmInfos);
-        //    var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithmInfo.Algorithm.Moves);
+            var algorithmInfo = Assert.Single(algorithmInfos);
+            var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithmInfo.Algorithm.Moves);
 
-        //    Assert.True(MoveEdgeToFrontBottomStep.InstanceBlueRed.EndGoal.Check(solvedPuzzle));
-        //}
+            Assert.True(MoveEdgeToFrontBottomStep.InstanceBlueRed.EndGoal(solvedPuzzle));
+        }
     }
 }
