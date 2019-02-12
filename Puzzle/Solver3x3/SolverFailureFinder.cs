@@ -21,7 +21,7 @@ namespace RubiksCubeTrainer.Solver3x3
             SolverBase solver,
             Puzzle puzzle,
             SolverFailureInformation failureInfo,
-            StepBase[] possibleSteps)
+            IStep[] possibleSteps)
         {
             foreach (var possibleStep in possibleSteps)
             {
@@ -45,15 +45,15 @@ namespace RubiksCubeTrainer.Solver3x3
             SolverBase solver,
             Puzzle puzzle,
             SolverFailureInformation failureInfo,
-            AlgorithmInformation[] possibleAlgorithms)
+            Algorithm[] possibleAlgorithms)
         {
             foreach (var possibleAlgorithm in possibleAlgorithms)
             {
-                var newPuzzle = Rotator.ApplyMoves(puzzle, possibleAlgorithm.Algorithm.Moves);
+                var newPuzzle = Rotator.ApplyMoves(puzzle, possibleAlgorithm.Moves);
                 var algorithmFailureInfo = FindFailure(
                     solver,
                     newPuzzle,
-                    failureInfo.WithMoves(possibleAlgorithm.Algorithm.Moves));
+                    failureInfo.WithMoves(possibleAlgorithm.Moves));
                 if (algorithmFailureInfo.AtEnd)
                 {
                     return algorithmFailureInfo;

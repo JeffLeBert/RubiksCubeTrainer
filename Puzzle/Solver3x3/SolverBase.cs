@@ -9,6 +9,6 @@ namespace RubiksCubeTrainer.Solver3x3
         {
         }
 
-        public abstract IEnumerable<StepBase> NextSteps(Puzzle puzzle);
+        public abstract IEnumerable<IStep> NextSteps(Puzzle puzzle);
     }
 }

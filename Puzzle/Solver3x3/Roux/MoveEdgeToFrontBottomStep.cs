@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3.Roux
 {
-    public class MoveEdgeToFrontBottomStep : StepBase
+    public class MoveEdgeToFrontBottomStep : IStep
     {
+        private readonly ImmutableArray<Algorithm> allAlgorithms;
+
         public MoveEdgeToFrontBottomStep(PuzzleColor color1, PuzzleColor color2)
-            : base(BuildEndGoal(color1, color2))
         {
             this.Color1 = color1;
             this.Color2 = color2;
+            this.EndGoal = BuildEndGoal(color1, color2);
+            this.allAlgorithms = this.BuildAllAlgorithms();
         }
 
         public static MoveEdgeToFrontBottomStep InstanceBlueRed { get; } = new MoveEdgeToFrontBottomStep(
@@ -34,14 +38,15 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public PuzzleColor Color2 { get; }
 
-        public override IEnumerable<AlgorithmInformation> GetPossibleAlgorithms(Puzzle puzzle)
-            => from algorithmInfo in this.AllAlgorithms
+        public Func<Puzzle, bool> EndGoal { get; }
+
+        public IEnumerable<Algorithm> GetPossibleAlgorithms(Puzzle puzzle)
+            => from algorithmInfo in this.allAlgorithms
                where algorithmInfo.InitialPosition(puzzle)
                select algorithmInfo;
 
-        protected override AlgorithmInformation[] BuildAllAlgorithms()
-            => new AlgorithmInformation[]
-            {
+        private ImmutableArray<Algorithm> BuildAllAlgorithms()
+            => ImmutableArray.Create(
                 this.MoveEdgeFromFrontLeft(),
                 this.MoveEdgeFromFrontUp(),
                 this.MoveEdgeFromFrontRight(),
@@ -51,67 +56,75 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 this.MoveEdgeFromBackDown(),
                 this.MoveEdgeFromRightUp(),
                 this.MoveEdgeFromRightDown(),
-                this.MoveEdgeFromLeftUp()
-            };
+                this.MoveEdgeFromLeftUp());
 
-        private AlgorithmInformation MoveEdgeFromFrontUp()
-            => new AlgorithmInformation(
-                new Algorithm("Move edge from front top.", NotationMoveType.FrontDouble),
-                Checker.EdgeOrFlipped(Location.FrontUpEdge, PuzzleColor.Red, PuzzleColor.Blue));
+        private Algorithm MoveEdgeFromFrontUp()
+            => new Algorithm(
+                "Move edge from front top.",
+                Checker.EdgeOrFlipped(Location.FrontUpEdge, PuzzleColor.Red, PuzzleColor.Blue),
+                NotationMoveType.FrontDouble);
 
-        private AlgorithmInformation MoveEdgeFromFrontLeft()
-            => new AlgorithmInformation(
-                new Algorithm("Move edge from front left.", NotationMoveType.FrontCounterClockwise),
-                Checker.EdgeOrFlipped(Location.FrontLeftEdge, PuzzleColor.Red, PuzzleColor.Blue));
+        private Algorithm MoveEdgeFromFrontLeft()
+            => new Algorithm(
+                "Move edge from front left.",
+                Checker.EdgeOrFlipped(Location.FrontLeftEdge, PuzzleColor.Red, PuzzleColor.Blue),
+                NotationMoveType.FrontCounterClockwise);
 
-        private AlgorithmInformation MoveEdgeFromFrontRight()
-            => new AlgorithmInformation(
-                new Algorithm("Move edge from front right.", NotationMoveType.FrontClockwise),
-                Checker.EdgeOrFlipped(Location.FrontRightEdge, PuzzleColor.Red, PuzzleColor.Blue));
+        private Algorithm MoveEdgeFromFrontRight()
+            => new Algorithm(
+                "Move edge from front right.",
+                Checker.EdgeOrFlipped(Location.FrontRightEdge, PuzzleColor.Red, PuzzleColor.Blue),
+                NotationMoveType.FrontClockwise);
 
-        private AlgorithmInformation MoveEdgeFromBackLeft()
-            => new AlgorithmInformation(
-                new Algorithm("Move edge from back left.", NotationMoveType.BackClockwise, NotationMoveType.MiddleMCounterClockwise),
-                Checker.EdgeOrFlipped(Location.LeftBackEdge, PuzzleColor.Blue, PuzzleColor.Red));
+        private Algorithm MoveEdgeFromBackLeft()
+            => new Algorithm(
+                "Move edge from back left.",
+                Checker.EdgeOrFlipped(Location.LeftBackEdge, PuzzleColor.Blue, PuzzleColor.Red),
+                NotationMoveType.BackClockwise,
+                NotationMoveType.MiddleMCounterClockwise);
 
-        private AlgorithmInformation MoveEdgeFromBackUp()
-            => new AlgorithmInformation(
-                new Algorithm("Move edge from back up.", NotationMoveType.MiddleMDouble),
-                Checker.EdgeOrFlipped(Location.UpBackEdge, PuzzleColor.Blue, PuzzleColor.Red));
+        private Algorithm MoveEdgeFromBackUp()
+            => new Algorithm(
+                "Move edge from back up.",
+                Checker.EdgeOrFlipped(Location.UpBackEdge, PuzzleColor.Blue, PuzzleColor.Red),
+                NotationMoveType.MiddleMDouble);
 
-        private AlgorithmInformation MoveEdgeFromBackRight()
-            => new AlgorithmInformation(
-                new Algorithm(
-                    "Move edge from back right.",
-                    NotationMoveType.BackClockwise,
-                    NotationMoveType.UpDouble,
-                    NotationMoveType.BackCounterClockwise,
-                    NotationMoveType.MiddleMClockwise),
-                Checker.EdgeOrFlipped(Location.BackRightEdge, PuzzleColor.Blue, PuzzleColor.Red));
+        private Algorithm MoveEdgeFromBackRight()
+            => new Algorithm(
+                "Move edge from back right.",
+                Checker.EdgeOrFlipped(Location.BackRightEdge, PuzzleColor.Blue, PuzzleColor.Red),
+                NotationMoveType.BackClockwise,
+                NotationMoveType.UpDouble,
+                NotationMoveType.BackCounterClockwise,
+                NotationMoveType.MiddleMClockwise);
 
-        private AlgorithmInformation MoveEdgeFromBackDown()
-            => new AlgorithmInformation(
-                new Algorithm("Move edge from back down.", NotationMoveType.MiddleMCounterClockwise),
-                Checker.EdgeOrFlipped(Location.BackDownEdge, PuzzleColor.Blue, PuzzleColor.Red));
+        private Algorithm MoveEdgeFromBackDown()
+            => new Algorithm(
+                "Move edge from back down.",
+                Checker.EdgeOrFlipped(Location.BackDownEdge, PuzzleColor.Blue, PuzzleColor.Red),
+                NotationMoveType.MiddleMCounterClockwise);
 
-        private AlgorithmInformation MoveEdgeFromRightUp()
-            => new AlgorithmInformation(
-                new Algorithm("Move edge from up right.", NotationMoveType.UpClockwise, NotationMoveType.MiddleMClockwise),
-                Checker.EdgeOrFlipped(Location.RightUpEdge, PuzzleColor.Blue, PuzzleColor.Red));
+        private Algorithm MoveEdgeFromRightUp()
+            => new Algorithm(
+                "Move edge from up right.",
+                Checker.EdgeOrFlipped(Location.RightUpEdge, PuzzleColor.Blue, PuzzleColor.Red),
+                NotationMoveType.UpClockwise,
+                NotationMoveType.MiddleMClockwise);
 
-        private AlgorithmInformation MoveEdgeFromRightDown()
-            => new AlgorithmInformation(
-                new Algorithm(
-                    "Move edge from right down.",
-                    NotationMoveType.RightDouble,
-                    NotationMoveType.UpClockwise,
-                    NotationMoveType.MiddleMClockwise),
-                Checker.EdgeOrFlipped(Location.RightDownEdge, PuzzleColor.Blue, PuzzleColor.Red));
+        private Algorithm MoveEdgeFromRightDown()
+            => new Algorithm(
+                "Move edge from right down.",
+                Checker.EdgeOrFlipped(Location.RightDownEdge, PuzzleColor.Blue, PuzzleColor.Red),
+                NotationMoveType.RightDouble,
+                NotationMoveType.UpClockwise,
+                NotationMoveType.MiddleMClockwise);
 
-        private AlgorithmInformation MoveEdgeFromLeftUp()
-            => new AlgorithmInformation(
-                new Algorithm("Move edge from right up.", NotationMoveType.UpCounterClockwise, NotationMoveType.MiddleMClockwise),
-                Checker.EdgeOrFlipped(Location.LeftUpEdge, PuzzleColor.Blue, PuzzleColor.Red));
+        private Algorithm MoveEdgeFromLeftUp()
+            => new Algorithm(
+                "Move edge from right up.",
+                Checker.EdgeOrFlipped(Location.LeftUpEdge, PuzzleColor.Blue, PuzzleColor.Red),
+                NotationMoveType.UpCounterClockwise,
+                NotationMoveType.MiddleMClockwise);
 
         private static Func<Puzzle, bool> BuildEndGoal(PuzzleColor color1, PuzzleColor color2)
             => puzzle => Checker.EdgeOrFlipped(Location.FrontDownEdge, color1, color2)(puzzle)

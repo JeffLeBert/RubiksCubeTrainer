@@ -98,11 +98,11 @@ namespace RubiksCubeTrainer.WinFormsUI
                     break;
                 }
 
-                currentPuzzle = Rotator.ApplyMoves(currentPuzzle, firstAlgorithmInfo.Algorithm.Moves);
+                currentPuzzle = Rotator.ApplyMoves(currentPuzzle, firstAlgorithmInfo.Moves);
 
-                var moves = NotationParser.FormatMoves(firstAlgorithmInfo.Algorithm.Moves);
+                var moves = NotationParser.FormatMoves(firstAlgorithmInfo.Moves);
                 solutionMoves += moves + " ";
-                solutionDescription += firstAlgorithmInfo.Algorithm.Description
+                solutionDescription += firstAlgorithmInfo.Description
                     + Environment.NewLine
                     + moves
                     + Environment.NewLine

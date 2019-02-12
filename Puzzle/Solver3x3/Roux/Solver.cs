@@ -13,24 +13,24 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public static Puzzle Solved { get; } = BuildSolvedPuzzle();
 
-        public override IEnumerable<StepBase> NextSteps(Puzzle puzzle)
+        public override IEnumerable<IStep> NextSteps(Puzzle puzzle)
         {
             if (!MoveBlueCenterToLeftFaceStep.Instance.EndGoal(puzzle))
             {
-                return new StepBase[] { MoveBlueCenterToLeftFaceStep.Instance };
+                return new IStep[] { MoveBlueCenterToLeftFaceStep.Instance };
             }
 
             if (!FirstPieceToBottomLeftEdgeStep.Instance.EndGoal(puzzle))
             {
-                return new StepBase[] { FirstPieceToBottomLeftEdgeStep.Instance };
+                return new IStep[] { FirstPieceToBottomLeftEdgeStep.Instance };
             }
 
             if (!MoveEdgeToFrontBottomStep.InstanceBlueRed.EndGoal(puzzle))
             {
-                return new StepBase[] { MoveEdgeToFrontBottomStep.InstanceBlueRed };
+                return new IStep[] { MoveEdgeToFrontBottomStep.InstanceBlueRed };
             }
 
-            return Enumerable.Empty<StepBase>();
+            return Enumerable.Empty<IStep>();
         }
 
         private static Puzzle BuildSolvedPuzzle()
