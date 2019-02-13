@@ -16,12 +16,12 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         public static IEnumerable<object[]> AllCentersAndColors()
             => new[]
             {
-                new object[] { Location.BackCenter, PuzzleColor.Orange },
-                new object[] { Location.DownCenter, PuzzleColor.White },
-                new object[] { Location.FrontCenter, PuzzleColor.Red },
-                new object[] { Location.LeftCenter, PuzzleColor.Blue },
-                new object[] { Location.RightCenter, PuzzleColor.Green },
-                new object[] { Location.UpCenter, PuzzleColor.Yellow }
+                new object[] { Location.Back, PuzzleColor.Orange },
+                new object[] { Location.Down, PuzzleColor.White },
+                new object[] { Location.Front, PuzzleColor.Red },
+                new object[] { Location.Left, PuzzleColor.Blue },
+                new object[] { Location.Right, PuzzleColor.Green },
+                new object[] { Location.Up, PuzzleColor.Yellow }
             };
     }
 

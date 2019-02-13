@@ -25,9 +25,13 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 return new IStep[] { FirstPieceToBottomLeftEdgeStep.Instance };
             }
 
-            if (!MoveEdgeToFrontBottomStep.InstanceBlueRed.EndGoal(puzzle))
+            if (!MoveEdgeToFrontBottomStep.InstanceFrontLeft.EndGoal(puzzle))
             {
-                return new IStep[] { MoveEdgeToFrontBottomStep.InstanceBlueRed };
+                return new IStep[]
+                {
+                    MoveEdgeToFrontBottomStep.InstanceFrontLeft,
+                    MoveCornerToTopFrontOrBackStep.InstanceFrontLeft
+                };
             }
 
             return Enumerable.Empty<IStep>();
