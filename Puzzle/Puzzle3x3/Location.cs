@@ -1,7 +1,9 @@
-﻿namespace RubiksCubeTrainer.Puzzle3x3
+﻿using System;
+
+namespace RubiksCubeTrainer.Puzzle3x3
 {
     [System.Diagnostics.DebuggerDisplay("{FaceName} ({Point3D.X}, {Point3D.Y}, {Point3D.Z})")]
-    public struct Location
+    public struct Location : IEquatable<Location>
     {
         public Location(FaceName faceName, int x, int y, int z)
             : this(faceName, new Point3D(x, y, z))
@@ -76,8 +78,23 @@
 
         public FaceName FaceName { get; }
 
-        public Point2D Point2D => CoordinateMapper.GetMapperForFace(this.FaceName).Map(this.Point3D);
-
         public Point3D Point3D { get; }
+
+        public override bool Equals(object obj)
+            => obj is Location location && this.Equals(location);
+
+        public bool Equals(Location other)
+            => this.FaceName == other.FaceName && this.Point3D == other.Point3D;
+
+        public override int GetHashCode()
+            => 955250357
+            * (-1521134295 + this.FaceName.GetHashCode())
+            * (-1521134295 + this.Point3D.GetHashCode());
+
+        public static bool operator ==(Location left, Location right)
+            => left.Equals(right);
+
+        public static bool operator !=(Location left, Location right)
+            => !(left == right);
     }
 }

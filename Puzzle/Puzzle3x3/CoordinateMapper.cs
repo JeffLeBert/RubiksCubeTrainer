@@ -1,140 +1,81 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Immutable;
 
 namespace RubiksCubeTrainer.Puzzle3x3
 {
     /// <summary>
     /// Maps the 3D co-ordinates of the puzzle into the 2D co-ordinates of a face.
     /// </summary>
-    public abstract class CoordinateMapper
+    public static class CoordinateMapper
     {
-        // This must be in the same order as FaceName.
-        private static readonly CoordinateMapper[] coordinateMappers = new CoordinateMapper[]
-            {
-                new ZFaceMapper(FaceName.Up, 1),
-                new YFaceMapper(FaceName.Front, -1),
-                new ZFaceMapper(FaceName.Down, -1),
-                new YFaceMapper(FaceName.Back, 1),
-                new XFaceMapper(FaceName.Left, -1),
-                new XFaceMapper(FaceName.Right, 1)
-            };
+        private static readonly ImmutableDictionary<Location, Location> adjacentEdge = BuildAdjacentEdges();
 
-        private CoordinateMapper(FaceName faceName, int faceSide)
+        public static Location GetAdjacentEdge(Location location)
+            => adjacentEdge[location];
+
+        public static Point2D Map(Location location)
         {
-            this.FaceSide = faceSide;
+            var point3D = location.Point3D;
+            switch (location.FaceName)
+            {
+                case FaceName.Up:
+                case FaceName.Down:
+                    return new Point2D(point3D.X, point3D.Y);
+
+                case FaceName.Front:
+                case FaceName.Back:
+                    return new Point2D(point3D.X, point3D.Z);
+
+                case FaceName.Left:
+                case FaceName.Right:
+                    return new Point2D(point3D.Y, point3D.Z);
+
+                default:
+                    throw new InvalidOperationException();
+            }
         }
 
-        public Point3D CenterPoint => this.Map(new Point2D(0, 0));
-
-        public int FaceSide { get; }
-
-        public static FaceName GetFaceFromCenterPoint(Point3D centerPoint)
+        private static ImmutableDictionary<Location, Location> BuildAdjacentEdges()
         {
-            if (centerPoint.X == -1)
-            {
-                return FaceName.Left;
-            }
+            var builder = ImmutableDictionary.CreateBuilder<Location, Location>();
 
-            if (centerPoint.X == 1)
-            {
-                return FaceName.Right;
-            }
+            // Up face.
+            builder.Add(Location.UpBack, Location.BackUp);
+            builder.Add(Location.UpLeft, Location.LeftUp);
+            builder.Add(Location.UpRight, Location.RightUp);
+            builder.Add(Location.UpFront, Location.FrontUp);
 
-            if (centerPoint.Y == -1)
-            {
-                return FaceName.Front;
-            }
+            // Front face.
+            builder.Add(Location.FrontUp, Location.UpFront);
+            builder.Add(Location.FrontLeft, Location.LeftFront);
+            builder.Add(Location.FrontRight, Location.RightFront);
+            builder.Add(Location.FrontDown, Location.DownFront);
 
-            if (centerPoint.Y == 1)
-            {
-                return FaceName.Back;
-            }
+            // Down face.
+            builder.Add(Location.DownFront, Location.FrontDown);
+            builder.Add(Location.DownLeft, Location.LeftDown);
+            builder.Add(Location.DownRight, Location.RightDown);
+            builder.Add(Location.DownBack, Location.BackDown);
 
-            if (centerPoint.Z == -1)
-            {
-                return FaceName.Down;
-            }
+            // Back face.
+            builder.Add(Location.BackUp, Location.UpBack);
+            builder.Add(Location.BackLeft, Location.LeftBack);
+            builder.Add(Location.BackRight, Location.RightBack);
+            builder.Add(Location.BackDown, Location.DownBack);
 
-            if (centerPoint.Z == 1)
-            {
-                return FaceName.Up;
-            }
+            // Left face.
+            builder.Add(Location.LeftUp, Location.UpLeft);
+            builder.Add(Location.LeftBack, Location.BackLeft);
+            builder.Add(Location.LeftFront, Location.FrontLeft);
+            builder.Add(Location.LeftDown, Location.DownLeft);
 
-            throw new InvalidOperationException();
-        }
+            // Right face.
+            builder.Add(Location.RightUp, Location.UpRight);
+            builder.Add(Location.RightBack, Location.BackRight);
+            builder.Add(Location.RightFront, Location.FrontRight);
+            builder.Add(Location.RightDown, Location.DownRight);
 
-        public static CoordinateMapper GetMapperForFace(FaceName faceName)
-            => coordinateMappers[(int)faceName];
-
-        public static Location GetLocationForOtherEdgeFace(Location location)
-        {
-            var mapper = GetMapperForFace(location.FaceName);
-            var otherFace = mapper.GetAdjacentFaceForEdge(location.Point2D);
-
-            return new Location(otherFace, location.Point3D);
-        }
-
-        public abstract FaceName GetAdjacentFaceForEdge(Point2D edge);
-
-        public abstract Point2D Map(Point3D point3D);
-
-        public abstract Point3D Map(Point2D point2D);
-
-        private class XFaceMapper : CoordinateMapper
-        {
-            public XFaceMapper(FaceName faceName, int faceSide) : base(faceName, faceSide)
-            {
-            }
-
-            public override FaceName GetAdjacentFaceForEdge(Point2D edge)
-                => GetFaceFromCenterPoint(new Point3D(0, edge.X, edge.Y));
-
-            public override Point2D Map(Point3D point3D)
-            {
-                Debug.Assert(point3D.X == this.FaceSide, "Invalid 3D co-ordinate for face.");
-
-                return new Point2D(point3D.Y, point3D.Z);
-            }
-
-            public override Point3D Map(Point2D point2D) => new Point3D(this.FaceSide, point2D.X, point2D.Y);
-        }
-
-        private class YFaceMapper : CoordinateMapper
-        {
-            public YFaceMapper(FaceName faceName, int faceSide) : base(faceName, faceSide)
-            {
-            }
-
-            public override FaceName GetAdjacentFaceForEdge(Point2D edge)
-                => GetFaceFromCenterPoint(new Point3D(edge.X, 0, edge.Y));
-
-            public override Point2D Map(Point3D point3D)
-            {
-                Debug.Assert(point3D.Y == this.FaceSide, "Invalid 3D co-ordinate for face.");
-
-                return new Point2D(point3D.X, point3D.Z);
-            }
-
-            public override Point3D Map(Point2D point2D) => new Point3D(point2D.X, this.FaceSide, point2D.Y);
-        }
-
-        private class ZFaceMapper : CoordinateMapper
-        {
-            public ZFaceMapper(FaceName faceName, int faceSide) : base(faceName, faceSide)
-            {
-            }
-
-            public override FaceName GetAdjacentFaceForEdge(Point2D edge)
-                => GetFaceFromCenterPoint(new Point3D(edge.X, edge.Y, 0));
-
-            public override Point2D Map(Point3D point3D)
-            {
-                Debug.Assert(point3D.Z == this.FaceSide, "Invalid 3D co-ordinate for face.");
-
-                return new Point2D(point3D.X, point3D.Y);
-            }
-
-            public override Point3D Map(Point2D point2D) => new Point3D(point2D.X, point2D.Y, this.FaceSide);
+            return builder.ToImmutable();
         }
     }
 }

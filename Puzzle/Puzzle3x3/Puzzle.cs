@@ -14,9 +14,9 @@
 
         public PuzzleColor this[Location location]
         {
-            get { return this[location.FaceName][location.Point3D]; }
+            get { return this[location.FaceName][CoordinateMapper.Map(location)]; }
 
-            internal set { this[location.FaceName][location.Point3D] = value; }
+            internal set { this[location.FaceName][CoordinateMapper.Map(location)] = value; }
         }
 
         public Puzzle Clone()
@@ -30,9 +30,6 @@
                     this.faces[4].Clone(),
                     this.faces[5].Clone()
                 });
-
-        public void With(Face face)
-            => this.faces[(int)face.FaceName] = face;
 
         public override string ToString()
             => new TextRenderer(this).Draw();
