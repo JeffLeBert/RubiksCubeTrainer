@@ -15,17 +15,17 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public override IEnumerable<IStep> NextSteps(Puzzle puzzle)
         {
-            if (!MoveBlueCenterToLeftFaceStep.Instance.EndGoal(puzzle))
+            if (MoveBlueCenterToLeftFaceStep.Instance.ShouldUse(puzzle))
             {
                 return new IStep[] { MoveBlueCenterToLeftFaceStep.Instance };
             }
 
-            if (!FirstPieceToBottomLeftEdgeStep.Instance.EndGoal(puzzle))
+            if (FirstPieceToBottomLeftEdgeStep.Instance.ShouldUse(puzzle))
             {
                 return new IStep[] { FirstPieceToBottomLeftEdgeStep.Instance };
             }
 
-            if (!MoveEdgeToFrontBottomStep.InstanceFrontLeft.EndGoal(puzzle))
+            if (MoveEdgeToFrontBottomStep.InstanceFrontLeft.ShouldUse(puzzle))
             {
                 return new IStep[]
                 {

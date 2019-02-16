@@ -12,7 +12,8 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public MoveCornerToTopFrontOrBackStep(PuzzleColor color1, PuzzleColor color2)
         {
-            this.EndGoal = puzzle => IsEndGoal(puzzle, color1, color2);
+            this.Color1 = color1;
+            this.Color2 = color2;
         }
 
         public static MoveCornerToTopFrontOrBackStep InstanceFrontLeft { get; } = new MoveCornerToTopFrontOrBackStep(
@@ -31,21 +32,18 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             PuzzleColor.Green,
             PuzzleColor.Orange);
 
-        public Func<Puzzle, bool> EndGoal { get; }
+        public PuzzleColor Color1 { get; }
+
+        public PuzzleColor Color2 { get; }
 
         public IEnumerable<Algorithm> GetPossibleAlgorithms(Puzzle puzzle)
             => from algorithmInfo in this.allAlgorithms
                where algorithmInfo.InitialPosition(puzzle)
                select algorithmInfo;
 
-        private static bool IsEndGoal(Puzzle puzzle, PuzzleColor color1, PuzzleColor color2)
+        public bool ShouldUse(Puzzle puzzle)
         {
-            // We don't care which way the edge is flipped so always take it that color1 is facing us.
-            if (puzzle[Location.FrontDown] == color2)
-            {
-                return IsEndGoal(puzzle, color2, color1);
-            }
-
+            // TODO: Fix this...
             return false;
         }
     }

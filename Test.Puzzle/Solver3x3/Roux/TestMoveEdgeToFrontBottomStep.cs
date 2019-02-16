@@ -36,7 +36,9 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             var algorithmInfo = Assert.Single(algorithmInfos);
             var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithmInfo.Moves);
 
-            Assert.True(MoveEdgeToFrontBottomStep.InstanceFrontLeft.EndGoal(solvedPuzzle));
+            Assert.False(MoveBlueCenterToLeftFaceStep.Instance.ShouldUse(solvedPuzzle));
+            Assert.False(FirstPieceToBottomLeftEdgeStep.Instance.ShouldUse(solvedPuzzle));
+            Assert.False(MoveEdgeToFrontBottomStep.InstanceFrontLeft.ShouldUse(solvedPuzzle));
         }
     }
 }
