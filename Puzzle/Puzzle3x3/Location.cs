@@ -80,6 +80,9 @@ namespace RubiksCubeTrainer.Puzzle3x3
 
         public Point3D Point3D { get; }
 
+        public override string ToString()
+            => $"{this.FaceName} ({this.Point3D.X}, {this.Point3D.Y}, {this.Point3D.Z})";
+
         public override bool Equals(object obj)
             => obj is Location location && this.Equals(location);
 

@@ -3,7 +3,7 @@
 namespace RubiksCubeTrainer.Puzzle3x3
 {
     [System.Diagnostics.DebuggerDisplay("{Name} - {Type}")]
-    public struct NotationMoveType
+    public struct NotationMoveType : IEquatable<NotationMoveType>
     {
         public static NotationMoveType None => new NotationMoveType();
 
@@ -54,6 +54,14 @@ namespace RubiksCubeTrainer.Puzzle3x3
         public static NotationMoveType MiddleMCounterClockwise { get; } = new NotationMoveType(NotationRotationNames.MiddleM, NotationRotationType.CounterClockwise);
         public static NotationMoveType MiddleMDouble { get; } = new NotationMoveType(NotationRotationNames.MiddleM, NotationRotationType.Double);
 
+        public static NotationMoveType MiddleEClockwise { get; } = new NotationMoveType(NotationRotationNames.MiddleE, NotationRotationType.Clockwise);
+        public static NotationMoveType MiddleECounterClockwise { get; } = new NotationMoveType(NotationRotationNames.MiddleE, NotationRotationType.CounterClockwise);
+        public static NotationMoveType MiddleEDouble { get; } = new NotationMoveType(NotationRotationNames.MiddleE, NotationRotationType.Double);
+
+        public static NotationMoveType MiddleSClockwise { get; } = new NotationMoveType(NotationRotationNames.MiddleS, NotationRotationType.Clockwise);
+        public static NotationMoveType MiddleSCounterClockwise { get; } = new NotationMoveType(NotationRotationNames.MiddleS, NotationRotationType.CounterClockwise);
+        public static NotationMoveType MiddleSDouble { get; } = new NotationMoveType(NotationRotationNames.MiddleS, NotationRotationType.Double);
+
         public bool IsEmpty => this.Name == NotationRotationNames.None;
 
         public NotationRotationNames Name { get; }
@@ -83,5 +91,24 @@ namespace RubiksCubeTrainer.Puzzle3x3
                     throw new InvalidOperationException();
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is NotationMoveType type && this.Equals(type);
+        }
+
+        public bool Equals(NotationMoveType other)
+            => this.Name == other.Name && this.Type == other.Type;
+
+        public override int GetHashCode()
+            => -243844509
+            * (-1521134295 + this.Name.GetHashCode())
+            * (-1521134295 + this.Type.GetHashCode());
+
+        public static bool operator ==(NotationMoveType left, NotationMoveType right)
+            => left.Equals(right);
+
+        public static bool operator !=(NotationMoveType left, NotationMoveType right)
+            => !(left == right);
     }
 }

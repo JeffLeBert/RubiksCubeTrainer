@@ -1,10 +1,86 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace RubiksCubeTrainer.Puzzle3x3
 {
     public static class Rotator
     {
+        private static readonly ImmutableDictionary<NotationMoveType, IEnumerable<(Location, Location)>> allMoveLocations;
+
+        static Rotator()
+        {
+            var builder = ImmutableDictionary.CreateBuilder<NotationMoveType, IEnumerable<(Location, Location)>>();
+
+            // Faces...
+            BuildRotations(builder, NotationRotationNames.Back, RotateYSlice);
+            BuildRotations(builder, NotationRotationNames.Front, RotateYSlice);
+            BuildRotations(builder, NotationRotationNames.Left, RotateXSlice);
+            BuildRotations(builder, NotationRotationNames.Right, RotateXSlice);
+            BuildRotations(builder, NotationRotationNames.Down, RotateZSlice);
+            BuildRotations(builder, NotationRotationNames.Up, RotateZSlice);
+
+            // Middle rotations.
+            BuildRotations(builder, NotationRotationNames.MiddleE, RotateZSlice);
+            BuildRotations(builder, NotationRotationNames.MiddleM, RotateXSlice);
+            BuildRotations(builder, NotationRotationNames.MiddleS, RotateYSlice);
+
+            // Wide rotations.
+            BuildRotations(
+                builder,
+                NotationRotationNames.WideUp,
+                move => RotateZSlice(move.With(NotationRotationNames.Up))
+                    .Concat(RotateZSlice(move.With(NotationRotationNames.MiddleE).WithSwapDirection())));
+            BuildRotations(
+                builder,
+                NotationRotationNames.WideDown,
+                move => RotateZSlice(move.With(NotationRotationNames.MiddleE))
+                    .Concat(RotateZSlice(move.With(NotationRotationNames.Down))));
+            BuildRotations(
+                builder,
+                NotationRotationNames.WideLeft,
+                move => RotateXSlice(move.With(NotationRotationNames.Left))
+                    .Concat(RotateXSlice(move.With(NotationRotationNames.MiddleM))));
+            BuildRotations(
+                builder,
+                NotationRotationNames.WideRight,
+                move => RotateXSlice(move.With(NotationRotationNames.Right))
+                    .Concat(RotateXSlice(move.With(NotationRotationNames.MiddleM).WithSwapDirection())));
+            BuildRotations(
+                builder,
+                NotationRotationNames.WideBack,
+                move => RotateYSlice(move.With(NotationRotationNames.Back))
+                    .Concat(RotateYSlice(move.With(NotationRotationNames.MiddleS).WithSwapDirection())));
+            BuildRotations(
+                builder,
+                NotationRotationNames.WideFront,
+                move => RotateYSlice(move.With(NotationRotationNames.Front))
+                    .Concat(RotateYSlice(move.With(NotationRotationNames.MiddleS))));
+
+            // Full cube rotations.
+            BuildRotations(
+                builder,
+                NotationRotationNames.AllFrontLeft,
+                move => RotateZSlice(move.With(NotationRotationNames.Up))
+                    .Concat(RotateZSlice(move.With(NotationRotationNames.MiddleE).WithSwapDirection()))
+                    .Concat(RotateZSlice(move.With(NotationRotationNames.Down).WithSwapDirection())));
+            BuildRotations(
+                builder,
+                NotationRotationNames.AllFrontClockwise,
+                move => RotateYSlice(move.With(NotationRotationNames.Front))
+                    .Concat(RotateYSlice(move.With(NotationRotationNames.MiddleS)))
+                    .Concat(RotateYSlice(move.With(NotationRotationNames.Back).WithSwapDirection())));
+            BuildRotations(
+                builder,
+                NotationRotationNames.AllFrontUp,
+                move => RotateXSlice(move.With(NotationRotationNames.Right))
+                    .Concat(RotateXSlice(move.With(NotationRotationNames.MiddleM).WithSwapDirection()))
+                    .Concat(RotateXSlice(move.With(NotationRotationNames.Left).WithSwapDirection())));
+
+            allMoveLocations = builder.ToImmutable();
+        }
+
         public static Puzzle ApplyMoves(Puzzle puzzle, string moves)
             => ApplyMoves(puzzle, NotationParser.EnumerateMoves(moves));
 
@@ -20,138 +96,53 @@ namespace RubiksCubeTrainer.Puzzle3x3
 
         public static Puzzle ApplyMove(Puzzle puzzle, NotationMoveType move)
         {
-            switch (move.Name)
+            var moveLocations = allMoveLocations[move];
+            var newPuzzle = puzzle.Clone();
+            foreach (var (fromLocation, toLocation) in moveLocations)
             {
-                // Edge rotations.
-                case NotationRotationNames.Back:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateYSlice(oldPuzzle, newPuzzle, move));
-                case NotationRotationNames.Down:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateZSlice(oldPuzzle, newPuzzle, move));
-                case NotationRotationNames.Front:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateYSlice(oldPuzzle, newPuzzle, move));
-                case NotationRotationNames.Left:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateXSlice(oldPuzzle, newPuzzle, move));
-                case NotationRotationNames.Right:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateXSlice(oldPuzzle, newPuzzle, move));
-                case NotationRotationNames.Up:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateZSlice(oldPuzzle, newPuzzle, move));
-
-                // Middle rotations.
-                case NotationRotationNames.MiddleE:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateZSlice(oldPuzzle, newPuzzle, move));
-                case NotationRotationNames.MiddleM:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateXSlice(oldPuzzle, newPuzzle, move));
-                case NotationRotationNames.MiddleS:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateYSlice(oldPuzzle, newPuzzle, move));
-
-                // Wide rotations.
-                case NotationRotationNames.WideUp:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Up)),
-                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE).WithSwapDirection()));
-                case NotationRotationNames.WideDown:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE)),
-                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Down)));
-                case NotationRotationNames.WideLeft:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Left)),
-                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleM)));
-                case NotationRotationNames.WideRight:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Right)),
-                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleM).WithSwapDirection()));
-                case NotationRotationNames.WideBack:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Back)),
-                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS).WithSwapDirection()));
-                case NotationRotationNames.WideFront:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Front)),
-                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS)));
-
-                // Full cube rotations.
-                case NotationRotationNames.AllFrontLeft:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Up)),
-                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleE).WithSwapDirection()),
-                        (oldPuzzle, newPuzzle) => RotateZSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Down).WithSwapDirection()));
-                case NotationRotationNames.AllFrontClockwise:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Front)),
-                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleS)),
-                        (oldPuzzle, newPuzzle) => RotateYSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Back).WithSwapDirection()));
-                case NotationRotationNames.AllFrontUp:
-                    return DoWithNewPuzzle(
-                        puzzle,
-                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Right)),
-                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.MiddleM).WithSwapDirection()),
-                        (oldPuzzle, newPuzzle) => RotateXSlice(puzzle, newPuzzle, move.With(NotationRotationNames.Left).WithSwapDirection()));
-
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
-
-        private static Puzzle DoWithNewPuzzle(Puzzle oldPuzzle, params Action<Puzzle, Puzzle>[] actions)
-        {
-            var newPuzzle = oldPuzzle.Clone();
-            foreach (var action in actions)
-            {
-                action(oldPuzzle, newPuzzle);
+                newPuzzle[toLocation] = puzzle[fromLocation];
             }
 
             return newPuzzle;
         }
 
+        private static void BuildRotations(
+            ImmutableDictionary<NotationMoveType, IEnumerable<(Location, Location)>>.Builder builder,
+            NotationRotationNames rotationName,
+            Func<NotationMoveType, IEnumerable<(Location, Location)>> rotator)
+        {
+            var clockwiseMoveType = new NotationMoveType(rotationName, NotationRotationType.Clockwise);
+            builder.Add(clockwiseMoveType, rotator(clockwiseMoveType).ToImmutableArray());
+
+            var counterClockwiseMoveType = new NotationMoveType(rotationName, NotationRotationType.CounterClockwise);
+            builder.Add(counterClockwiseMoveType, rotator(counterClockwiseMoveType).ToImmutableArray());
+
+            var doubleMoveType = new NotationMoveType(rotationName, NotationRotationType.Double);
+            builder.Add(doubleMoveType, rotator(doubleMoveType).ToImmutableArray());
+        }
+
         #region X Slice
 
-        private static void RotateXSlice(Puzzle oldPuzzle, Puzzle newPuzzle, NotationMoveType move)
+        private static IEnumerable<(Location, Location)> RotateXSlice(NotationMoveType move)
         {
             var rotations = GetRotationForXSlice(move);
             var zLayer = GetLayerForXSlice(move);
             foreach (var (fromLocation, toLocation) in GetXSliceLocations(zLayer, rotations))
             {
-                newPuzzle[toLocation] = oldPuzzle[fromLocation];
+                yield return (fromLocation, toLocation);
 
                 switch (zLayer)
                 {
                     case 1:
                         var rightFromLocation = new Location(FaceName.Right, fromLocation.Point3D);
                         var rightToLocation = new Location(FaceName.Right, toLocation.Point3D);
-                        newPuzzle[rightToLocation] = oldPuzzle[rightFromLocation];
+                        yield return (rightFromLocation, rightToLocation);
                         break;
 
                     case -1:
                         var leftFromLocation = new Location(FaceName.Left, fromLocation.Point3D);
                         var leftToLocation = new Location(FaceName.Left, toLocation.Point3D);
-                        newPuzzle[leftToLocation] = oldPuzzle[leftFromLocation];
+                        yield return (leftFromLocation, leftToLocation);
                         break;
                 }
             }
@@ -270,26 +261,26 @@ namespace RubiksCubeTrainer.Puzzle3x3
 
         #region Y Slice
 
-        private static void RotateYSlice(Puzzle oldPuzzle, Puzzle newPuzzle, NotationMoveType move)
+        private static IEnumerable<(Location, Location)> RotateYSlice(NotationMoveType move)
         {
             var rotations = GetRotationForYSlice(move);
             var zLayer = GetLayerForYSlice(move);
             foreach (var (fromLocation, toLocation) in GetYSliceLocations(zLayer, rotations))
             {
-                newPuzzle[toLocation] = oldPuzzle[fromLocation];
+                yield return (fromLocation, toLocation);
 
                 switch (zLayer)
                 {
                     case 1:
                         var backFromLocation = new Location(FaceName.Back, fromLocation.Point3D);
                         var backToLocation = new Location(FaceName.Back, toLocation.Point3D);
-                        newPuzzle[backToLocation] = oldPuzzle[backFromLocation];
+                        yield return (backFromLocation, backToLocation);
                         break;
 
                     case -1:
                         var frontFromLocation = new Location(FaceName.Front, fromLocation.Point3D);
                         var frontToLocation = new Location(FaceName.Front, toLocation.Point3D);
-                        newPuzzle[frontToLocation] = oldPuzzle[frontFromLocation];
+                        yield return (frontFromLocation, frontToLocation);
                         break;
                 }
             }
@@ -408,26 +399,26 @@ namespace RubiksCubeTrainer.Puzzle3x3
 
         #region Z Slice
 
-        private static void RotateZSlice(Puzzle oldPuzzle, Puzzle newPuzzle, NotationMoveType move)
+        private static IEnumerable<(Location, Location)> RotateZSlice(NotationMoveType move)
         {
             var rotations = GetRotationForZSlice(move);
             var zLayer = GetLayerForZSlice(move);
             foreach (var (fromLocation, toLocation) in GetZSliceLocations(zLayer, rotations))
             {
-                newPuzzle[toLocation] = oldPuzzle[fromLocation];
+                yield return (fromLocation, toLocation);
 
                 switch (zLayer)
                 {
                     case 1:
                         var upFromLocation = new Location(FaceName.Up, fromLocation.Point3D);
                         var upToLocation = new Location(FaceName.Up, toLocation.Point3D);
-                        newPuzzle[upToLocation] = oldPuzzle[upFromLocation];
+                        yield return (upFromLocation, upToLocation);
                         break;
 
                     case -1:
                         var downFromLocation = new Location(FaceName.Down, fromLocation.Point3D);
                         var downToLocation = new Location(FaceName.Down, toLocation.Point3D);
-                        newPuzzle[downToLocation] = oldPuzzle[downFromLocation];
+                        yield return (downFromLocation, downToLocation);
                         break;
                 }
             }
