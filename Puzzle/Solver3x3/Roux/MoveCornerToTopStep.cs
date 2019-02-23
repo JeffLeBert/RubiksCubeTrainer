@@ -5,7 +5,7 @@ using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3.Roux
 {
-    internal class MoveCornerToTopStep : IStep
+    public class MoveCornerToTopStep : IStep
     {
         private readonly ImmutableArray<Algorithm> allAlgorithms;
 
@@ -16,19 +16,19 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             this.allAlgorithms = this.BuildAllAlgorithms();
         }
 
-        public static MoveCornerToTopStep InstanceLeftFrontDown { get; } = new MoveCornerToTopStep(
+        public static MoveCornerToTopStep InstanceDownFrontLeft { get; } = new MoveCornerToTopStep(
             PuzzleColor.Red,
             PuzzleColor.Blue);
 
-        public static MoveCornerToTopStep InstanceLeftBackDown { get; } = new MoveCornerToTopStep(
+        public static MoveCornerToTopStep InstanceDownBackLeft { get; } = new MoveCornerToTopStep(
             PuzzleColor.Blue,
             PuzzleColor.Orange);
 
-        public static MoveCornerToTopStep InstanceRightFrontDown { get; } = new MoveCornerToTopStep(
+        public static MoveCornerToTopStep InstanceDownFrontRight { get; } = new MoveCornerToTopStep(
             PuzzleColor.Green,
             PuzzleColor.Red);
 
-        public static MoveCornerToTopStep InstanceRightBackDown { get; } = new MoveCornerToTopStep(
+        public static MoveCornerToTopStep InstanceDownBackRight { get; } = new MoveCornerToTopStep(
             PuzzleColor.Orange,
             PuzzleColor.Green);
 
@@ -51,7 +51,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         private Algorithm MoveCornerFromLeftFrontDown()
             => new Algorithm(
                 "Move corner from left front down to up.",
-                puzzle => Checker.CornerOrRotated(puzzle, Location.LeftFrontDown, this.Color1, this.Color2, PuzzleColor.White),
+                puzzle => Checker.CornerDownFrontLeft(puzzle, this.Color1, this.Color2, PuzzleColor.White),
                 NotationMoveType.FrontClockwise,
                 NotationMoveType.UpClockwise,
                 NotationMoveType.FrontCounterClockwise);
@@ -59,7 +59,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         private Algorithm MoveCornerFromRightFrontDown()
             => new Algorithm(
                 "Move corner from right front down to up.",
-                puzzle => Checker.CornerOrRotated(puzzle, Location.RightFrontDown, this.Color1, this.Color2, PuzzleColor.White),
+                puzzle => Checker.CornerDownFrontRight(puzzle, this.Color1, this.Color2, PuzzleColor.White),
                 NotationMoveType.FrontCounterClockwise,
                 NotationMoveType.UpCounterClockwise,
                 NotationMoveType.FrontClockwise);
@@ -67,7 +67,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         private Algorithm MoveCornerFromLeftBackDown()
             => new Algorithm(
                 "Move corner from left back down to up.",
-                puzzle => Checker.CornerOrRotated(puzzle, Location.LeftBackDown, this.Color1, this.Color2, PuzzleColor.White),
+                puzzle => Checker.CornerDownBackLeft(puzzle, this.Color1, this.Color2, PuzzleColor.White),
                 NotationMoveType.BackCounterClockwise,
                 NotationMoveType.UpCounterClockwise,
                 NotationMoveType.BackClockwise);
@@ -75,15 +75,15 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         private Algorithm MoveCornerFromRightBackDown()
             => new Algorithm(
                 "Move corner from right back down to up.",
-                puzzle => Checker.CornerOrRotated(puzzle, Location.RightBackDown, this.Color1, this.Color2, PuzzleColor.White),
+                puzzle => Checker.CornerDownBackRight(puzzle, this.Color1, this.Color2, PuzzleColor.White),
                 NotationMoveType.BackClockwise,
                 NotationMoveType.UpClockwise,
                 NotationMoveType.BackCounterClockwise);
 
         public bool ShouldUse(Puzzle puzzle)
-            => !Checker.CornerOrRotated(puzzle, Location.UpFrontLeft, this.Color1, this.Color2, PuzzleColor.White)
-            && !Checker.CornerOrRotated(puzzle, Location.UpFrontRight, this.Color1, this.Color2, PuzzleColor.White)
-            && !Checker.CornerOrRotated(puzzle, Location.UpBackLeft, this.Color1, this.Color2, PuzzleColor.White)
-            && !Checker.CornerOrRotated(puzzle, Location.UpBackRight, this.Color1, this.Color2, PuzzleColor.White);
+            => !Checker.CornerUpFrontLeft(puzzle, this.Color1, this.Color2, PuzzleColor.White)
+            && !Checker.CornerUpFrontRight(puzzle, this.Color1, this.Color2, PuzzleColor.White)
+            && !Checker.CornerUpBackLeft(puzzle, this.Color1, this.Color2, PuzzleColor.White)
+            && !Checker.CornerUpBackRight(puzzle, this.Color1, this.Color2, PuzzleColor.White);
     }
 }

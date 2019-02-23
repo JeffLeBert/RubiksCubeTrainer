@@ -19,22 +19,22 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         public static IEnumerable<object[]> No_algorithms_already_at_top_enumerator()
             => new[]
             {
-                new object[] { MoveCornerToTopStep.InstanceLeftFrontDown, "F" },
-                new object[] { MoveCornerToTopStep.InstanceLeftFrontDown, "FU" },
-                new object[] { MoveCornerToTopStep.InstanceLeftFrontDown, "FU2" },
-                new object[] { MoveCornerToTopStep.InstanceLeftFrontDown, "FU'" },
-                new object[] { MoveCornerToTopStep.InstanceLeftBackDown, "B'" },
-                new object[] { MoveCornerToTopStep.InstanceLeftBackDown, "B'U" },
-                new object[] { MoveCornerToTopStep.InstanceLeftBackDown, "B'U2" },
-                new object[] { MoveCornerToTopStep.InstanceLeftBackDown, "B'U'" },
-                new object[] { MoveCornerToTopStep.InstanceRightFrontDown, "F'" },
-                new object[] { MoveCornerToTopStep.InstanceRightFrontDown, "F'U" },
-                new object[] { MoveCornerToTopStep.InstanceRightFrontDown, "F'U2" },
-                new object[] { MoveCornerToTopStep.InstanceRightFrontDown, "F'U'" },
-                new object[] { MoveCornerToTopStep.InstanceRightBackDown, "B" },
-                new object[] { MoveCornerToTopStep.InstanceRightBackDown, "BU" },
-                new object[] { MoveCornerToTopStep.InstanceRightBackDown, "BU2" },
-                new object[] { MoveCornerToTopStep.InstanceRightBackDown, "BU'" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontLeft, "F" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontLeft, "FU" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontLeft, "FU2" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontLeft, "FU'" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackLeft, "B'" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackLeft, "B'U" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackLeft, "B'U2" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackLeft, "B'U'" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontRight, "F'" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontRight, "F'U" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontRight, "F'U2" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontRight, "F'U'" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackRight, "B" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackRight, "BU" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackRight, "BU2" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackRight, "BU'" },
             };
 
         [Theory]
@@ -54,25 +54,25 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         public static IEnumerable<object[]> Can_move_to_top_enumerator()
             => new[]
             {
-                new object[] { MoveCornerToTopStep.InstanceLeftBackDown, "" },
-                new object[] { MoveCornerToTopStep.InstanceLeftBackDown, "D" },
-                new object[] { MoveCornerToTopStep.InstanceLeftBackDown, "D2" },
-                new object[] { MoveCornerToTopStep.InstanceLeftBackDown, "D'" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackLeft, "" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackLeft, "D" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackLeft, "D2" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackLeft, "D'" },
 
-                new object[] { MoveCornerToTopStep.InstanceRightBackDown, "" },
-                new object[] { MoveCornerToTopStep.InstanceRightBackDown, "D" },
-                new object[] { MoveCornerToTopStep.InstanceRightBackDown, "D2" },
-                new object[] { MoveCornerToTopStep.InstanceRightBackDown, "D'" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackRight, "" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackRight, "D" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackRight, "D2" },
+                new object[] { MoveCornerToTopStep.InstanceDownBackRight, "D'" },
 
-                new object[] { MoveCornerToTopStep.InstanceLeftFrontDown, "" },
-                new object[] { MoveCornerToTopStep.InstanceLeftFrontDown, "D" },
-                new object[] { MoveCornerToTopStep.InstanceLeftFrontDown, "D2" },
-                new object[] { MoveCornerToTopStep.InstanceLeftFrontDown, "D'" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontLeft, "" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontLeft, "D" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontLeft, "D2" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontLeft, "D'" },
 
-                new object[] { MoveCornerToTopStep.InstanceRightFrontDown, "" },
-                new object[] { MoveCornerToTopStep.InstanceRightFrontDown, "D" },
-                new object[] { MoveCornerToTopStep.InstanceRightFrontDown, "D2" },
-                new object[] { MoveCornerToTopStep.InstanceRightFrontDown, "D'" }
+                new object[] { MoveCornerToTopStep.InstanceDownFrontRight, "" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontRight, "D" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontRight, "D2" },
+                new object[] { MoveCornerToTopStep.InstanceDownFrontRight, "D'" }
             };
     }
 }
