@@ -30,9 +30,36 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 return new IStep[]
                 {
                     MoveEdgeToFrontBottomStep.InstanceFrontLeft,
-                    MoveCornerToTopFrontOrBackStep.InstanceFrontLeft
+                    MoveCornerToTopStep.InstanceLeftFrontDown
                 };
             }
+
+            //if (MoveEdgeToFrontBottomStep.InstanceBackLeft.ShouldUse(puzzle))
+            //{
+            //    return new IStep[]
+            //    {
+            //        MoveEdgeToFrontBottomStep.InstanceBackLeft,
+            //        MoveCornerToTopStep.InstanceLeftBackDown
+            //    };
+            //}
+
+            //if (MoveEdgeToFrontBottomStep.InstanceBackRight.ShouldUse(puzzle))
+            //{
+            //    return new IStep[]
+            //    {
+            //        MoveEdgeToFrontBottomStep.InstanceBackRight,
+            //        MoveCornerToTopStep.InstanceRightBackDown
+            //    };
+            //}
+
+            //if (MoveEdgeToFrontBottomStep.InstanceFrontRight.ShouldUse(puzzle))
+            //{
+            //    return new IStep[]
+            //    {
+            //        MoveEdgeToFrontBottomStep.InstanceFrontRight,
+            //        MoveCornerToTopStep.InstanceRightFrontDown
+            //    };
+            //}
 
             return Enumerable.Empty<IStep>();
         }

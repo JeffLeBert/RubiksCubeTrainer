@@ -1,4 +1,6 @@
-﻿namespace RubiksCubeTrainer.Puzzle3x3
+﻿using System;
+
+namespace RubiksCubeTrainer.Puzzle3x3
 {
     public class Puzzle
     {
@@ -14,9 +16,9 @@
 
         public PuzzleColor this[Location location]
         {
-            get { return this[location.FaceName][CoordinateMapper.Map(location)]; }
+            get { return this[location.FaceName][MapTo2D(location)]; }
 
-            internal set { this[location.FaceName][CoordinateMapper.Map(location)] = value; }
+            internal set { this[location.FaceName][MapTo2D(location)] = value; }
         }
 
         public Puzzle Clone()
@@ -33,5 +35,27 @@
 
         public override string ToString()
             => new TextRenderer(this).Draw();
+
+        private static Point2D MapTo2D(Location location)
+        {
+            var point3D = location.Point3D;
+            switch (location.FaceName)
+            {
+                case FaceName.Up:
+                case FaceName.Down:
+                    return new Point2D(point3D.X, point3D.Y);
+
+                case FaceName.Front:
+                case FaceName.Back:
+                    return new Point2D(point3D.X, point3D.Z);
+
+                case FaceName.Left:
+                case FaceName.Right:
+                    return new Point2D(point3D.Y, point3D.Z);
+
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
     }
 }
