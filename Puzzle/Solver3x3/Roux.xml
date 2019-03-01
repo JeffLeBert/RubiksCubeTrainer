@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Solver>
+  <StepSequence Name="Solve">
+    <Step>MoveBlueCenterToLeft</Step>
+    <Step>FirstPieceToBottomLeft</Step>
+  </StepSequence>
+
+  <Step Name="MoveBlueCenterToLeft">
+    <InitialState>!Left Blue</InitialState>
+    <AlgorithmCollection>
+      <Description>Move blue face from Back to Left.</Description>
+      <InitialState>Back Blue</InitialState>
+      <Algorithms>y'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move blue face from Front to Left.</Description>
+      <InitialState>Front Blue</InitialState>
+      <Algorithms>y</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move blue face from Right to Left.</Description>
+      <InitialState>Right Blue</InitialState>
+      <Algorithms>y2</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move blue face from Up to Left.</Description>
+      <InitialState>Up Blue</InitialState>
+      <Algorithms>z'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move blue face from Down to Left.</Description>
+      <InitialState>Down Blue</InitialState>
+      <Algorithms>z</Algorithms>
+    </AlgorithmCollection>
+    <FinishedState>Left Blue</FinishedState>
+  </Step>
+
+  <Step Name="FirstPieceToBottomLeftEdge">
+    <InitialState>Left Blue, !LeftDown Blue White</InitialState>
+    
+    <!-- Left side -->
+    <AlgorithmCollection>
+      <Description>Flip down left edge.</Description>
+      <InitialState>LeftDown White Blue</InitialState>
+      <Algorithms>D F L, D' B' L', L B D, L' F' D'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from back left.</Description>
+      <InitialState>BackLeft White Blue</InitialState>
+      <Algorithms>L'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edit from back left and flip.</Description>
+      <InitialState>BackLeft Blue White</InitialState>
+      <Algorithms>B D</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from top left.</Description>
+      <InitialState>LeftUp Blue White</InitialState>
+      <Algorithms>L2</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from top left and flip.</Description>
+      <InitialState>LeftUp White Blue</InitialState>
+      <Algorithms>U B L', U' F' L, L F' D', L' B D</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from front left.</Description>
+      <InitialState>FrontLeft White Blue</InitialState>
+      <Algorithms>L</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from front left and flip.</Description>
+      <InitialState>FrontLeft Blue White</InitialState>
+      <Algorithms>F' D'</Algorithms>
+    </AlgorithmCollection>
+
+    <!-- Middle slice -->
+    <AlgorithmCollection>
+      <Description>Move edge from back bottom.</Description>
+      <InitialState>BackDown Blue White</InitialState>
+      <Algorithms>D</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from back bottom and flip.</Description>
+      <InitialState>BackDown White Blue</InitialState>
+      <Algorithms>B' L'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from back top.</Description>
+      <InitialState>BackUp Blue White</InitialState>
+      <Algorithms>U' L2, B2 D</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from back top and flip.</Description>
+      <InitialState>BackUp White Blue</InitialState>
+      <Algorithms>B L'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from front bottom.</Description>
+      <InitialState>FrontDown Blue White</InitialState>
+      <Algorithms>D'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from front bottom and flip.</Description>
+      <InitialState>FrontDown White Blue</InitialState>
+      <Algorithms>F L</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from front up.</Description>
+      <InitialState>FrontUp Blue White</InitialState>
+      <Algorithms>F2 D', U L2</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from front up and flip.</Description>
+      <InitialState>FrontUp White Blue</InitialState>
+      <Algorithms>F' L</Algorithms>
+    </AlgorithmCollection>
+    
+    <!-- Right side -->
+    <AlgorithmCollection>
+      <Description>Move edge from right down.</Description>
+      <InitialState>RightDown Blue White</InitialState>
+      <Algorithms>D2</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from right down and flip.</Description>
+      <InitialState>RightDown White Blue</InitialState>
+      <Algorithms>R F D', R' B' D, D B' L', D' F L</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from right back.</Description>
+      <InitialState>RightBack White Blue</InitialState>
+      <Algorithms>B' D</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from right back and flip.</Description>
+      <InitialState>RightBack Blue White</InitialState>
+      <Algorithms>R D2, B2 L'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from right front.</Description>
+      <InitialState>RightFront Blue White</InitialState>
+      <Algorithms>R' D2, F2 L</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from right front and flip.</Description>
+      <InitialState>RightFront White Blue</InitialState>
+      <Algorithms>F D'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from right up.</Description>
+      <InitialState>RightUp Blue White</InitialState>
+      <Algorithms>U2 L2, R2 D2</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection>
+      <Description>Move edge from right up.</Description>
+      <InitialState>RightUp White Blue</InitialState>
+      <Algorithms>U F' L, R B' D, R' F D', U' B L'</Algorithms>
+    </AlgorithmCollection>
+
+    <FinishedState>Left Blue, LeftDown Blue White</FinishedState>
+  </Step>
+
+  <Step Name="MoveEdgeToFrontBottom">
+    <InitialState>Left Blue, LeftDown Blue White</InitialState>
+  </Step>
+</Solver>

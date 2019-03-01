@@ -24,27 +24,4 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 new object[] { Location.Up, PuzzleColor.Yellow }
             };
     }
-
-    public class When_getting_the_next_step
-    {
-        [Fact]
-        public void Move_blue_center_to_left_face_is_first()
-        {
-            var solver = new Solver();
-            var puzzle = Rotator.ApplyMove(Solver.Solved, NotationMoveType.AllFrontClockwise);
-
-            var nextStep = Assert.Single(solver.NextSteps(puzzle));
-            Assert.IsType<MoveBlueCenterToLeftFaceStep>(nextStep);
-        }
-
-        [Fact]
-        public void First_piece_to_bottom_left_edge_is_second()
-        {
-            var solver = new Solver();
-            var puzzle = Rotator.ApplyMove(Solver.Solved, NotationMoveType.DownClockwise);
-
-            var nextStep = Assert.Single(solver.NextSteps(puzzle));
-            Assert.IsType<FirstPieceToBottomLeftEdgeStep>(nextStep);
-        }
-    }
 }

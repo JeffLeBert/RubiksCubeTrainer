@@ -7,7 +7,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 {
     public class RotateWhiteCornerFacingOutStep : IStep
     {
-        private readonly ImmutableArray<Algorithm> allAlgorithms;
+        private readonly ImmutableArray<AlgorithmCollection> allAlgorithms;
 
         public RotateWhiteCornerFacingOutStep(PuzzleColor color1, PuzzleColor color2)
         {
@@ -17,13 +17,13 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             this.allAlgorithms = this.BuildAllAlgorithms();
         }
 
-        public IEnumerable<Algorithm> GetPossibleAlgorithms(Puzzle puzzle)
+        public IEnumerable<AlgorithmCollection> GetPossibleAlgorithms(Puzzle puzzle)
             => from algorithmInfo in this.allAlgorithms
-               where algorithmInfo.InitialPosition(puzzle)
+               where algorithmInfo.InitialState.Matches(puzzle)
                select algorithmInfo;
 
-        private ImmutableArray<Algorithm> BuildAllAlgorithms()
-            => ImmutableArray<Algorithm>.Empty;
+        private ImmutableArray<AlgorithmCollection> BuildAllAlgorithms()
+            => ImmutableArray<AlgorithmCollection>.Empty;
 
         public static RotateWhiteCornerFacingOutStep InstanceDownFrontLeft { get; } = new RotateWhiteCornerFacingOutStep(
             PuzzleColor.Red,
@@ -44,6 +44,8 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         public PuzzleColor Color1 { get; }
 
         public PuzzleColor Color2 { get; }
+
+        public string Name => nameof(RotateWhiteCornerFacingOutStep);
 
         public bool ShouldUse(Puzzle puzzle)
             => this.ShouldUseForUpFrontLeft(puzzle)

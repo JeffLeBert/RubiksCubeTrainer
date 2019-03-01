@@ -2,13 +2,12 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs
-/WinFormsUI/.vs/WinFormsUI/v15
-/WinFormsUI/obj/Debug
-/Puzzle/bin/Debug
-/Puzzle/obj
-/WinFormsUI/bin/Debug
-/WinFormsUI/obj
-/WinFormsUI/.vs/WinFormsUI/lut
-/Test.Puzzle/bin/Debug/netcoreapp2.1
-/Test.Puzzle/obj
+# User specific directory used by Visual Studio.
+**/.vs
+
+# We don't want any of the local build stuff going into source control.
+**/bin
+**/obj
+
+# NuGet packages should be download at build time.
+**/packages

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using RubiksCubeTrainer.Puzzle3x3;
@@ -8,7 +9,7 @@ namespace RubiksCubeTrainer.WinFormsUI
 {
     public partial class MainForm : Form
     {
-        private Puzzle puzzle = Solver3x3.Roux.Solver.Solved;
+        private Puzzle puzzle = Solver.Solved;
 
         public MainForm()
         {
@@ -18,8 +19,6 @@ namespace RubiksCubeTrainer.WinFormsUI
 
         private void picPuzzle_Paint(object sender, PaintEventArgs e)
         {
-            this.picPuzzle.Invalidate();
-
             var renderer = new FlatPuzzleRenderer3x3(this.puzzle);
             renderer.Draw(e.Graphics, this.picPuzzle.Size);
         }
@@ -39,7 +38,7 @@ namespace RubiksCubeTrainer.WinFormsUI
 
         private void UpdateWithMoves(string moves)
         {
-            this.puzzle = Solver3x3.Roux.Solver.Solved;
+            this.puzzle = Solver.Solved;
             try
             {
                 foreach (var move in NotationParser.EnumerateMoves(moves))
@@ -78,13 +77,12 @@ namespace RubiksCubeTrainer.WinFormsUI
 
         private void cmdSolve_Click(object sender, EventArgs e)
         {
-            var solver = new Solver3x3.Roux.Solver();
             var solutionMoves = string.Empty;
             var solutionDescription = string.Empty;
             var currentPuzzle = this.puzzle;
             while (true)
             {
-                var nextStep = solver.NextSteps(currentPuzzle).FirstOrDefault();
+                var nextStep = Solver.Roux.NextSteps(currentPuzzle).FirstOrDefault();
                 if (nextStep == null)
                 {
                     solutionDescription += "No steps found.";
@@ -98,9 +96,9 @@ namespace RubiksCubeTrainer.WinFormsUI
                     break;
                 }
 
-                currentPuzzle = Rotator.ApplyMoves(currentPuzzle, firstAlgorithmInfo.Moves);
+                currentPuzzle = Rotator.ApplyMoves(currentPuzzle, firstAlgorithmInfo.Algorithms[0]);
 
-                var moves = NotationParser.FormatMoves(firstAlgorithmInfo.Moves);
+                var moves = NotationParser.FormatMoves(firstAlgorithmInfo.Algorithms[0]);
                 solutionMoves += moves + " ";
                 solutionDescription += firstAlgorithmInfo.Description
                     + Environment.NewLine
@@ -123,11 +121,10 @@ namespace RubiksCubeTrainer.WinFormsUI
         private void findFailureToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var currentPuzzle = Rotator.ApplyMoves(
-                Solver3x3.Roux.Solver.Solved,
+                Solver.Solved,
                 NotationParser.EnumerateMoves(this.txtScrambleMoves.Text));
 
-            var solver = new Solver3x3.Roux.Solver();
-            var failureInfo = SolverFailureFinder.FindFailure(solver, currentPuzzle);
+            var failureInfo = SolverFailureFinder.FindFailure(Solver.Roux, currentPuzzle);
 
             var movesText = NotationParser.FormatMoves(failureInfo.Moves);
             if (failureInfo.NoMoreSteps)
@@ -146,6 +143,29 @@ namespace RubiksCubeTrainer.WinFormsUI
             this.txtSolutionMoves.Text = movesText;
 
             this.Refresh();
+        }
+
+        private void TestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.txtSolutionMoves.Text = string.Empty;
+            this.txtSolutionDescription.Text = string.Empty;
+
+            var stopwatch = Stopwatch.StartNew();
+            var solutions = new SolutionSearch(6, SolutionSearch.AllFaceMoves, Check)
+                .Search(this.puzzle);
+            stopwatch.Stop();
+
+            this.txtSolutionDescription.Text = "Results. Finished in " + stopwatch.ElapsedMilliseconds.ToString() + "ms\r\n" + string.Join(
+                Environment.NewLine,
+                from solution in solutions
+                orderby solution.Count()
+                select NotationParser.FormatMoves(solution));
+
+            this.Refresh();
+
+            bool Check(Puzzle puzzle)
+                => Checker.SingleColor(puzzle, Puzzle3x3.Location.Left, PuzzleColor.Blue)
+                && Checker.Edge(puzzle, Puzzle3x3.Location.LeftDown, PuzzleColor.Blue, PuzzleColor.White);
         }
     }
 }

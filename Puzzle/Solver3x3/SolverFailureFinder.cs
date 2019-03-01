@@ -5,11 +5,11 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public static class SolverFailureFinder
     {
-        public static SolverFailureInformation FindFailure(SolverBase solver, Puzzle puzzle)
+        public static SolverFailureInformation FindFailure(Solver solver, Puzzle puzzle)
             => FindFailure(solver, puzzle, SolverFailureInformation.Empty);
 
         private static SolverFailureInformation FindFailure(
-            SolverBase solver,
+            Solver solver,
             Puzzle puzzle,
             SolverFailureInformation failureInfo)
         {
@@ -18,7 +18,7 @@ namespace RubiksCubeTrainer.Solver3x3
         }
 
         private static SolverFailureInformation FindFailure(
-            SolverBase solver,
+            Solver solver,
             Puzzle puzzle,
             SolverFailureInformation failureInfo,
             IStep[] possibleSteps)
@@ -42,18 +42,18 @@ namespace RubiksCubeTrainer.Solver3x3
         }
 
         private static SolverFailureInformation FindFailure(
-            SolverBase solver,
+            Solver solver,
             Puzzle puzzle,
             SolverFailureInformation failureInfo,
-            Algorithm[] possibleAlgorithms)
+            AlgorithmCollection[] possibleAlgorithms)
         {
             foreach (var possibleAlgorithm in possibleAlgorithms)
             {
-                var newPuzzle = Rotator.ApplyMoves(puzzle, possibleAlgorithm.Moves);
+                var newPuzzle = Rotator.ApplyMoves(puzzle, possibleAlgorithm.Algorithms[0]);
                 var algorithmFailureInfo = FindFailure(
                     solver,
                     newPuzzle,
-                    failureInfo.WithMoves(possibleAlgorithm.Moves));
+                    failureInfo.WithMoves(possibleAlgorithm.Algorithms[0]));
                 if (algorithmFailureInfo.AtEnd)
                 {
                     return algorithmFailureInfo;

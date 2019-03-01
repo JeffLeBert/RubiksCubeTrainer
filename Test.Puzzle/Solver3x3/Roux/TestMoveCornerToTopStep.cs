@@ -8,7 +8,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
     {
         [Theory]
         [MemberData(nameof(No_algorithms_already_at_top_enumerator))]
-        public void No_LeftFrontDonw_algorithm_if_already_at_top(IStep step, string moves)
+        public void No_LeftFrontDown_algorithm_if_already_at_top(IStep step, string moves)
         {
             var puzzle = Rotator.ApplyMoves(Solver.Solved, moves);
             var algorithms = step.GetPossibleAlgorithms(puzzle);
@@ -46,7 +46,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             var algorithmInfos = step.GetPossibleAlgorithms(scrambledPuzzle);
 
             var algorithmInfo = Assert.Single(algorithmInfos);
-            var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithmInfo.Moves);
+            var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithmInfo.Algorithms[0]);
 
             Assert.False(step.ShouldUse(solvedPuzzle));
         }

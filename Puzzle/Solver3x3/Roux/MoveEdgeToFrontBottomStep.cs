@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
@@ -8,7 +7,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 {
     public class MoveEdgeToFrontBottomStep : IStep
     {
-        private readonly ImmutableArray<Algorithm> allAlgorithms;
+        private readonly ImmutableArray<AlgorithmCollection> allAlgorithms;
 
         public MoveEdgeToFrontBottomStep(PuzzleColor color1, PuzzleColor color2)
         {
@@ -37,12 +36,14 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public PuzzleColor Color2 { get; }
 
-        public IEnumerable<Algorithm> GetPossibleAlgorithms(Puzzle puzzle)
+        public string Name => nameof(MoveEdgeToFrontBottomStep);
+
+        public IEnumerable<AlgorithmCollection> GetPossibleAlgorithms(Puzzle puzzle)
             => from algorithmInfo in this.allAlgorithms
-               where algorithmInfo.InitialPosition(puzzle)
+               where algorithmInfo.InitialState.Matches(puzzle)
                select algorithmInfo;
 
-        private ImmutableArray<Algorithm> BuildAllAlgorithms()
+        private ImmutableArray<AlgorithmCollection> BuildAllAlgorithms()
             => ImmutableArray.Create(
                 this.MoveEdgeFromFrontLeft(),
                 this.MoveEdgeFromFrontUp(),
@@ -55,71 +56,71 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 this.MoveEdgeFromRightDown(),
                 this.MoveEdgeFromLeftUp());
 
-        private Algorithm MoveEdgeFromFrontUp()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromFrontUp()
+            => new AlgorithmCollection(
                 "Move edge from front top.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.FrontUp, PuzzleColor.Red, PuzzleColor.Blue),
+                new PuzzleState("FrontUp* Red Blue"),
                 NotationMoveType.FrontDouble);
 
-        private Algorithm MoveEdgeFromFrontLeft()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromFrontLeft()
+            => new AlgorithmCollection(
                 "Move edge from front left.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.FrontLeft, PuzzleColor.Red, PuzzleColor.Blue),
+                new PuzzleState("FrontLeft* Red Blue"),
                 NotationMoveType.FrontCounterClockwise);
 
-        private Algorithm MoveEdgeFromFrontRight()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromFrontRight()
+            => new AlgorithmCollection(
                 "Move edge from front right.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.FrontRight, PuzzleColor.Red, PuzzleColor.Blue),
+                new PuzzleState("FrontRight* Red Blue"),
                 NotationMoveType.FrontClockwise);
 
-        private Algorithm MoveEdgeFromBackLeft()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromBackLeft()
+            => new AlgorithmCollection(
                 "Move edge from back left.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.LeftBack, PuzzleColor.Blue, PuzzleColor.Red),
+                new PuzzleState("LeftBack* Blue Red"),
                 NotationMoveType.BackClockwise,
                 NotationMoveType.MiddleMCounterClockwise);
 
-        private Algorithm MoveEdgeFromBackUp()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromBackUp()
+            => new AlgorithmCollection(
                 "Move edge from back up.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.UpBack, PuzzleColor.Blue, PuzzleColor.Red),
+                new PuzzleState("UpBack* Blue Red"),
                 NotationMoveType.MiddleMDouble);
 
-        private Algorithm MoveEdgeFromBackRight()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromBackRight()
+            => new AlgorithmCollection(
                 "Move edge from back right.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.BackRight, PuzzleColor.Blue, PuzzleColor.Red),
+                new PuzzleState("BackRight* Blue Red"),
                 NotationMoveType.BackClockwise,
                 NotationMoveType.UpDouble,
                 NotationMoveType.BackCounterClockwise,
                 NotationMoveType.MiddleMClockwise);
 
-        private Algorithm MoveEdgeFromBackDown()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromBackDown()
+            => new AlgorithmCollection(
                 "Move edge from back down.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.BackDown, PuzzleColor.Blue, PuzzleColor.Red),
+                new PuzzleState("BackDown* Blue Red"),
                 NotationMoveType.MiddleMCounterClockwise);
 
-        private Algorithm MoveEdgeFromRightUp()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromRightUp()
+            => new AlgorithmCollection(
                 "Move edge from up right.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.RightUp, PuzzleColor.Blue, PuzzleColor.Red),
+                new PuzzleState("RightUp* Blue Red"),
                 NotationMoveType.UpClockwise,
                 NotationMoveType.MiddleMClockwise);
 
-        private Algorithm MoveEdgeFromRightDown()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromRightDown()
+            => new AlgorithmCollection(
                 "Move edge from right down.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.RightDown, PuzzleColor.Blue, PuzzleColor.Red),
+                new PuzzleState("RightDown* Blue Red"),
                 NotationMoveType.RightDouble,
                 NotationMoveType.UpClockwise,
                 NotationMoveType.MiddleMClockwise);
 
-        private Algorithm MoveEdgeFromLeftUp()
-            => new Algorithm(
+        private AlgorithmCollection MoveEdgeFromLeftUp()
+            => new AlgorithmCollection(
                 "Move edge from right up.",
-                puzzle => Checker.EdgeOrFlipped(puzzle, Location.LeftUp, PuzzleColor.Blue, PuzzleColor.Red),
+                new PuzzleState("LeftUp* Blue Red"),
                 NotationMoveType.UpCounterClockwise,
                 NotationMoveType.MiddleMClockwise);
 

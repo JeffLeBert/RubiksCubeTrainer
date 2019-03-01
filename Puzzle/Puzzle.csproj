@@ -8,7 +8,43 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Solver3x3\Roux\Roux.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Solver3x3\Roux.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Puzzle3x3\Location_Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Location_Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Puzzle3x3\PuzzleColor_Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PuzzleColor_Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Puzzle3x3\Location_Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Location_Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Puzzle3x3\PuzzleColor_Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PuzzleColor_Generated.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>

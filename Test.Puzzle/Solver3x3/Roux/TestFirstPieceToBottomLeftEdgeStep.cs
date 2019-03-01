@@ -5,10 +5,12 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 {
     public class TestFirstPieceToBottomLeftEdgeStep
     {
+        private static Step step = Solver.Roux.GetStep("FirstPieceToBottomLeftEdge");
+
         [Fact]
         public void No_algorithms_if_already_at_goal()
         {
-            var algorithms = FirstPieceToBottomLeftEdgeStep.Instance.GetPossibleAlgorithms(Solver.Solved);
+            var algorithms = step.GetPossibleAlgorithms(Solver.Solved);
 
             Assert.Empty(algorithms);
         }
@@ -44,12 +46,15 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         {
             var scrambledPuzzle = Rotator.ApplyMoves(Solver.Solved, NotationParser.EnumerateMoves(scrambleMoves));
 
-            var algorithmInfos = FirstPieceToBottomLeftEdgeStep.Instance.GetPossibleAlgorithms(scrambledPuzzle);
+            var algorithmInfos = step.GetPossibleAlgorithms(scrambledPuzzle);
 
             var algorithmInfo = Assert.Single(algorithmInfos);
-            var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithmInfo.Moves);
+            foreach (var algorithm in algorithmInfo.Algorithms)
+            {
+                var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithm);
 
-            Assert.False(FirstPieceToBottomLeftEdgeStep.Instance.ShouldUse(solvedPuzzle));
+                Assert.True(step.FinishedState.Matches(solvedPuzzle));
+            }
         }
     }
 }

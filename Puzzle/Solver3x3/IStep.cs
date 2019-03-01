@@ -4,10 +4,15 @@ using RubiksCubeTrainer.Puzzle3x3;
 namespace RubiksCubeTrainer.Solver3x3
 {
     /// <summary>
-    /// Used to find a set of <see cref="Algorithm"/>s that can improve the puzzle.
+    /// Used to find a set of <see cref="AlgorithmCollection"/>s that can improve the puzzle.
     /// </summary>
     public interface IStep
     {
+        /// <summary>
+        /// Gets the name of the step.
+        /// </summary>
+        string Name { get; }
+
         /// <summary>
         /// Determines if this step should be used.
         /// </summary>
@@ -20,10 +25,10 @@ namespace RubiksCubeTrainer.Solver3x3
         bool ShouldUse(Puzzle puzzle);
 
         /// <summary>
-        /// Gets all the <see cref="Algorithm"/>s that can improve the puzzle.
+        /// Gets all the <see cref="AlgorithmCollection"/>s that can improve the puzzle.
         /// </summary>
         /// <param name="puzzle">The current puzzle.</param>
-        /// <returns>The <see cref="Algorithm"/>s that can improve the puzzle.</returns>
-        IEnumerable<Algorithm> GetPossibleAlgorithms(Puzzle puzzle);
+        /// <returns>The <see cref="AlgorithmCollection"/>s that can improve the puzzle.</returns>
+        IEnumerable<AlgorithmCollection> GetPossibleAlgorithms(Puzzle puzzle);
     }
 }

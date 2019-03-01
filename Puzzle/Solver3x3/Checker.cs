@@ -28,7 +28,7 @@ namespace RubiksCubeTrainer.Solver3x3
         public static bool CornerDownBackRight(Puzzle puzzle, PuzzleColor color1, PuzzleColor color2, PuzzleColor color3)
             => CornerOrRotated(puzzle, Location.DownBackRight, Location.BackRightDown, Location.RightBackDown, color1, color2, color3);
 
-        private static bool CornerOrRotated(
+        public static bool CornerOrRotated(
             Puzzle puzzle,
             Location location1,
             Location location2,
@@ -49,11 +49,21 @@ namespace RubiksCubeTrainer.Solver3x3
         public static bool SingleColor(Puzzle puzzle, Location location, PuzzleColor color)
             => puzzle[location] == color;
 
-        private static bool Edge(Puzzle puzzle, Location location1, Location location2, PuzzleColor color1, PuzzleColor color2)
+        public static bool Edge(Puzzle puzzle, Location location1, Location location2, PuzzleColor color1, PuzzleColor color2)
             => (puzzle[location1] == color1) && (puzzle[location2] == color2);
 
-        private static bool EdgeOrFlipped(Puzzle puzzle, Location location1, Location location2, PuzzleColor color1, PuzzleColor color2)
+        public static bool EdgeOrFlipped(Puzzle puzzle, Location location1, Location location2, PuzzleColor color1, PuzzleColor color2)
             => ((puzzle[location1] == color1) && (puzzle[location2] == color2))
                 || ((puzzle[location1] == color2) && (puzzle[location2] == color1));
+
+        public static bool Corner(
+            Puzzle puzzle,
+            Location location1,
+            Location location2,
+            Location location3,
+            PuzzleColor color1,
+            PuzzleColor color2,
+            PuzzleColor color3)
+            => (puzzle[location1] == color1) && (puzzle[location2] == color2) && (puzzle[location3] == color3);
     }
 }
