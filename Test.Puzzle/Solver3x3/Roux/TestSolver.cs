@@ -10,7 +10,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         [MemberData(nameof(AllCentersAndColors))]
         public void Solved_puzzle_is_rotated_correctly(Location location, PuzzleColor centerColor)
         {
-            Assert.Equal(centerColor, Solver.Solved[location]);
+            Assert.Equal(centerColor, Puzzle.Solved[location]);
         }
 
         public static IEnumerable<object[]> AllCentersAndColors()

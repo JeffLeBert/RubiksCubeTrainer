@@ -11,6 +11,8 @@ namespace RubiksCubeTrainer.Puzzle3x3
             this.faces = faces;
         }
 
+        public static Puzzle Solved { get; } = BuildSolvedPuzzle();
+
         public Face this[FaceName faceName]
             => this.faces[(int)faceName];
 
@@ -57,5 +59,14 @@ namespace RubiksCubeTrainer.Puzzle3x3
                     throw new InvalidOperationException();
             }
         }
+
+        private static Puzzle BuildSolvedPuzzle()
+            => new Puzzle(
+                new Face(FaceName.Up, PuzzleColor.Yellow),
+                new Face(FaceName.Front, PuzzleColor.Red),
+                new Face(FaceName.Down, PuzzleColor.White),
+                new Face(FaceName.Back, PuzzleColor.Orange),
+                new Face(FaceName.Left, PuzzleColor.Blue),
+                new Face(FaceName.Right, PuzzleColor.Green));
     }
 }

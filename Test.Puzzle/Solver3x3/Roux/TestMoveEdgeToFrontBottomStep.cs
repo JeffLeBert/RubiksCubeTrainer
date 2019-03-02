@@ -10,7 +10,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         [InlineData("F M")]
         public void No_algorithm_if_already_at_bottom_front(string moves)
         {
-            var puzzle = Rotator.ApplyMoves(Solver.Solved, moves);
+            var puzzle = Rotator.ApplyMoves(Puzzle.Solved, moves);
             var algorithms = MoveEdgeToFrontBottomStep.InstanceFrontLeft.GetPossibleAlgorithms(puzzle);
 
             Assert.Empty(algorithms);
@@ -29,7 +29,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         [InlineData("F U")]
         public void Can_solve_front_left(string scrambleMoves)
         {
-            var scrambledPuzzle = Rotator.ApplyMoves(Solver.Solved, NotationParser.EnumerateMoves(scrambleMoves));
+            var scrambledPuzzle = Rotator.ApplyMoves(Puzzle.Solved, NotationParser.EnumerateMoves(scrambleMoves));
 
             var algorithmInfos = MoveEdgeToFrontBottomStep.InstanceFrontLeft.GetPossibleAlgorithms(scrambledPuzzle);
 

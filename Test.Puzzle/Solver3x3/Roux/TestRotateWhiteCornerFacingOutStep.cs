@@ -10,7 +10,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         [MemberData(nameof(Algorithms_for_should_use))]
         public void True_if_we_should_use(RotateWhiteCornerFacingOutStep step, string moves)
         {
-            var puzzle = Rotator.ApplyMoves(Solver.Solved, moves);
+            var puzzle = Rotator.ApplyMoves(Puzzle.Solved, moves);
 
             Assert.True(step.ShouldUse(puzzle));
         }
@@ -28,7 +28,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         [MemberData(nameof(Algorithms_for_should_not_use))]
         public void False_if_we_should_not_use(RotateWhiteCornerFacingOutStep step, string moves)
         {
-            var puzzle = Rotator.ApplyMoves(Solver.Solved, moves);
+            var puzzle = Rotator.ApplyMoves(Puzzle.Solved, moves);
 
             Assert.False(step.ShouldUse(puzzle));
         }

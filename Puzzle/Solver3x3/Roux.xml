@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Solver>
-  <StepSequence Name="Solve">
-    <Step>MoveBlueCenterToLeft</Step>
-    <Step>FirstPieceToBottomLeft</Step>
-  </StepSequence>
-
+  
   <Step Name="MoveBlueCenterToLeft">
     <InitialState>!Left Blue</InitialState>
     <AlgorithmCollection>
@@ -162,7 +158,8 @@
     <FinishedState>Left Blue, LeftDown Blue White</FinishedState>
   </Step>
 
-  <Step Name="MoveEdgeToFrontBottom">
+  <!--<Step Name="MoveEdgeToFrontBottom">
     <InitialState>Left Blue, LeftDown Blue White</InitialState>
-  </Step>
+  </Step>-->
+  
 </Solver>

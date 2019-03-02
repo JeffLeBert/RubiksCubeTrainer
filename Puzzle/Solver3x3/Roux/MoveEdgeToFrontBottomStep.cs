@@ -40,7 +40,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public IEnumerable<AlgorithmCollection> GetPossibleAlgorithms(Puzzle puzzle)
             => from algorithmInfo in this.allAlgorithms
-               where algorithmInfo.InitialState.Matches(puzzle)
+               where algorithmInfo.InitialState(puzzle)
                select algorithmInfo;
 
         private ImmutableArray<AlgorithmCollection> BuildAllAlgorithms()
@@ -59,70 +59,62 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         private AlgorithmCollection MoveEdgeFromFrontUp()
             => new AlgorithmCollection(
                 "Move edge from front top.",
-                new PuzzleState("FrontUp* Red Blue"),
-                NotationMoveType.FrontDouble);
+                PuzzleStateParser.Parse("FrontUp* Red Blue"),
+                AlgorithmCollectionParser.ParseAlgorithms("F2"));
 
         private AlgorithmCollection MoveEdgeFromFrontLeft()
             => new AlgorithmCollection(
                 "Move edge from front left.",
-                new PuzzleState("FrontLeft* Red Blue"),
-                NotationMoveType.FrontCounterClockwise);
+                PuzzleStateParser.Parse("FrontLeft* Red Blue"),
+                AlgorithmCollectionParser.ParseAlgorithms("F'"));
 
         private AlgorithmCollection MoveEdgeFromFrontRight()
             => new AlgorithmCollection(
                 "Move edge from front right.",
-                new PuzzleState("FrontRight* Red Blue"),
-                NotationMoveType.FrontClockwise);
+                PuzzleStateParser.Parse("FrontRight* Red Blue"),
+                AlgorithmCollectionParser.ParseAlgorithms("F"));
 
         private AlgorithmCollection MoveEdgeFromBackLeft()
             => new AlgorithmCollection(
                 "Move edge from back left.",
-                new PuzzleState("LeftBack* Blue Red"),
-                NotationMoveType.BackClockwise,
-                NotationMoveType.MiddleMCounterClockwise);
+                PuzzleStateParser.Parse("LeftBack* Blue Red"),
+                AlgorithmCollectionParser.ParseAlgorithms("B M'"));
 
         private AlgorithmCollection MoveEdgeFromBackUp()
             => new AlgorithmCollection(
                 "Move edge from back up.",
-                new PuzzleState("UpBack* Blue Red"),
-                NotationMoveType.MiddleMDouble);
+                PuzzleStateParser.Parse("UpBack* Blue Red"),
+                AlgorithmCollectionParser.ParseAlgorithms("M2"));
 
         private AlgorithmCollection MoveEdgeFromBackRight()
             => new AlgorithmCollection(
                 "Move edge from back right.",
-                new PuzzleState("BackRight* Blue Red"),
-                NotationMoveType.BackClockwise,
-                NotationMoveType.UpDouble,
-                NotationMoveType.BackCounterClockwise,
-                NotationMoveType.MiddleMClockwise);
+                PuzzleStateParser.Parse("BackRight* Blue Red"),
+                AlgorithmCollectionParser.ParseAlgorithms("B U2 B' M"));
 
         private AlgorithmCollection MoveEdgeFromBackDown()
             => new AlgorithmCollection(
                 "Move edge from back down.",
-                new PuzzleState("BackDown* Blue Red"),
-                NotationMoveType.MiddleMCounterClockwise);
+                PuzzleStateParser.Parse("BackDown* Blue Red"),
+                AlgorithmCollectionParser.ParseAlgorithms("M'"));
 
         private AlgorithmCollection MoveEdgeFromRightUp()
             => new AlgorithmCollection(
                 "Move edge from up right.",
-                new PuzzleState("RightUp* Blue Red"),
-                NotationMoveType.UpClockwise,
-                NotationMoveType.MiddleMClockwise);
+                PuzzleStateParser.Parse("RightUp* Blue Red"),
+                AlgorithmCollectionParser.ParseAlgorithms("U M"));
 
         private AlgorithmCollection MoveEdgeFromRightDown()
             => new AlgorithmCollection(
                 "Move edge from right down.",
-                new PuzzleState("RightDown* Blue Red"),
-                NotationMoveType.RightDouble,
-                NotationMoveType.UpClockwise,
-                NotationMoveType.MiddleMClockwise);
+                PuzzleStateParser.Parse("RightDown* Blue Red"),
+                AlgorithmCollectionParser.ParseAlgorithms("R2 U M"));
 
         private AlgorithmCollection MoveEdgeFromLeftUp()
             => new AlgorithmCollection(
                 "Move edge from right up.",
-                new PuzzleState("LeftUp* Blue Red"),
-                NotationMoveType.UpCounterClockwise,
-                NotationMoveType.MiddleMClockwise);
+                PuzzleStateParser.Parse("LeftUp* Blue Red"),
+                AlgorithmCollectionParser.ParseAlgorithms("U' M"));
 
         public bool ShouldUse(Puzzle puzzle)
             => !Checker.EdgeOrFlipped(puzzle, Location.FrontDown, this.Color1, this.Color2);

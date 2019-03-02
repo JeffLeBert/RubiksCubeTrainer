@@ -48,7 +48,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public IEnumerable<AlgorithmCollection> GetPossibleAlgorithms(Puzzle puzzle)
             => from algorithmInfo in this.allAlgorithms
-               where algorithmInfo.InitialState.Matches(puzzle)
+               where algorithmInfo.InitialState(puzzle)
                select algorithmInfo;
 
         private ImmutableArray<AlgorithmCollection> BuildAllAlgorithms()
@@ -61,34 +61,26 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         private AlgorithmCollection MoveCornerFromLeftFrontDown()
             => new AlgorithmCollection(
                 "Move corner from left front down to up.",
-                new PuzzleState($"DownFrontLeft* {this.Color1} {this.Color2} White"),
-                NotationMoveType.FrontClockwise,
-                NotationMoveType.UpClockwise,
-                NotationMoveType.FrontCounterClockwise);
+                PuzzleStateParser.Parse($"DownFrontLeft* {this.Color1} {this.Color2} White"),
+                AlgorithmCollectionParser.ParseAlgorithms("F U F'"));
 
         private AlgorithmCollection MoveCornerFromRightFrontDown()
             => new AlgorithmCollection(
                 "Move corner from right front down to up.",
-                new PuzzleState($"DownFrontRight* {this.Color1} {this.Color2} White"),
-                NotationMoveType.FrontCounterClockwise,
-                NotationMoveType.UpCounterClockwise,
-                NotationMoveType.FrontClockwise);
+                PuzzleStateParser.Parse($"DownFrontRight* {this.Color1} {this.Color2} White"),
+                AlgorithmCollectionParser.ParseAlgorithms("F' U' F"));
 
         private AlgorithmCollection MoveCornerFromLeftBackDown()
             => new AlgorithmCollection(
                 "Move corner from left back down to up.",
-                new PuzzleState($"DownBackLeft* {this.Color1} {this.Color2} White"),
-                NotationMoveType.BackCounterClockwise,
-                NotationMoveType.UpCounterClockwise,
-                NotationMoveType.BackClockwise);
+                PuzzleStateParser.Parse($"DownBackLeft* {this.Color1} {this.Color2} White"),
+                AlgorithmCollectionParser.ParseAlgorithms("B' U' B"));
 
         private AlgorithmCollection MoveCornerFromRightBackDown()
             => new AlgorithmCollection(
                 "Move corner from right back down to up.",
-                new PuzzleState($"DownBackRight* {this.Color1} {this.Color2} White"),
-                NotationMoveType.BackClockwise,
-                NotationMoveType.UpClockwise,
-                NotationMoveType.BackCounterClockwise);
+                PuzzleStateParser.Parse($"DownBackRight* {this.Color1} {this.Color2} White"),
+                AlgorithmCollectionParser.ParseAlgorithms("B U B'"));
 
         public bool ShouldUse(Puzzle puzzle)
             => !Checker.CornerUpFrontLeft(puzzle, this.Color1X, this.Color2X, PuzzleColor.White)

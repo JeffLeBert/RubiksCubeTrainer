@@ -19,7 +19,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 
         public IEnumerable<AlgorithmCollection> GetPossibleAlgorithms(Puzzle puzzle)
             => from algorithmInfo in this.allAlgorithms
-               where algorithmInfo.InitialState.Matches(puzzle)
+               where algorithmInfo.InitialState(puzzle)
                select algorithmInfo;
 
         private ImmutableArray<AlgorithmCollection> BuildAllAlgorithms()

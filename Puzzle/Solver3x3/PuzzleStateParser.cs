@@ -1,18 +1,16 @@
 ﻿using System;
+using System.Xml.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public class PuzzleState
+    public static class PuzzleStateParser
     {
-        public PuzzleState(string state)
-        {
-            this.Matches = Parse(state);
-        }
+        public static Func<Puzzle, bool> Parse(Solver solver, XElement stateElement)
+            => Parse(stateElement.Value);
 
-        public Func<Puzzle, bool> Matches { get; }
-
-        private static Func<Puzzle, bool> Parse(string state)
+        [Obsolete("Use the above other parser.")]
+        public static Func<Puzzle, bool> Parse(string state)
         {
             Func<Puzzle, bool> currentMatches = null;
             foreach (var match in state.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))

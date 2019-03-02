@@ -9,7 +9,7 @@ namespace RubiksCubeTrainer.WinFormsUI
 {
     public partial class MainForm : Form
     {
-        private Puzzle puzzle = Solver.Solved;
+        private Puzzle puzzle = Puzzle.Solved;
 
         public MainForm()
         {
@@ -38,7 +38,7 @@ namespace RubiksCubeTrainer.WinFormsUI
 
         private void UpdateWithMoves(string moves)
         {
-            this.puzzle = Solver.Solved;
+            this.puzzle = Puzzle.Solved;
             try
             {
                 foreach (var move in NotationParser.EnumerateMoves(moves))
@@ -82,7 +82,7 @@ namespace RubiksCubeTrainer.WinFormsUI
             var currentPuzzle = this.puzzle;
             while (true)
             {
-                var nextStep = Solver.Roux.NextSteps(currentPuzzle).FirstOrDefault();
+                var nextStep = WellKnownSolvers.Roux.NextSteps(currentPuzzle).FirstOrDefault();
                 if (nextStep == null)
                 {
                     solutionDescription += "No steps found.";
@@ -121,10 +121,10 @@ namespace RubiksCubeTrainer.WinFormsUI
         private void findFailureToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var currentPuzzle = Rotator.ApplyMoves(
-                Solver.Solved,
+                Puzzle.Solved,
                 NotationParser.EnumerateMoves(this.txtScrambleMoves.Text));
 
-            var failureInfo = SolverFailureFinder.FindFailure(Solver.Roux, currentPuzzle);
+            var failureInfo = SolverFailureFinder.FindFailure(WellKnownSolvers.Roux, currentPuzzle);
 
             var movesText = NotationParser.FormatMoves(failureInfo.Moves);
             if (failureInfo.NoMoreSteps)

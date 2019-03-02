@@ -5,12 +5,12 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
 {
     public class TestMoveBlueCenterToLeftFaceStep
     {
-        private static Step step = Solver.Roux.GetStep("MoveBlueCenterToLeft");
+        private static readonly Step step = WellKnownSolvers.Roux.Steps["MoveBlueCenterToLeft"];
 
         [Fact]
         public void No_algorithms_if_already_at_goal()
         {
-            var algorithms = step.GetPossibleAlgorithms(Solver.Solved);
+            var algorithms = step.GetPossibleAlgorithms(Puzzle.Solved);
 
             Assert.Empty(algorithms);
         }
@@ -23,7 +23,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         [InlineData("S'")]
         public void Can_solve(string scrambleMoves)
         {
-            var scrambledPuzzle = Rotator.ApplyMoves(Solver.Solved, NotationParser.EnumerateMoves(scrambleMoves));
+            var scrambledPuzzle = Rotator.ApplyMoves(Puzzle.Solved, NotationParser.EnumerateMoves(scrambleMoves));
 
             var algorithmInfos = step.GetPossibleAlgorithms(scrambledPuzzle);
 
@@ -32,7 +32,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             {
                 var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithm);
 
-                Assert.True(step.FinishedState.Matches(solvedPuzzle));
+                Assert.True(step.FinishedState(solvedPuzzle));
             }
         }
     }

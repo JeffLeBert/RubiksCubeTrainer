@@ -1,39 +1,39 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Xml.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
 {
     public class Step : IStep
     {
-        private readonly ImmutableArray<AlgorithmCollection> allAlgorithmCollections;
-
-        public Step(XElement stepElement)
+        public Step(
+            string name,
+            Func<Puzzle, bool> initialState,
+            Func<Puzzle, bool> finishedState,
+            ImmutableArray<AlgorithmCollection> algorithmCollections)
         {
-            this.Name = stepElement.Attribute(nameof(Name)).Value;
-            this.InitialState = new PuzzleState(stepElement.Element(nameof(InitialState)).Value);
-            this.FinishedState = new PuzzleState(stepElement.Element(nameof(FinishedState)).Value);
-            this.allAlgorithmCollections = ImmutableArray.CreateRange(ParseAlgorithmCollections(stepElement));
+            this.Name = name;
+            this.InitialState = initialState;
+            this.FinishedState = finishedState;
+            this.AlgorithmCollections = algorithmCollections;
         }
 
-        public PuzzleState FinishedState { get; }
+        public ImmutableArray<AlgorithmCollection> AlgorithmCollections { get; }
 
-        public PuzzleState InitialState { get; }
+        public Func<Puzzle, bool> FinishedState { get; }
+
+        public Func<Puzzle, bool> InitialState { get; }
 
         public string Name { get; }
 
         public IEnumerable<AlgorithmCollection> GetPossibleAlgorithms(Puzzle puzzle)
-            => from algorithmCollection in this.allAlgorithmCollections
-               where algorithmCollection.InitialState.Matches(puzzle)
+            => from algorithmCollection in this.AlgorithmCollections
+               where algorithmCollection.InitialState(puzzle)
                select algorithmCollection;
 
         public bool ShouldUse(Puzzle puzzle)
-            => this.InitialState.Matches(puzzle);
-
-        private static IEnumerable<AlgorithmCollection> ParseAlgorithmCollections(XElement stepElement)
-            => from element in stepElement.Elements(nameof(AlgorithmCollection))
-               select new AlgorithmCollection(element);
+            => this.InitialState(puzzle);
     }
 }
