@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -7,12 +9,18 @@ namespace RubiksCubeTrainer.Solver3x3
     public static class SolverParser
     {
         public static Solver ParseFromEmbeddedResource(string name)
-            => AddAllSteps(Solver.Empty, GetSolverDocument(name));
+            => new Solver(AddAllSteps(GetSolverDocument(name)));
 
-        private static Solver AddAllSteps(Solver initialSolver, XDocument document)
+        private static ImmutableDictionary<string, Step> AddAllSteps(XDocument document)
             => document.Root.Elements(nameof(Step)).Aggregate(
-                initialSolver,
-                (solver, stepElement) => solver.WithStep(StepParser.Parse(solver, stepElement)));
+                ImmutableDictionary.CreateBuilder<string, Step>(StringComparer.OrdinalIgnoreCase),
+                (steps, stepElement) =>
+                {
+                    var step = StepParser.Parse(stepElement, name => steps[name]);
+                    steps.Add(step.Name, step);
+                    return steps;
+                })
+                .ToImmutable();
 
         private static XDocument GetSolverDocument(string name)
             => XDocument.Load(GetSolverStream(name));

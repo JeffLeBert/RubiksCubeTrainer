@@ -80,6 +80,7 @@ namespace RubiksCubeTrainer.WinFormsUI
             var solutionMoves = string.Empty;
             var solutionDescription = string.Empty;
             var currentPuzzle = this.puzzle;
+            var tryCount = 0;
             while (true)
             {
                 var nextStep = WellKnownSolvers.Roux.NextSteps(currentPuzzle).FirstOrDefault();
@@ -98,6 +99,7 @@ namespace RubiksCubeTrainer.WinFormsUI
 
                 currentPuzzle = Rotator.ApplyMoves(currentPuzzle, firstAlgorithmInfo.Algorithms[0]);
 
+                // Update the UI.
                 var moves = NotationParser.FormatMoves(firstAlgorithmInfo.Algorithms[0]);
                 solutionMoves += moves + " ";
                 solutionDescription += firstAlgorithmInfo.Description
@@ -105,6 +107,14 @@ namespace RubiksCubeTrainer.WinFormsUI
                     + moves
                     + Environment.NewLine
                     + Environment.NewLine;
+
+                // Fail if we seen to not be able to find a solution.
+                tryCount++;
+                if (tryCount > 100)
+                {
+                    solutionDescription += "Got stuck in a loop somewhere...";
+                    break;
+                }
             }
 
             this.txtSolutionMoves.Text = solutionMoves;
@@ -150,8 +160,9 @@ namespace RubiksCubeTrainer.WinFormsUI
             this.txtSolutionMoves.Text = string.Empty;
             this.txtSolutionDescription.Text = string.Empty;
 
+            var step = WellKnownSolvers.Roux.Steps["MoveLeftFrontToFrontBottom"];
             var stopwatch = Stopwatch.StartNew();
-            var solutions = new SolutionSearch(6, SolutionSearch.AllFaceMoves, Check)
+            var solutions = new SolutionSearch(6, SolutionSearch.AllFaceMoves, step.FinishedState)
                 .Search(this.puzzle);
             stopwatch.Stop();
 

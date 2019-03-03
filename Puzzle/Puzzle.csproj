@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>RubiksCubeTrainer.Puzzle</AssemblyName>
     <RootNamespace>RubiksCubeTrainer</RootNamespace>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

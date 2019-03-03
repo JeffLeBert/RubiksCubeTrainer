@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
@@ -6,16 +8,68 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public static class PuzzleStateParser
     {
-        public static Func<Puzzle, bool> Parse(Solver solver, XElement stateElement)
-            => Parse(stateElement.Value);
+        public static Func<Puzzle, bool> Parse(XElement stateElement, Func<string, Step> getStep)
+        {
+            var previousState = GetPreviousStateIfAny(stateElement, getStep);
 
-        [Obsolete("Use the above other parser.")]
-        public static Func<Puzzle, bool> Parse(string state)
+            var state = stateElement.HasElements
+                ? ParseStateElements(stateElement)
+                : ParseStateValue(stateElement.Value);
+
+            return previousState == null
+                ? state
+                : puzzle => previousState(puzzle) && state(puzzle);
+        }
+
+        private static Func<Puzzle, bool> GetPreviousStateIfAny(XElement stateElement, Func<string, Step> getStep)
+        {
+            // The previous state is the finished state of the previous step.
+            var previousStepName = stateElement.Attribute("PreviousStep")?.Value;
+            return previousStepName == null
+                ? null
+                : getStep(previousStepName).FinishedState;
+        }
+
+        private static Func<Puzzle, bool> ParseStateElements(XElement element)
+            => AndMatchers(
+                from childElement in element.Elements()
+                select ParseChildElement(childElement));
+
+        private static Func<Puzzle, bool> ParseChildElement(XElement childElement)
+        {
+            switch (childElement.Name.LocalName)
+            {
+                case "Checks":
+                    return ParseStateValue(childElement.Value);
+
+                case "Or":
+                    return ParseOrElement(childElement);
+
+                default:
+                    throw new InvalidOperationException(
+                        $"Must be either 'Checks' or 'Or' but was '{childElement.Name.LocalName}'.");
+            }
+        }
+
+        private static Func<Puzzle, bool> ParseOrElement(XElement orElement)
+            => OrMatchers(
+                from childElement in orElement.Elements()
+                select ParseChildElement(childElement));
+
+        private static Func<Puzzle, bool> AndMatchers(IEnumerable<Func<Puzzle, bool>> matchers)
+            => CombineMatchers(matchers, (matcher1, matcher2) => puzzle => matcher1(puzzle) && matcher2(puzzle));
+
+        private static Func<Puzzle, bool> OrMatchers(IEnumerable<Func<Puzzle, bool>> matchers)
+            => CombineMatchers(matchers, (matcher1, matcher2) => puzzle => matcher1(puzzle) || matcher2(puzzle));
+
+        private static Func<Puzzle, bool> CombineMatchers(
+            IEnumerable<Func<Puzzle, bool>> matchers,
+            Func<Func<Puzzle, bool>, Func<Puzzle, bool>, Func<Puzzle, bool>> combiner)
         {
             Func<Puzzle, bool> currentMatches = null;
-            foreach (var match in state.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var matcher in matchers)
             {
-                var currentMatch = ParseMatch(match);
+                var currentMatch = matcher;
                 if (currentMatches == null)
                 {
                     currentMatches = currentMatch;
@@ -23,18 +77,20 @@ namespace RubiksCubeTrainer.Solver3x3
                 else
                 {
                     var thisCurrentMatches = currentMatches;
-                    currentMatches = puzzle => thisCurrentMatches(puzzle) && currentMatch(puzzle);
+                    currentMatches = combiner(thisCurrentMatches, currentMatch);
                 }
             }
 
-            if (currentMatches == null)
-            {
-                return puzzle => true;
-            }
-            else
-            {
-                return currentMatches;
-            }
+            return currentMatches;
+        }
+
+        [Obsolete("Use the other parser.")]
+        public static Func<Puzzle, bool> ParseStateValue(string state)
+        {
+            var currentMatches = AndMatchers(
+                from matcher in state.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                select ParseMatch(matcher));
+            return currentMatches ?? ((Puzzle puzzle) => true);
         }
 
         private static Func<Puzzle, bool> ParseMatch(string match)
@@ -52,7 +108,7 @@ namespace RubiksCubeTrainer.Solver3x3
                     return ParseCorner(parts);
 
                 default:
-                    throw new InvalidOperationException("Too many parts.");
+                    throw new InvalidOperationException($"Too many parts: '{match}'");
             }
         }
 

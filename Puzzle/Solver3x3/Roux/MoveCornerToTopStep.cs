@@ -61,25 +61,25 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
         private AlgorithmCollection MoveCornerFromLeftFrontDown()
             => new AlgorithmCollection(
                 "Move corner from left front down to up.",
-                PuzzleStateParser.Parse($"DownFrontLeft* {this.Color1} {this.Color2} White"),
+                PuzzleStateParser.ParseStateValue($"DownFrontLeft* {this.Color1} {this.Color2} White"),
                 AlgorithmCollectionParser.ParseAlgorithms("F U F'"));
 
         private AlgorithmCollection MoveCornerFromRightFrontDown()
             => new AlgorithmCollection(
                 "Move corner from right front down to up.",
-                PuzzleStateParser.Parse($"DownFrontRight* {this.Color1} {this.Color2} White"),
+                PuzzleStateParser.ParseStateValue($"DownFrontRight* {this.Color1} {this.Color2} White"),
                 AlgorithmCollectionParser.ParseAlgorithms("F' U' F"));
 
         private AlgorithmCollection MoveCornerFromLeftBackDown()
             => new AlgorithmCollection(
                 "Move corner from left back down to up.",
-                PuzzleStateParser.Parse($"DownBackLeft* {this.Color1} {this.Color2} White"),
+                PuzzleStateParser.ParseStateValue($"DownBackLeft* {this.Color1} {this.Color2} White"),
                 AlgorithmCollectionParser.ParseAlgorithms("B' U' B"));
 
         private AlgorithmCollection MoveCornerFromRightBackDown()
             => new AlgorithmCollection(
                 "Move corner from right back down to up.",
-                PuzzleStateParser.Parse($"DownBackRight* {this.Color1} {this.Color2} White"),
+                PuzzleStateParser.ParseStateValue($"DownBackRight* {this.Color1} {this.Color2} White"),
                 AlgorithmCollectionParser.ParseAlgorithms("B U B'"));
 
         public bool ShouldUse(Puzzle puzzle)

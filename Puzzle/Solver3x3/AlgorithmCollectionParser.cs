@@ -9,13 +9,13 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public static class AlgorithmCollectionParser
     {
-        public static AlgorithmCollection Parse(Solver solver, XElement element)
+        public static AlgorithmCollection Parse(XElement element, Func<string, Step> getStep)
             => new AlgorithmCollection(
                 element.Element(nameof(AlgorithmCollection.Description)).Value,
-                PuzzleStateParser.Parse(solver, element.Element(nameof(AlgorithmCollection.InitialState))),
+                PuzzleStateParser.Parse(element.Element(nameof(AlgorithmCollection.InitialState)), getStep),
                 ParseAlgorithms(element.Element(nameof(AlgorithmCollection.Algorithms)).Value));
 
-        [Obsolete("Don't use this.")]
+        [Obsolete("Remove usage except here.")]
         public static ImmutableArray<IEnumerable<NotationMoveType>> ParseAlgorithms(string value)
             => ImmutableArray.CreateRange(
                 from algorithmText in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
