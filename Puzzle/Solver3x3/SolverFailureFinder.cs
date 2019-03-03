@@ -52,16 +52,19 @@ namespace RubiksCubeTrainer.Solver3x3
                 return failureInfo.WithFoundCycle();
             }
 
-            foreach (var possibleAlgorithmCollection in possibleAlgorithmCollections)
+            foreach (var algorithmCollection in possibleAlgorithmCollections)
             {
-                var newPuzzle = Rotator.ApplyMoves(puzzle, possibleAlgorithmCollection.Algorithms[0]);
-                var algorithmFailureInfo = FindFailure(
-                    solver,
-                    newPuzzle,
-                    failureInfo.WithAlgorithm(possibleAlgorithmCollection.Algorithms[0]));
-                if (algorithmFailureInfo.AtEnd)
+                foreach (var algorithm in algorithmCollection.Algorithms)
                 {
-                    return algorithmFailureInfo;
+                    var newPuzzle = Rotator.ApplyMoves(puzzle, algorithm);
+                    var algorithmFailureInfo = FindFailure(
+                        solver,
+                        newPuzzle,
+                        failureInfo.WithAlgorithm(algorithm));
+                    if (algorithmFailureInfo.AtEnd)
+                    {
+                        return algorithmFailureInfo;
+                    }
                 }
             }
 
