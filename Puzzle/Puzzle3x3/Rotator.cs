@@ -61,19 +61,19 @@ namespace RubiksCubeTrainer.Puzzle3x3
             // Full cube rotations.
             BuildRotations(
                 builder,
-                NotationRotationNames.AllFrontLeft,
+                NotationRotationNames.AllY,
                 move => RotateZSlice(move.With(NotationRotationNames.Up))
                     .Concat(RotateZSlice(move.With(NotationRotationNames.MiddleE).WithSwapDirection()))
                     .Concat(RotateZSlice(move.With(NotationRotationNames.Down).WithSwapDirection())));
             BuildRotations(
                 builder,
-                NotationRotationNames.AllFrontClockwise,
+                NotationRotationNames.AllZ,
                 move => RotateYSlice(move.With(NotationRotationNames.Front))
                     .Concat(RotateYSlice(move.With(NotationRotationNames.MiddleS)))
                     .Concat(RotateYSlice(move.With(NotationRotationNames.Back).WithSwapDirection())));
             BuildRotations(
                 builder,
-                NotationRotationNames.AllFrontUp,
+                NotationRotationNames.AllX,
                 move => RotateXSlice(move.With(NotationRotationNames.Right))
                     .Concat(RotateXSlice(move.With(NotationRotationNames.MiddleM).WithSwapDirection()))
                     .Concat(RotateXSlice(move.With(NotationRotationNames.Left).WithSwapDirection())));

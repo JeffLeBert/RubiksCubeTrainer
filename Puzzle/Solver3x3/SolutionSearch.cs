@@ -17,6 +17,10 @@ namespace RubiksCubeTrainer.Solver3x3
             NotationMoveType.LeftClockwise, NotationMoveType.LeftCounterClockwise, NotationMoveType.LeftDouble,
             NotationMoveType.DownClockwise, NotationMoveType.DownCounterClockwise, NotationMoveType.DownDouble,
             NotationMoveType.BackClockwise, NotationMoveType.BackCounterClockwise, NotationMoveType.BackDouble);
+        //public static readonly ImmutableArray<NotationMoveType> AllFaceAndWideMoves = AllFaceMoves.AddRange(
+        //    new[]
+        //    {
+        //    });
 
         private readonly ImmutableArray<NotationMoveType> availableMoves;
         private readonly Func<Puzzle, bool> isFinished;

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace RubiksCubeTrainer.Puzzle3x3
 {
-    public static class NotationParser
+    public static partial class NotationParser
     {
         public static IEnumerable<NotationMoveType> EnumerateMoves(string moves)
         {
@@ -60,33 +60,6 @@ namespace RubiksCubeTrainer.Puzzle3x3
         public static string FormatMove(NotationMoveType move)
             => FormatMoveName(move.Name) + FormatRotationType(move.Type);
 
-        private static string FormatMoveName(NotationRotationNames rotationName)
-        {
-            switch (rotationName)
-            {
-                case NotationRotationNames.Right: return "R";
-                case NotationRotationNames.Left: return "L";
-                case NotationRotationNames.Up: return "U";
-                case NotationRotationNames.Down: return "D";
-                case NotationRotationNames.Front: return "F";
-                case NotationRotationNames.Back: return "B";
-                case NotationRotationNames.WideRight: return "r";
-                case NotationRotationNames.WideLeft: return "l";
-                case NotationRotationNames.WideUp: return "u";
-                case NotationRotationNames.WideDown: return "d";
-                case NotationRotationNames.WideFront: return "f";
-                case NotationRotationNames.WideBack: return "b";
-                case NotationRotationNames.MiddleE: return "E";
-                case NotationRotationNames.MiddleM: return "M";
-                case NotationRotationNames.MiddleS: return "S";
-                case NotationRotationNames.AllFrontUp: return "x";
-                case NotationRotationNames.AllFrontLeft: return "y";
-                case NotationRotationNames.AllFrontClockwise: return "z";
-
-                default: throw new InvalidOperationException();
-            }
-        }
-
         private static string FormatRotationType(NotationRotationType rotationType)
         {
             switch (rotationType)
@@ -94,33 +67,6 @@ namespace RubiksCubeTrainer.Puzzle3x3
                 case NotationRotationType.Clockwise: return string.Empty;
                 case NotationRotationType.CounterClockwise: return "'";
                 case NotationRotationType.Double: return "2";
-
-                default: throw new InvalidOperationException();
-            }
-        }
-
-        private static NotationRotationNames ParseMoveName(char moveChar)
-        {
-            switch (moveChar)
-            {
-                case 'R': return NotationRotationNames.Right;
-                case 'L': return NotationRotationNames.Left;
-                case 'U': return NotationRotationNames.Up;
-                case 'D': return NotationRotationNames.Down;
-                case 'F': return NotationRotationNames.Front;
-                case 'B': return NotationRotationNames.Back;
-                case 'r': return NotationRotationNames.WideRight;
-                case 'l': return NotationRotationNames.WideLeft;
-                case 'u': return NotationRotationNames.WideUp;
-                case 'd': return NotationRotationNames.WideDown;
-                case 'f': return NotationRotationNames.WideFront;
-                case 'b': return NotationRotationNames.WideBack;
-                case 'E': return NotationRotationNames.MiddleE;
-                case 'M': return NotationRotationNames.MiddleM;
-                case 'S': return NotationRotationNames.MiddleS;
-                case 'x': return NotationRotationNames.AllFrontUp;
-                case 'y': return NotationRotationNames.AllFrontLeft;
-                case 'z': return NotationRotationNames.AllFrontClockwise;
 
                 default: throw new InvalidOperationException();
             }

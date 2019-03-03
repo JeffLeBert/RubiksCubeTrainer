@@ -1,0 +1,50 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#@ include file="NotationRotationNames.ttinclude" #>
+using System;
+
+namespace RubiksCubeTrainer.Puzzle3x3
+{
+    partial class NotationParser
+    {
+        private static string FormatMoveName(NotationRotationNames rotationName)
+        {
+            switch (rotationName)
+            {
+<#
+foreach (var rotation in rotations)
+{
+#>
+                case NotationRotationNames.<#= rotation.Name #>: return "<#= rotation.Notation #>";
+<#
+}
+#>
+
+                default: throw new InvalidOperationException();
+            }
+        }
+
+
+        private static NotationRotationNames ParseMoveName(char moveChar)
+        {
+            switch (moveChar)
+            {
+<#
+foreach (var rotation in rotations)
+{
+#>
+                case '<#= rotation.Notation #>': return NotationRotationNames.<#= rotation.Name #>;
+<#
+}
+#>
+
+                default: throw new InvalidOperationException();
+            }
+        }
+
+	}
+}

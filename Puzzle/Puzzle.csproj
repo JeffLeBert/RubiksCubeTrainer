@@ -8,11 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Solver3x3\Roux\Roux.xml" />
+    <EmbeddedResource Include="Solver3x3\Roux.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Solver3x3\Roux.xml" />
+    <None Include="Puzzle3x3\NotationParser_Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NotationParser_Generated.tt</DependentUpon>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -20,30 +24,57 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Puzzle3x3\Location_Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Location_Generated.cs</LastGenOutput>
-    </None>
-    <None Update="Puzzle3x3\PuzzleColor_Generated.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>PuzzleColor_Generated.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Puzzle3x3\Location_Generated.cs">
+    <None Update="Puzzle3x3\NotationParser_Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NotationParser_Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Puzzle3x3\NotationRotationNames_Generated.tt">
+      <LastGenOutput>NotationRotationNames_Generated.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <Compile Update="Puzzle3x3\NotationParser_Generated.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Location_Generated.tt</DependentUpon>
+      <DependentUpon>NotationParser_Generated.tt</DependentUpon>
     </Compile>
-    <Compile Update="Puzzle3x3\PuzzleColor_Generated.cs">
+    <Compile Update="Puzzle3x3\NotationRotationNames_generated.cs">
+      <DependentUpon>NotationRotationNames_generated.tt</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+    </Compile>
+    
+    <None Update="Puzzle3x3\NotationMoveType_Generated.tt">
+      <LastGenOutput>NotationMoveType_Generated.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <Compile Update="Puzzle3x3\NotationMoveType_Generated.cs">
+      <DependentUpon>NotationMoveType_Generated.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    
+    <None Update="Puzzle3x3\Location_Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Location_Generated.cs</LastGenOutput>
+    </None>
+    <Compile Update="Puzzle3x3\Location_Generated.cs">
+      <DependentUpon>Location_Generated.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+
+    <None Update="Puzzle3x3\PuzzleColor_Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PuzzleColor_Generated.cs</LastGenOutput>
+    </None>
+    <Compile Update="Puzzle3x3\PuzzleColor_Generated.cs">
       <DependentUpon>PuzzleColor_Generated.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
 
