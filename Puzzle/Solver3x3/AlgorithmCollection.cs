@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using RubiksCubeTrainer.Puzzle3x3;
 
@@ -18,14 +17,14 @@ namespace RubiksCubeTrainer.Solver3x3
         public AlgorithmCollection(
             string description,
             Func<Puzzle, bool> initialState,
-            ImmutableArray<IEnumerable<NotationMoveType>> algorithms)
+            ImmutableArray<ImmutableArray<NotationMoveType>> algorithms)
         {
             this.Description = description;
             this.InitialState = initialState;
             this.Algorithms = algorithms;
         }
 
-        public ImmutableArray<IEnumerable<NotationMoveType>> Algorithms { get; }
+        public ImmutableArray<ImmutableArray<NotationMoveType>> Algorithms { get; }
 
         public string Description { get; }
 

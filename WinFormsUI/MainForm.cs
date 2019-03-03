@@ -71,7 +71,7 @@ namespace RubiksCubeTrainer.WinFormsUI
 
         private void ScramblePuzzle()
         {
-            this.txtScrambleMoves.Text = Scrambler.Scamble(10);
+            this.txtScrambleMoves.Text = Scrambler.Scamble();
             this.txtScrambleMoves.SelectionStart = int.MaxValue;
         }
 
@@ -128,6 +128,32 @@ namespace RubiksCubeTrainer.WinFormsUI
             this.Close();
         }
 
+        private void FindFailureX10000ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var stopwatch = Stopwatch.StartNew();
+            const int Tries = 10000;
+            for (int i = 0; i < Tries; i++)
+            {
+                var scramble = Scrambler.Scamble();
+                var currentPuzzle = Rotator.ApplyMoves(
+                    Puzzle.Solved,
+                    NotationParser.EnumerateMoves(scramble));
+                var failureInfo = SolverFailureFinder.FindFailure(WellKnownSolvers.Roux, currentPuzzle);
+                if (failureInfo.Failed)
+                {
+                    this.txtScrambleMoves.Text = scramble;
+                    this.UpdateUIForFindFailure(failureInfo);
+                    return;
+                }
+            }
+            stopwatch.Stop();
+
+            this.txtScrambleMoves.Text = string.Empty;
+            this.txtSolutionMoves.Text = string.Empty;
+            this.txtSolutionDescription.Text = $"{Tries} solutions found in {stopwatch.ElapsedMilliseconds}ms.";
+            this.Refresh();
+        }
+
         private void findFailureToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var currentPuzzle = Rotator.ApplyMoves(
@@ -135,8 +161,11 @@ namespace RubiksCubeTrainer.WinFormsUI
                 NotationParser.EnumerateMoves(this.txtScrambleMoves.Text));
 
             var failureInfo = SolverFailureFinder.FindFailure(WellKnownSolvers.Roux, currentPuzzle);
+            this.UpdateUIForFindFailure(failureInfo);
+        }
 
-            var movesText = NotationParser.FormatMoves(failureInfo.Moves);
+        private void UpdateUIForFindFailure(SolverFailureInformation failureInfo)
+        {
             if (failureInfo.NoMoreSteps)
             {
                 this.txtSolutionDescription.Text = "Solution found.";
@@ -145,11 +174,19 @@ namespace RubiksCubeTrainer.WinFormsUI
             {
                 this.txtSolutionDescription.Text = "No more algorithms found.";
             }
+            else if (failureInfo.FoundCycle)
+            {
+                this.txtSolutionDescription.Text = "Cycle found.";
+            }
             else
             {
                 throw new InvalidOperationException();
             }
 
+            var movesText = string.Join(
+                " ",
+                from algorithm in failureInfo.Algorithms
+                select "(" + NotationParser.FormatMoves(algorithm) + ")");
             this.txtSolutionMoves.Text = movesText;
 
             this.Refresh();

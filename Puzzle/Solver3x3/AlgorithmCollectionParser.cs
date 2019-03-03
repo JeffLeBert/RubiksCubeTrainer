@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Xml.Linq;
@@ -16,9 +15,9 @@ namespace RubiksCubeTrainer.Solver3x3
                 ParseAlgorithms(element.Element(nameof(AlgorithmCollection.Algorithms)).Value));
 
         [Obsolete("Remove usage except here.")]
-        public static ImmutableArray<IEnumerable<NotationMoveType>> ParseAlgorithms(string value)
+        public static ImmutableArray<ImmutableArray<NotationMoveType>> ParseAlgorithms(string value)
             => ImmutableArray.CreateRange(
                 from algorithmText in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                select NotationParser.EnumerateMoves(algorithmText));
+                select ImmutableArray.CreateRange(NotationParser.EnumerateMoves(algorithmText)));
     }
 }

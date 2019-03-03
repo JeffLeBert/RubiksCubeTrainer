@@ -45,15 +45,20 @@ namespace RubiksCubeTrainer.Solver3x3
             Solver solver,
             Puzzle puzzle,
             SolverFailureInformation failureInfo,
-            AlgorithmCollection[] possibleAlgorithms)
+            AlgorithmCollection[] possibleAlgorithmCollections)
         {
-            foreach (var possibleAlgorithm in possibleAlgorithms)
+            if (failureInfo.Algorithms.Length > 50)
             {
-                var newPuzzle = Rotator.ApplyMoves(puzzle, possibleAlgorithm.Algorithms[0]);
+                return failureInfo.WithFoundCycle();
+            }
+
+            foreach (var possibleAlgorithmCollection in possibleAlgorithmCollections)
+            {
+                var newPuzzle = Rotator.ApplyMoves(puzzle, possibleAlgorithmCollection.Algorithms[0]);
                 var algorithmFailureInfo = FindFailure(
                     solver,
                     newPuzzle,
-                    failureInfo.WithMoves(possibleAlgorithm.Algorithms[0]));
+                    failureInfo.WithAlgorithm(possibleAlgorithmCollection.Algorithms[0]));
                 if (algorithmFailureInfo.AtEnd)
                 {
                     return algorithmFailureInfo;

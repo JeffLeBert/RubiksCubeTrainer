@@ -6,7 +6,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
 {
     public static class Scrambler
     {
-        public static string Scamble(int depth)
+        public static string Scamble(int depth = 10)
             => string.Join(" ", EnumerateMoveNames().Take(depth));
 
         private static IEnumerable<string> EnumerateMoveNames()
