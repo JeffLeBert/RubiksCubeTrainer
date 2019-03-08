@@ -11,28 +11,28 @@ namespace RubiksCubeTrainer.Solver3x3
         public void Center_true_if_correct()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "Left Blue"), null);
-            Assert.True(state(Puzzle.Solved));
+            Assert.True(state.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void Center_false_if_not_correct()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "Front Blue"), null);
-            Assert.False(state(Puzzle.Solved));
+            Assert.False(state.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void Not_center_false_if_not_correct()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "!Left Blue"), null);
-            Assert.False(state(Puzzle.Solved));
+            Assert.False(state.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void Not_center_true_if_correct()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "!Front Blue"), null);
-            Assert.True(state(Puzzle.Solved));
+            Assert.True(state.Matches(Puzzle.Solved));
         }
     }
 
@@ -42,21 +42,21 @@ namespace RubiksCubeTrainer.Solver3x3
         public void Edge_true_if_correct()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "LeftDown Blue White"), null);
-            Assert.True(state(Puzzle.Solved));
+            Assert.True(state.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void Edge_false_if_not_correct()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "LeftUp Blue White"), null);
-            Assert.False(state(Puzzle.Solved));
+            Assert.False(state.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void Edge_false_if_flipped()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "LeftDown White Blue"), null);
-            Assert.False(state(Puzzle.Solved));
+            Assert.False(state.Matches(Puzzle.Solved));
         }
     }
 
@@ -68,21 +68,21 @@ namespace RubiksCubeTrainer.Solver3x3
         public void All_edge_true_if_flipped(string stateText)
         {
             var state = PuzzleStateParser.Parse(new XElement("State", stateText), null);
-            Assert.True(state(Puzzle.Solved));
+            Assert.True(state.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void Corner_true_if_correct()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "LeftFrontDown Blue White Red"), null);
-            Assert.True(state(Puzzle.Solved));
+            Assert.True(state.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void Corner_false_if_rotated()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "LeftFrontDown Red Blue White"), null);
-            Assert.False(state(Puzzle.Solved));
+            Assert.False(state.Matches(Puzzle.Solved));
         }
 
         [Theory]
@@ -92,7 +92,7 @@ namespace RubiksCubeTrainer.Solver3x3
         public void All_corner_true_if_rotated(string stateText)
         {
             var state = PuzzleStateParser.Parse(new XElement("State", stateText), null);
-            Assert.True(state(Puzzle.Solved));
+            Assert.True(state.Matches(Puzzle.Solved));
         }
     }
 
@@ -102,7 +102,7 @@ namespace RubiksCubeTrainer.Solver3x3
         public void All_true_checks_are_true()
         {
             var state = PuzzleStateParser.Parse(new XElement("State", "Left Blue, LeftDown Blue White"), null);
-            Assert.True(state(Puzzle.Solved));
+            Assert.True(state.Matches(Puzzle.Solved));
         }
 
         [Theory]
@@ -112,7 +112,7 @@ namespace RubiksCubeTrainer.Solver3x3
         public void All_false_checks_are_false(string stateText)
         {
             var state = PuzzleStateParser.Parse(new XElement("State", stateText), null);
-            Assert.False(state(Puzzle.Solved));
+            Assert.False(state.Matches(Puzzle.Solved));
         }
     }
 
@@ -126,7 +126,7 @@ namespace RubiksCubeTrainer.Solver3x3
             var previousStep = new Step(
                 "Step1",
                 null,
-                puzzle => checksValue,
+                new BoolChecker(checksValue),
                 ImmutableArray<AlgorithmCollection>.Empty);
             var state = PuzzleStateParser.Parse(
                 new XElement(
@@ -139,7 +139,20 @@ namespace RubiksCubeTrainer.Solver3x3
                     return previousStep;
                 });
 
-            Assert.Equal(checksValue, state(Puzzle.Solved));
+            Assert.Equal(checksValue, state.Matches(Puzzle.Solved));
+        }
+
+        private class BoolChecker : CheckerBase
+        {
+            private readonly bool value;
+
+            public BoolChecker(bool value)
+            {
+                this.value = value;
+            }
+
+            public override bool Matches(Puzzle puzzle)
+                => this.value;
         }
     }
 
@@ -160,7 +173,7 @@ namespace RubiksCubeTrainer.Solver3x3
                         new XElement("Checks", orCheck2)),
                     new XElement("Checks", afterCheck)),
                 null);
-            Assert.True(state(Puzzle.Solved));
+            Assert.True(state.Matches(Puzzle.Solved));
         }
     }
 }

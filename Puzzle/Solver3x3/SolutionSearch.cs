@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -17,19 +16,15 @@ namespace RubiksCubeTrainer.Solver3x3
             NotationMoveType.LeftClockwise, NotationMoveType.LeftCounterClockwise, NotationMoveType.LeftDouble,
             NotationMoveType.DownClockwise, NotationMoveType.DownCounterClockwise, NotationMoveType.DownDouble,
             NotationMoveType.BackClockwise, NotationMoveType.BackCounterClockwise, NotationMoveType.BackDouble);
-        //public static readonly ImmutableArray<NotationMoveType> AllFaceAndWideMoves = AllFaceMoves.AddRange(
-        //    new[]
-        //    {
-        //    });
 
         private readonly ImmutableArray<NotationMoveType> availableMoves;
-        private readonly Func<Puzzle, bool> isFinished;
+        private readonly IChecker isFinished;
         private int shortestSolutionLength;
 
         public SolutionSearch(
             int shortestSolutionLength,
             ImmutableArray<NotationMoveType> availableMoves,
-            Func<Puzzle, bool> isFinished)
+            IChecker isFinished)
         {
             this.shortestSolutionLength = shortestSolutionLength;
             this.availableMoves = availableMoves;
@@ -41,14 +36,12 @@ namespace RubiksCubeTrainer.Solver3x3
 
         private Task<IEnumerable<IEnumerable<NotationMoveType>>> SearchThisLayer(SearchState searchState)
         {
-            //System.Diagnostics.Debug.WriteLine(NotationParser.FormatMoves(searchState.Moves));
-
             if (searchState.Moves.Length > this.shortestSolutionLength)
             {
                 return Task.FromResult(Enumerable.Empty<IEnumerable<NotationMoveType>>());
             }
 
-            if (isFinished(searchState.Puzzle))
+            if (isFinished.Matches(searchState.Puzzle))
             {
                 UpdateShortestSolutionLength(searchState.Moves.Length);
                 return Task.FromResult<IEnumerable<IEnumerable<NotationMoveType>>>(new[] { (IEnumerable<NotationMoveType>)searchState.Moves });

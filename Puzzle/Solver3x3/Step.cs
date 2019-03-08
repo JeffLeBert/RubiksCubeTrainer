@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public class Step : IStep
+    public class Step
     {
         public Step(
             string name,
-            Func<Puzzle, bool> initialState,
-            Func<Puzzle, bool> finishedState,
+            IChecker initialState,
+            IChecker finishedState,
             ImmutableArray<AlgorithmCollection> algorithmCollections)
         {
             this.Name = name;
@@ -22,18 +21,15 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public ImmutableArray<AlgorithmCollection> AlgorithmCollections { get; }
 
-        public Func<Puzzle, bool> FinishedState { get; }
+        public IChecker FinishedState { get; }
 
-        public Func<Puzzle, bool> InitialState { get; }
+        public IChecker InitialState { get; }
 
         public string Name { get; }
 
         public IEnumerable<AlgorithmCollection> GetPossibleAlgorithms(Puzzle puzzle)
             => from algorithmCollection in this.AlgorithmCollections
-               where algorithmCollection.InitialState(puzzle)
+               where algorithmCollection.InitialState.Matches(puzzle)
                select algorithmCollection;
-
-        public bool ShouldUse(Puzzle puzzle)
-            => this.InitialState(puzzle);
     }
 }

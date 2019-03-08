@@ -101,7 +101,7 @@ namespace RubiksCubeTrainer.WinFormsUI
 
                 // Update the UI.
                 var moves = NotationParser.FormatMoves(firstAlgorithmInfo.Algorithms[0]);
-                solutionMoves += moves + " ";
+                solutionMoves += "(" + moves + ") ";
                 solutionDescription += firstAlgorithmInfo.Description
                     + Environment.NewLine
                     + moves
@@ -139,7 +139,7 @@ namespace RubiksCubeTrainer.WinFormsUI
                     Puzzle.Solved,
                     NotationParser.EnumerateMoves(scramble));
                 var failureInfo = SolverFailureFinder.FindFailure(WellKnownSolvers.Roux, currentPuzzle);
-                if (failureInfo.Failed)
+                if (failureInfo.Failed || failureInfo.AlgorithmFailed)
                 {
                     this.txtScrambleMoves.Text = scramble;
                     this.UpdateUIForFindFailure(failureInfo);
@@ -170,6 +170,10 @@ namespace RubiksCubeTrainer.WinFormsUI
             {
                 this.txtSolutionDescription.Text = "Solution found.";
             }
+            else if (failureInfo.AlgorithmFailed)
+            {
+                this.txtSolutionDescription.Text = "Algorithm failed.";
+            }
             else if (failureInfo.NoMoreAlgorithms)
             {
                 this.txtSolutionDescription.Text = "No more algorithms found.";
@@ -197,7 +201,7 @@ namespace RubiksCubeTrainer.WinFormsUI
             this.txtSolutionMoves.Text = string.Empty;
             this.txtSolutionDescription.Text = string.Empty;
 
-            var step = WellKnownSolvers.Roux.Steps["MoveLeftFrontToFrontBottom"];
+            var step = WellKnownSolvers.Roux.Steps["RotateLeftFrontDownWhiteCornerFacingOut"];
             var stopwatch = Stopwatch.StartNew();
             var solutions = new SolutionSearch(6, SolutionSearch.AllFaceMoves, step.FinishedState)
                 .Search(this.puzzle);
@@ -210,10 +214,6 @@ namespace RubiksCubeTrainer.WinFormsUI
                 select NotationParser.FormatMoves(solution));
 
             this.Refresh();
-
-            bool Check(Puzzle puzzle)
-                => Checker.SingleColor(puzzle, Puzzle3x3.Location.Left, PuzzleColor.Blue)
-                && Checker.Edge(puzzle, Puzzle3x3.Location.LeftDown, PuzzleColor.Blue, PuzzleColor.White);
         }
     }
 }

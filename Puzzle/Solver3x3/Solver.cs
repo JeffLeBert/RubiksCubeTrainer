@@ -14,9 +14,9 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public ImmutableDictionary<string, Step> Steps { get; }
 
-        public IEnumerable<IStep> NextSteps(Puzzle puzzle)
+        public IEnumerable<Step> NextSteps(Puzzle puzzle)
             => from step in this.Steps.Values
-               where step.InitialState(puzzle)
+               where step.InitialState.Matches(puzzle)
                select step;
     }
 }

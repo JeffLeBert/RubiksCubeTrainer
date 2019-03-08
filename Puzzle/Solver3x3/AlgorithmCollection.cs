@@ -16,7 +16,7 @@ namespace RubiksCubeTrainer.Solver3x3
     {
         public AlgorithmCollection(
             string description,
-            Func<Puzzle, bool> initialState,
+            IChecker initialState,
             ImmutableArray<ImmutableArray<NotationMoveType>> algorithms)
         {
             this.Description = description;
@@ -28,6 +28,6 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public string Description { get; }
 
-        public Func<Puzzle, bool> InitialState { get; }
+        public IChecker InitialState { get; }
     }
 }

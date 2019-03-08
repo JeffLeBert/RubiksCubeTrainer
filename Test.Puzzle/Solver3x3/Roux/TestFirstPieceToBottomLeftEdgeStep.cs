@@ -53,7 +53,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             {
                 var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithm);
 
-                Assert.True(step.FinishedState(solvedPuzzle));
+                Assert.True(step.FinishedState.Matches(solvedPuzzle));
             }
         }
     }

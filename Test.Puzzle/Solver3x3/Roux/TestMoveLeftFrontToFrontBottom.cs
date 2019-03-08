@@ -15,7 +15,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             var puzzle = Puzzle.Solved.Clone();
             puzzle[location] = color;
 
-            Assert.True(step.InitialState(puzzle));
+            Assert.True(step.InitialState.Matches(puzzle));
         }
 
         public static IEnumerable<object[]> GoodInitialStates()
@@ -32,7 +32,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
             var puzzle = Puzzle.Solved.Clone();
             puzzle[location] = color;
 
-            Assert.False(step.InitialState(puzzle));
+            Assert.False(step.InitialState.Matches(puzzle));
         }
 
         public static IEnumerable<object[]> BadInitialStates()
@@ -76,7 +76,7 @@ namespace RubiksCubeTrainer.Solver3x3.Roux
                 {
                     var solvedPuzzle = Rotator.ApplyMoves(scrambledPuzzle, algorithm);
                     Assert.True(
-                        step.FinishedState(solvedPuzzle),
+                        step.FinishedState.Matches(solvedPuzzle),
                         $"Failed for scramble [{scrambleMoves}] with solution [{NotationParser.FormatMoves(algorithm)}].");
                 }
             }
