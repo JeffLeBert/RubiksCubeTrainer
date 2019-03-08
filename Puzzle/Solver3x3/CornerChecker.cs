@@ -4,16 +4,16 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public class CornerChecker : CheckerBase
     {
-        public CornerChecker(params string[] parts)
+        public CornerChecker(string location, string color1, string color2, string color3)
         {
-            var info = GetLocationInformation(parts[0].Trim());
+            var info = GetLocationInformation(location.Trim());
 
             this.Location1 = info.Location;
             this.Location2 = info.Location.AdjacentCorner;
             this.Location3 = this.Location2.AdjacentCorner;
-            this.Color1 = PuzzleColorParser.Parse(parts[1]);
-            this.Color2 = PuzzleColorParser.Parse(parts[2]);
-            this.Color3 = PuzzleColorParser.Parse(parts[3]);
+            this.Color1 = PuzzleColorParser.Parse(color1);
+            this.Color2 = PuzzleColorParser.Parse(color2);
+            this.Color3 = PuzzleColorParser.Parse(color3);
             this.IsNot = info.IsNot;
             this.IsRotated = info.IsAll;
         }
@@ -33,6 +33,9 @@ namespace RubiksCubeTrainer.Solver3x3
         public Location Location2 { get; }
 
         public Location Location3 { get; }
+
+        public override string ToString()
+            => $"{this.Location1.ToString()} {this.Color1.ToString()} {this.Color2.ToString()} {this.Color3.ToString()}";
 
         public override bool Matches(Puzzle puzzle)
             => this.MatchesWithoutIsNot(puzzle) != this.IsNot;

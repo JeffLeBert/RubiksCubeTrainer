@@ -27,20 +27,16 @@ foreach (var colorName in colorNames)
     {
         public static PuzzleColor Parse(string color)
         {
-			switch (color)
-			{
 <#
 foreach (var colorName in colorNames)
 {
 #>
-				case nameof(PuzzleColor.<#= colorName #>):
-					return PuzzleColor.<#= colorName #>;
+			if ("<#= colorName #>".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.<#= colorName #>;
 <#
 }
 #>
-				default:
-					throw new InvalidOperationException();
-			}
+
+			throw new InvalidOperationException();
 		}
 	}
 }

@@ -4,14 +4,14 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public class EdgeChecker : CheckerBase
     {
-        public EdgeChecker(params string[] parts)
+        public EdgeChecker(string location, string color1, string color2)
         {
-            var info = GetLocationInformation(parts[0].Trim());
+            var info = GetLocationInformation(location.Trim());
 
             this.Location1 = info.Location;
             this.Location2 = info.Location.AdjacentEdge;
-            this.Color1 = PuzzleColorParser.Parse(parts[1]);
-            this.Color2 = PuzzleColorParser.Parse(parts[2]);
+            this.Color1 = PuzzleColorParser.Parse(color1);
+            this.Color2 = PuzzleColorParser.Parse(color2);
             this.IsNot = info.IsNot;
             this.IsRotated = info.IsAll;
         }
@@ -27,6 +27,9 @@ namespace RubiksCubeTrainer.Solver3x3
         public Location Location1 { get; }
 
         public Location Location2 { get; }
+
+        public override string ToString()
+            => $"{this.Location1.ToString()} {this.Color1.ToString()} {this.Color2.ToString()}";
 
         public override bool Matches(Puzzle puzzle)
             => this.MatchesWithoutIsNot(puzzle) != this.IsNot;

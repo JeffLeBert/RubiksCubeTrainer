@@ -16,23 +16,14 @@ namespace RubiksCubeTrainer.Puzzle3x3
     {
         public static PuzzleColor Parse(string color)
         {
-			switch (color)
-			{
-				case nameof(PuzzleColor.White):
-					return PuzzleColor.White;
-				case nameof(PuzzleColor.Blue):
-					return PuzzleColor.Blue;
-				case nameof(PuzzleColor.Yellow):
-					return PuzzleColor.Yellow;
-				case nameof(PuzzleColor.Green):
-					return PuzzleColor.Green;
-				case nameof(PuzzleColor.Red):
-					return PuzzleColor.Red;
-				case nameof(PuzzleColor.Orange):
-					return PuzzleColor.Orange;
-				default:
-					throw new InvalidOperationException();
-			}
+			if ("White".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.White;
+			if ("Blue".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.Blue;
+			if ("Yellow".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.Yellow;
+			if ("Green".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.Green;
+			if ("Red".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.Red;
+			if ("Orange".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.Orange;
+
+			throw new InvalidOperationException();
 		}
 	}
 }

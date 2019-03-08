@@ -14,8 +14,7 @@ namespace RubiksCubeTrainer.Solver3x3
                 PuzzleStateParser.Parse(element.Element(nameof(AlgorithmCollection.InitialState)), getStep),
                 ParseAlgorithms(element.Element(nameof(AlgorithmCollection.Algorithms)).Value));
 
-        [Obsolete("Remove usage except here.")]
-        public static ImmutableArray<ImmutableArray<NotationMoveType>> ParseAlgorithms(string value)
+        private static ImmutableArray<ImmutableArray<NotationMoveType>> ParseAlgorithms(string value)
             => ImmutableArray.CreateRange(
                 from algorithmText in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 select ImmutableArray.CreateRange(NotationParser.EnumerateMoves(algorithmText)));

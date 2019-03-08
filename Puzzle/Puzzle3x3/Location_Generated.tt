@@ -88,19 +88,30 @@ foreach (var (name, location) in locations)
 	{
 		public static Location Parse(string location)
 		{
-			switch (location)
-			{
 <#
 foreach (var (name, _) in locations)
 {
 #>
-				case "<#= name #>": return Location.<#= name #>;
+			if ("<#= name #>".Equals(location, StringComparison.OrdinalIgnoreCase)) return Location.<#= name #>;
 <#
 }
 #>
-				default:
-					throw new InvalidOperationException();
-			}
+
+			throw new InvalidOperationException();
+		}
+
+		public static string Format(Location location)
+		{
+<#
+foreach (var (name, _) in locations)
+{
+#>
+			if (location == Location.<#= name #>) return "<#= name #>";
+<#
+}
+#>
+
+			throw new InvalidOperationException();
 		}
 	}
 }

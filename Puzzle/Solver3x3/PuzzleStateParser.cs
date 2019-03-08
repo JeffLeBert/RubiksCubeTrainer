@@ -80,13 +80,13 @@ namespace RubiksCubeTrainer.Solver3x3
             switch (parts.Length)
             {
                 case 2:
-                    return new SingleColorChecker(parts);
+                    return new SingleColorChecker(parts[0], parts[1]);
 
                 case 3:
-                    return new EdgeChecker(parts);
+                    return new EdgeChecker(parts[0], parts[1], parts[2]);
 
                 case 4:
-                    return new CornerChecker(parts);
+                    return new CornerChecker(parts[0], parts[1], parts[2], parts[3]);
 
                 default:
                     throw new InvalidOperationException($"Too many parts: '{match}'");

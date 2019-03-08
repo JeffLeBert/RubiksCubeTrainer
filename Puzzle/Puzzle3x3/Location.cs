@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 
 namespace RubiksCubeTrainer.Puzzle3x3
 {
-    [System.Diagnostics.DebuggerDisplay("{FaceName} ({Point3D.X}, {Point3D.Y}, {Point3D.Z})")]
     public partial struct Location : IEquatable<Location>
     {
         private static readonly ImmutableDictionary<Location, Location> adjacentCorner;
@@ -36,7 +35,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
         public Point3D Point3D { get; }
 
         public override string ToString()
-            => $"{this.FaceName} ({this.Point3D.X}, {this.Point3D.Y}, {this.Point3D.Z})";
+            => LocationParser.Format(this);
 
         public override bool Equals(object obj)
             => obj is Location location && this.Equals(location);
