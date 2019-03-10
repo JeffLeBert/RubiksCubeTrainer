@@ -79,7 +79,7 @@ namespace RubiksCubeTrainer.WinFormsUI
         {
             var solutionMoves = string.Empty;
             var solutionDescription = string.Empty;
-            var currentPuzzle = this.puzzle;
+            var currentPuzzle = Rotator.ApplyMoves(Puzzle.Solved, this.txtScrambleMoves.Text);
             var tryCount = 0;
             while (true)
             {
@@ -124,22 +124,20 @@ namespace RubiksCubeTrainer.WinFormsUI
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+            => this.Close();
 
         private void FindFailureX10000ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var stopwatch = Stopwatch.StartNew();
-            const int Tries = 10000;
-            for (int i = 0; i < Tries; i++)
+            const int SearchCount = 10000;
+            for (int i = 0; i < SearchCount; i++)
             {
                 var scramble = Scrambler.Scamble();
                 var currentPuzzle = Rotator.ApplyMoves(
                     Puzzle.Solved,
                     NotationParser.EnumerateMoves(scramble));
                 var failureInfo = SolverFailureFinder.FindFailure(WellKnownSolvers.Roux, currentPuzzle);
-                if (failureInfo.Failed || failureInfo.AlgorithmFailed)
+                if (failureInfo.FailDescription != null)
                 {
                     this.txtScrambleMoves.Text = scramble;
                     this.UpdateUIForFindFailure(failureInfo);
@@ -150,7 +148,7 @@ namespace RubiksCubeTrainer.WinFormsUI
 
             this.txtScrambleMoves.Text = string.Empty;
             this.txtSolutionMoves.Text = string.Empty;
-            this.txtSolutionDescription.Text = $"{Tries} solutions found in {stopwatch.ElapsedMilliseconds}ms.";
+            this.txtSolutionDescription.Text = $"{SearchCount} solutions found in {stopwatch.ElapsedMilliseconds}ms.";
             this.Refresh();
         }
 
@@ -166,32 +164,11 @@ namespace RubiksCubeTrainer.WinFormsUI
 
         private void UpdateUIForFindFailure(SolverFailureInformation failureInfo)
         {
-            if (failureInfo.NoMoreSteps)
-            {
-                this.txtSolutionDescription.Text = "Solution found.";
-            }
-            else if (failureInfo.AlgorithmFailed)
-            {
-                this.txtSolutionDescription.Text = "Algorithm failed.";
-            }
-            else if (failureInfo.NoMoreAlgorithms)
-            {
-                this.txtSolutionDescription.Text = "No more algorithms found.";
-            }
-            else if (failureInfo.FoundCycle)
-            {
-                this.txtSolutionDescription.Text = "Cycle found.";
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
-
-            var movesText = string.Join(
+            this.txtSolutionDescription.Text = failureInfo.FailDescription ?? "Solved!";
+            this.txtSolutionMoves.Text = string.Join(
                 " ",
                 from algorithm in failureInfo.Algorithms
                 select "(" + NotationParser.FormatMoves(algorithm) + ")");
-            this.txtSolutionMoves.Text = movesText;
 
             this.Refresh();
         }

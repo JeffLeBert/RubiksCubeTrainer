@@ -97,7 +97,7 @@ foreach (var (name, _) in locations)
 }
 #>
 
-			throw new InvalidOperationException();
+			throw new InvalidOperationException($"Unknown location: {location}");
 		}
 
 		public static string Format(Location location)

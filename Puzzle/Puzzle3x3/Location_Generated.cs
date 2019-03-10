@@ -119,7 +119,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
 			if ("UpLeft".Equals(location, StringComparison.OrdinalIgnoreCase)) return Location.UpLeft;
 			if ("UpRight".Equals(location, StringComparison.OrdinalIgnoreCase)) return Location.UpRight;
 
-			throw new InvalidOperationException();
+			throw new InvalidOperationException($"Unknown location: {location}");
 		}
 
 		public static string Format(Location location)

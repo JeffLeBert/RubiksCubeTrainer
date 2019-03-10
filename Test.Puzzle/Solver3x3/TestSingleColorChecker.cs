@@ -8,28 +8,28 @@ namespace RubiksCubeTrainer.Solver3x3
         [Fact]
         public void True_if_color_is_correct()
         {
-            var checker = new SingleColorChecker("Left", "Blue");
+            var checker = SingleColorChecker.Create("Left", "Blue");
             Assert.True(checker.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void False_if_not_color_is_correct()
         {
-            var checker = new SingleColorChecker("!Left", "Blue");
+            var checker = SingleColorChecker.Create("!Left", "Blue");
             Assert.False(checker.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void False_if_color_is_correct()
         {
-            var checker = new SingleColorChecker("Front", "Blue");
+            var checker = SingleColorChecker.Create("Front", "Blue");
             Assert.False(checker.Matches(Puzzle.Solved));
         }
 
         [Fact]
         public void True_if_not_color_is_correct()
         {
-            var checker = new SingleColorChecker("!Front", "Blue");
+            var checker = SingleColorChecker.Create("!Front", "Blue");
             Assert.True(checker.Matches(Puzzle.Solved));
         }
     }

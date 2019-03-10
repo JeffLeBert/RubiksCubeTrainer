@@ -10,6 +10,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
 		Green,
 		Red,
 		Orange,
+		TemplateColors = 1000
     }
 
     public static class PuzzleColorParser
@@ -22,6 +23,13 @@ namespace RubiksCubeTrainer.Puzzle3x3
 			if ("Green".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.Green;
 			if ("Red".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.Red;
 			if ("Orange".Equals(color, StringComparison.OrdinalIgnoreCase)) return PuzzleColor.Orange;
+
+            // Used in templates to signify a replacable color.
+            if (color.StartsWith("C", StringComparison.OrdinalIgnoreCase))
+            {
+                var number = int.Parse(color.Substring(1));
+                return PuzzleColor.TemplateColors + number;
+            }
 
 			throw new InvalidOperationException();
 		}

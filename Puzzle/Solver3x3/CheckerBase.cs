@@ -4,9 +4,34 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public abstract class CheckerBase : IChecker
     {
+        protected CheckerBase(Location location, bool isNot, bool isRotated)
+        {
+            this.Location = location;
+            this.IsNot = isNot;
+            this.IsRotated = isRotated;
+        }
+
+        public bool IsNot { get; }
+
+        public bool IsRotated { get; }
+
+        public Location Location { get; }
+
+        public static PuzzleColor UpdateColorIfTemplated(PuzzleColor currentColor, PuzzleColor[] templateColors)
+            => currentColor > PuzzleColor.TemplateColors
+            ? templateColors[currentColor - PuzzleColor.TemplateColors - 1]
+            : currentColor;
+
         public abstract bool Matches(Puzzle puzzle);
 
-        internal static (bool IsAll, bool IsNot, Location Location) GetLocationInformation(string locationPart)
+        public abstract IChecker WithColors(PuzzleColor[] colors);
+
+        protected string FormattedLocation
+            => (this.IsNot ? "!" : "")
+            + this.Location.ToString()
+            + (this.IsRotated ? "*" : "");
+
+        internal static (bool IsRotated, bool IsNot, Location Location) GetLocationInformation(string locationPart)
         {
             var isNot = locationPart.StartsWith("!");
             if (isNot)
@@ -14,13 +39,13 @@ namespace RubiksCubeTrainer.Solver3x3
                 locationPart = locationPart.Substring(1);
             }
 
-            var isAll = locationPart.EndsWith("*");
-            if (isAll)
+            var isRotated = locationPart.EndsWith("*");
+            if (isRotated)
             {
                 locationPart = locationPart.Substring(0, locationPart.Length - 1);
             }
 
-            return (isAll, isNot, LocationParser.Parse(locationPart));
+            return (isRotated, isNot, LocationParser.Parse(locationPart));
         }
     }
 }

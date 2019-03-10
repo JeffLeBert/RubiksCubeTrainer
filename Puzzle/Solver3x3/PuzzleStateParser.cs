@@ -7,20 +7,18 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public static class PuzzleStateParser
     {
-        public static IChecker Parse(XElement stateElement, Func<string, Step> getStep)
+        public static IChecker Parse(XElement stateElement, Solver solver)
         {
-            var previousState = GetPreviousStateIfAny(stateElement, getStep);
+            var previousState = GetPreviousStateIfAny(stateElement, solver);
 
             var state = stateElement.HasElements
                 ? ParseStateElements(stateElement)
                 : ParseStateValue(stateElement.Value);
 
-            return previousState == null
-                ? state
-                : new AndChecker(ImmutableArray.Create(previousState, state));
+            return AndChecker.Combine(previousState, state);
         }
 
-        private static IChecker GetPreviousStateIfAny(XElement stateElement, Func<string, Step> getStep)
+        private static IChecker GetPreviousStateIfAny(XElement stateElement, Solver solver)
         {
             if (stateElement == null)
             {
@@ -29,18 +27,19 @@ namespace RubiksCubeTrainer.Solver3x3
 
             // The previous state is the finished state of the previous step.
             var previousStepName = stateElement.Attribute("PreviousStep")?.Value;
-            return previousStepName == null
-                ? null
-                : getStep(previousStepName).FinishedState;
+            if (previousStepName == null)
+            {
+                return null;
+            }
+
+            return solver.Steps.TryGetValue(previousStepName, out Step previousStep)
+                ? previousStep.FinishedState
+                : throw new InvalidOperationException($"Unknown step name {previousStepName}");
         }
 
         private static IChecker ParseStateElements(XElement element)
-        {
-            var checkers = ImmutableArray.CreateRange(
-                from childElement in element.Elements()
-                select ParseChildElement(childElement));
-            return new AndChecker(checkers);
-        }
+            => (from childElement in element.Elements() select ParseChildElement(childElement))
+            .Aggregate(AndChecker.Combine);
 
         private static IChecker ParseChildElement(XElement childElement)
         {
@@ -50,7 +49,10 @@ namespace RubiksCubeTrainer.Solver3x3
                     return ParseStateValue(childElement.Value);
 
                 case "Or":
-                    return ParseOrElement(childElement);
+                    var orChecker = ParseOrElement(childElement);
+                    return ParseIsNot(childElement)
+                        ? orChecker.WithNot()
+                        : orChecker;
 
                 default:
                     throw new InvalidOperationException(
@@ -58,12 +60,20 @@ namespace RubiksCubeTrainer.Solver3x3
             }
         }
 
-        private static IChecker ParseOrElement(XElement orElement)
+        private static OrChecker ParseOrElement(XElement orElement)
         {
             var checkers = ImmutableArray.CreateRange(
                 from childElement in orElement.Elements()
                 select ParseChildElement(childElement));
-            return new OrChecker(checkers);
+            return new OrChecker(checkers, false);
+        }
+
+        private static bool ParseIsNot(XElement element)
+        {
+            var isNotText = element.Attribute("IsNot")?.Value;
+            return isNotText == null
+                ? false
+                : bool.Parse(isNotText);
         }
 
         private static IChecker ParseStateValue(string state)
@@ -71,7 +81,9 @@ namespace RubiksCubeTrainer.Solver3x3
             var checkers = ImmutableArray.CreateRange(
                 from matcher in state.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 select ParseMatch(matcher));
-            return new AndChecker(checkers);
+            return checkers.Length == 1
+                ? checkers[0]
+                : new AndChecker(checkers);
         }
 
         private static IChecker ParseMatch(string match)
@@ -80,13 +92,13 @@ namespace RubiksCubeTrainer.Solver3x3
             switch (parts.Length)
             {
                 case 2:
-                    return new SingleColorChecker(parts[0], parts[1]);
+                    return SingleColorChecker.Create(parts[0], parts[1]);
 
                 case 3:
-                    return new EdgeChecker(parts[0], parts[1], parts[2]);
+                    return EdgeChecker.Create(parts[0], parts[1], parts[2]);
 
                 case 4:
-                    return new CornerChecker(parts[0], parts[1], parts[2], parts[3]);
+                    return CornerChecker.Create(parts[0], parts[1], parts[2], parts[3]);
 
                 default:
                     throw new InvalidOperationException($"Too many parts: '{match}'");

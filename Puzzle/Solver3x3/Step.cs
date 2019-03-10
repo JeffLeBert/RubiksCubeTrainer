@@ -5,6 +5,7 @@ using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
 {
+    [System.Diagnostics.DebuggerDisplay("Name = {Name}")]
     public class Step
     {
         public Step(

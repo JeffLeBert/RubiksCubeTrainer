@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
@@ -15,10 +14,12 @@ namespace RubiksCubeTrainer.Solver3x3
     public class AlgorithmCollection
     {
         public AlgorithmCollection(
+            string name,
             string description,
             IChecker initialState,
             ImmutableArray<ImmutableArray<NotationMoveType>> algorithms)
         {
+            this.Name = name;
             this.Description = description;
             this.InitialState = initialState;
             this.Algorithms = algorithms;
@@ -29,5 +30,16 @@ namespace RubiksCubeTrainer.Solver3x3
         public string Description { get; }
 
         public IChecker InitialState { get; }
+
+        public string Name { get; }
+
+        public AlgorithmCollection WithColors(PuzzleColor[] colors)
+        {
+            return new AlgorithmCollection(
+                this.Name,
+                this.Description,
+                this.InitialState.WithColors(colors),
+                this.Algorithms);
+        }
     }
 }

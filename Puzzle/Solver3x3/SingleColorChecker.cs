@@ -4,25 +4,35 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public class SingleColorChecker : CheckerBase
     {
-        public SingleColorChecker(string location, string color)
+        private SingleColorChecker(Location location, PuzzleColor color, bool isNot, bool isRotated)
+            : base(location, isNot, isRotated)
         {
-            var info = GetLocationInformation(location.Trim());
-
-            this.IsNot = info.IsNot;
-            this.Location = info.Location;
-            this.Color = PuzzleColorParser.Parse(color);
+            this.Color = color;
         }
 
         public PuzzleColor Color { get; }
 
-        public bool IsNot { get; }
-
-        public Location Location { get; }
+        public static SingleColorChecker Create(string location, string color1)
+        {
+            var info = GetLocationInformation(location.Trim());
+            return new SingleColorChecker(
+                info.Location,
+                PuzzleColorParser.Parse(color1),
+                info.IsNot,
+                info.IsRotated);
+        }
 
         public override string ToString()
-            => $"{this.Location.ToString()} {this.Color.ToString()}";
+            => $"{this.FormattedLocation} {this.Color.ToString()}";
 
         public override bool Matches(Puzzle puzzle)
             => (puzzle[this.Location] == this.Color) != this.IsNot;
+
+        public override IChecker WithColors(PuzzleColor[] colors)
+            => new SingleColorChecker(
+                this.Location,
+                UpdateColorIfTemplated(this.Color, colors),
+                this.IsNot,
+                this.IsRotated);
     }
 }

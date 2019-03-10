@@ -1,12 +1,28 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Immutable;
+using System.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
 {
     public static class SolverFailureFinder
     {
+        private static IChecker solvedChecker = BuildSolvedChecker();
+
         public static SolverFailureInformation FindFailure(Solver solver, Puzzle puzzle)
-            => FindFailure(solver, puzzle, SolverFailureInformation.Empty);
+        {
+            var failInfo = FindFailure(solver, puzzle, SolverFailureInformation.Empty);
+
+            if (!failInfo.Solved)
+            {
+                return failInfo;
+            }
+
+            var solvedPuzzle = Rotator.ApplyMoves(puzzle, failInfo.Algorithms);
+            return solvedChecker.Matches(solvedPuzzle)
+                ? failInfo
+                : failInfo.WithFailed("Solution not found.");
+        }
 
         private static SolverFailureInformation FindFailure(
             Solver solver,
@@ -28,7 +44,7 @@ namespace RubiksCubeTrainer.Solver3x3
                 var possibleAlgorithms = possibleStep.GetPossibleAlgorithms(puzzle).ToArray();
                 if (!possibleAlgorithms.Any())
                 {
-                    return failureInfo.WithNoMoreAlgorithms();
+                    return failureInfo.WithFailed("No more algorithms found.");
                 }
 
                 var stepsFailureInfo = FindFailure(solver, puzzle, failureInfo, possibleStep, possibleAlgorithms);
@@ -38,19 +54,19 @@ namespace RubiksCubeTrainer.Solver3x3
                 }
             }
 
-            return failureInfo.WithNoMoreSteps();
+            return failureInfo.WithSolved();
         }
 
         private static SolverFailureInformation FindFailure(
             Solver solver,
             Puzzle puzzle,
             SolverFailureInformation failureInfo,
-            Step possibleStep,
+            Step step,
             AlgorithmCollection[] possibleAlgorithmCollections)
         {
             if (failureInfo.Algorithms.Length > 50)
             {
-                return failureInfo.WithFoundCycle();
+                return failureInfo.WithFailed("Cycle found.");
             }
 
             foreach (var algorithmCollection in possibleAlgorithmCollections)
@@ -58,9 +74,10 @@ namespace RubiksCubeTrainer.Solver3x3
                 foreach (var algorithm in algorithmCollection.Algorithms)
                 {
                     var newPuzzle = Rotator.ApplyMoves(puzzle, algorithm);
-                    if (!possibleStep.FinishedState.Matches(newPuzzle))
+                    if (!step.FinishedState.Matches(newPuzzle))
                     {
-                        return failureInfo.WithAlgorithmFailed();
+                        return failureInfo.WithFailed(
+                            $"{algorithmCollection.Description}\r\nAlgorithm: {NotationParser.FormatMoves(algorithm)}\r\nStep initial state: {step.InitialState.ToString()}\r\nAlgorithm initial state: {algorithmCollection.InitialState.ToString()}\r\nFinished state: {step.FinishedState.ToString()}");
                     }
 
                     var algorithmFailureInfo = FindFailure(
@@ -76,5 +93,15 @@ namespace RubiksCubeTrainer.Solver3x3
 
             return failureInfo;
         }
+
+        private static IChecker BuildSolvedChecker()
+            => new AndChecker(
+                ImmutableArray.Create<IChecker>(
+                    SingleColorChecker.Create("Left", "Blue"),
+                    EdgeChecker.Create("LeftDown", "Blue", "White"),
+                    EdgeChecker.Create("LeftFront", "Blue", "Red"),
+                    EdgeChecker.Create("LeftBack", "Blue", "Orange"),
+                    CornerChecker.Create("LeftFrontDown", "Blue", "White", "Red"),
+                    CornerChecker.Create("LeftBackDown", "Blue", "Orange", "White")));
     }
 }

@@ -128,21 +128,18 @@ namespace RubiksCubeTrainer.Solver3x3
                 null,
                 new BoolChecker(checksValue),
                 ImmutableArray<AlgorithmCollection>.Empty);
+            var solver = Solver.Empty.With(previousStep);
             var state = PuzzleStateParser.Parse(
                 new XElement(
                     "State",
                     new XAttribute("PreviousStep", "Step1"),
                     "Left Blue"),
-                name =>
-                {
-                    Assert.Equal("Step1", name);
-                    return previousStep;
-                });
+                solver);
 
             Assert.Equal(checksValue, state.Matches(Puzzle.Solved));
         }
 
-        private class BoolChecker : CheckerBase
+        private class BoolChecker : IChecker
         {
             private readonly bool value;
 
@@ -151,8 +148,13 @@ namespace RubiksCubeTrainer.Solver3x3
                 this.value = value;
             }
 
-            public override bool Matches(Puzzle puzzle)
+            public bool Matches(Puzzle puzzle)
                 => this.value;
+
+            public IChecker WithColors(PuzzleColor[] colors)
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 
@@ -176,4 +178,27 @@ namespace RubiksCubeTrainer.Solver3x3
             Assert.True(state.Matches(Puzzle.Solved));
         }
     }
+
+    //    public class When_parsing_complex_puzzle_states
+    //    {
+    //        [Fact]
+    //        public void MyTestMethod()
+    //        {
+    //            const string xmlText =
+    //@"<InitialState>
+    //  <Checks>!FrontDown* Blue Red</Checks>
+    //  <Checks>!FrontDown* Blue Orange</Checks>
+    //  <Checks>!LeftFrontUp White Red Blue, !FrontUp Red Blue</Checks>
+    //  <Checks>!RightFrontUp White Red Blue, !FrontUp Blue Red</Checks>
+    //  <Checks>!LeftBackUp White Red Blue, !BackUp Blue Red</Checks>
+    //  <Checks>!RightBackUp White Red Blue, !BackUp Red Blue</Checks>
+    //  <Or>
+    //    <Checks>!LeftFront Blue Red</Checks>
+    //    <Checks>!LeftFrontDown Blue White Red</Checks>
+    //  </Or>
+    //</InitialState>";
+    //            var xml = XElement.Parse(xmlText);
+    //            var checker = PuzzleStateParser.Parse(xml, null);
+    //        }
+    //    }
 }
