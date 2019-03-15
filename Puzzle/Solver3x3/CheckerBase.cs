@@ -26,6 +26,8 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public abstract IChecker WithColors(PuzzleColor[] colors);
 
+        public abstract IChecker Negate();
+
         protected string FormattedLocation
             => (this.IsNot ? "!" : "")
             + this.Location.ToString()

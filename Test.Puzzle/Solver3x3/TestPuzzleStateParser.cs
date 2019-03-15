@@ -1,204 +1,181 @@
-﻿using System.Collections.Immutable;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 using Xunit;
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public class When_parsing_center_puzzle_states
+    public class When_parsing_single_color_puzzle_states
     {
         [Fact]
-        public void Center_true_if_correct()
+        public void Can_parse_the_main_parts()
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", "Left Blue"), null);
-            Assert.True(state.Matches(Puzzle.Solved));
+            var checker = Assert.IsType<SingleColorChecker>(
+                PuzzleStateParser.Parse(new XElement("State", "Left Blue"), null).Checker);
+
+            Assert.Equal(Location.Left, checker.Location);
+            Assert.Equal(PuzzleColor.Blue, checker.Color);
+            Assert.False(checker.IsNot);
+            Assert.False(checker.IsRotated);
         }
 
         [Fact]
-        public void Center_false_if_not_correct()
+        public void Can_parse_is_not()
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", "Front Blue"), null);
-            Assert.False(state.Matches(Puzzle.Solved));
-        }
+            var checker = Assert.IsType<SingleColorChecker>(
+                PuzzleStateParser.Parse(new XElement("State", "!Left Blue"), null).Checker);
 
-        [Fact]
-        public void Not_center_false_if_not_correct()
-        {
-            var state = PuzzleStateParser.Parse(new XElement("State", "!Left Blue"), null);
-            Assert.False(state.Matches(Puzzle.Solved));
-        }
-
-        [Fact]
-        public void Not_center_true_if_correct()
-        {
-            var state = PuzzleStateParser.Parse(new XElement("State", "!Front Blue"), null);
-            Assert.True(state.Matches(Puzzle.Solved));
+            Assert.True(checker.IsNot);
         }
     }
 
     public class When_parsing_edge_puzzle_states
     {
         [Fact]
-        public void Edge_true_if_correct()
+        public void Can_parse_main_parts()
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", "LeftDown Blue White"), null);
-            Assert.True(state.Matches(Puzzle.Solved));
+            var checker = Assert.IsType<EdgeChecker>(
+                PuzzleStateParser.Parse(new XElement("State", "LeftDown Blue White"), null).Checker);
+
+            Assert.Equal(Location.LeftDown, checker.Location);
+            Assert.Equal(Location.LeftDown.AdjacentEdge, checker.Location2);
+            Assert.Equal(PuzzleColor.Blue, checker.Color);
+            Assert.Equal(PuzzleColor.White, checker.Color2);
+            Assert.False(checker.IsNot);
+            Assert.False(checker.IsRotated);
         }
 
         [Fact]
-        public void Edge_false_if_not_correct()
+        public void Can_parse_is_not()
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", "LeftUp Blue White"), null);
-            Assert.False(state.Matches(Puzzle.Solved));
+            var checker = Assert.IsType<EdgeChecker>(
+                PuzzleStateParser.Parse(new XElement("State", "!LeftUp Blue White"), null).Checker);
+
+            Assert.True(checker.IsNot);
         }
 
         [Fact]
         public void Edge_false_if_flipped()
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", "LeftDown White Blue"), null);
-            Assert.False(state.Matches(Puzzle.Solved));
+            var checker = Assert.IsType<EdgeChecker>(
+                PuzzleStateParser.Parse(new XElement("State", "LeftDown* White Blue"), null).Checker);
+
+            Assert.True(checker.IsRotated);
         }
     }
 
     public class When_parsing_corner_puzzle_states
     {
-        [Theory]
-        [InlineData("LeftDown* Blue White")]
-        [InlineData("LeftDown* White Blue")]
-        public void All_edge_true_if_flipped(string stateText)
+        [Fact]
+        public void Parses_main_parts()
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", stateText), null);
-            Assert.True(state.Matches(Puzzle.Solved));
+            var checker = Assert.IsType<CornerChecker>(
+                PuzzleStateParser.Parse(new XElement("State", "LeftFrontDown Blue White Red"), null).Checker);
+
+            Assert.Equal(Location.LeftFrontDown, checker.Location);
+            Assert.Equal(Location.DownFrontLeft, checker.Location2);
+            Assert.Equal(Location.FrontLeftDown, checker.Location3);
+            Assert.Equal(PuzzleColor.Blue, checker.Color);
+            Assert.Equal(PuzzleColor.White, checker.Color2);
+            Assert.Equal(PuzzleColor.Red, checker.Color3);
         }
 
         [Fact]
-        public void Corner_true_if_correct()
+        public void Can_parse_is_not()
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", "LeftFrontDown Blue White Red"), null);
-            Assert.True(state.Matches(Puzzle.Solved));
+            var checker = Assert.IsType<CornerChecker>(
+                PuzzleStateParser.Parse(new XElement("State", "!LeftFrontDown Blue White Red"), null).Checker);
+
+            Assert.True(checker.IsNot);
         }
 
         [Fact]
         public void Corner_false_if_rotated()
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", "LeftFrontDown Red Blue White"), null);
-            Assert.False(state.Matches(Puzzle.Solved));
-        }
+            var checker = Assert.IsType<CornerChecker>(
+                PuzzleStateParser.Parse(new XElement("State", "LeftFrontDown* Red Blue White"), null).Checker);
 
-        [Theory]
-        [InlineData("LeftFrontDown* Blue White Red")]
-        [InlineData("LeftFrontDown* Red Blue White")]
-        [InlineData("LeftFrontDown* White Red Blue")]
-        public void All_corner_true_if_rotated(string stateText)
-        {
-            var state = PuzzleStateParser.Parse(new XElement("State", stateText), null);
-            Assert.True(state.Matches(Puzzle.Solved));
+            Assert.True(checker.IsRotated);
         }
     }
 
     public class When_parsing_combination_puzzle_states
     {
         [Fact]
-        public void All_true_checks_are_true()
+        public void Can_parse_multiple_comma_separated_states()
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", "Left Blue, LeftDown Blue White"), null);
-            Assert.True(state.Matches(Puzzle.Solved));
+            var andChecker = Assert.IsType<AndChecker>(
+                PuzzleStateParser.Parse(new XElement("State", "Left Blue, LeftDown Blue White"), null).Checker);
+
+            Assert.Collection(
+                andChecker.Checkers,
+                checker => Assert.Equal(Location.Left, ((SingleColorChecker)checker).Location),
+                checker => Assert.Equal(Location.LeftDown, ((EdgeChecker)checker).Location));
         }
 
         [Theory]
-        [InlineData("!Left Blue, LeftDown Blue White")]
-        [InlineData("Left Blue, !LeftDown Blue White")]
-        [InlineData("!Left Blue, !LeftDown Blue White")]
-        public void All_false_checks_are_false(string stateText)
+        [InlineData("{LeftCenter}, LeftDown Blue White")]
+        [InlineData("Left Blue, {LeftDown}")]
+        [InlineData("{LeftCenter}, {LeftDown}")]
+        public void Can_parse_named_states(string xmlText)
         {
-            var state = PuzzleStateParser.Parse(new XElement("State", stateText), null);
-            Assert.False(state.Matches(Puzzle.Solved));
-        }
-    }
+            var solver = Solver.Empty
+                .With("LeftCenter", SingleColorChecker.Create("Left", "Blue"))
+                .With("LeftDown", EdgeChecker.Create("LeftDown", "Blue", "White"));
+            var andChecker = Assert.IsType<AndChecker>(
+                PuzzleStateParser.Parse(new XElement("State", xmlText), solver).Checker);
 
-    public class When_parsing_with_previous_step
-    {
+            Assert.Collection(
+                andChecker.Checkers,
+                checker => Assert.Equal(Location.Left, ((SingleColorChecker)checker).Location),
+                checker => Assert.Equal(Location.LeftDown, ((EdgeChecker)checker).Location));
+        }
+
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void FinishedState_from_previous_step_is_used(bool checksValue)
+        [InlineData("{LeftCenter}", "LeftDown Blue White")]
+        [InlineData("Left Blue", "{LeftDown}")]
+        [InlineData("{LeftCenter}", "{LeftDown}")]
+        public void Can_parse_named_states_in_separate_elements(string checker1, string checker2)
         {
-            var previousStep = new Step(
-                "Step1",
-                null,
-                new BoolChecker(checksValue),
-                ImmutableArray<AlgorithmCollection>.Empty);
-            var solver = Solver.Empty.With(previousStep);
-            var state = PuzzleStateParser.Parse(
+            var solver = Solver.Empty
+                .With("LeftCenter", SingleColorChecker.Create("Left", "Blue"))
+                .With("LeftDown", EdgeChecker.Create("LeftDown", "Blue", "White"));
+            var xml =
                 new XElement(
                     "State",
-                    new XAttribute("PreviousStep", "Step1"),
-                    "Left Blue"),
-                solver);
+                    new XElement("Checks", checker1),
+                    new XElement("Checks", checker2));
+            var andChecker = Assert.IsType<AndChecker>(
+                PuzzleStateParser.Parse(xml, solver).Checker);
 
-            Assert.Equal(checksValue, state.Matches(Puzzle.Solved));
+            Assert.Collection(
+                andChecker.Checkers,
+                checker => Assert.Equal(Location.Left, ((SingleColorChecker)checker).Location),
+                checker => Assert.Equal(Location.LeftDown, ((EdgeChecker)checker).Location));
         }
 
-        private class BoolChecker : IChecker
-        {
-            private readonly bool value;
-
-            public BoolChecker(bool value)
-            {
-                this.value = value;
-            }
-
-            public bool Matches(Puzzle puzzle)
-                => this.value;
-
-            public IChecker WithColors(PuzzleColor[] colors)
-            {
-                throw new System.NotImplementedException();
-            }
-        }
-    }
-
-    public class When_parsing_Or_puzzle_states
-    {
         [Theory]
-        [InlineData("Left Blue", "Front White", "Front Red", "Right Green")]        // First OR is wrong.
-        [InlineData("Left Blue", "Front Red", "Front White", "Right Green")]        // Second OR is wrong.
-        public void True_if_any_part_is_true(string beforeCheck, string orCheck1, string orCheck2, string afterCheck)
+        [InlineData("{LeftCenter}", "LeftDown Blue White")]
+        [InlineData("Left Blue", "{LeftDown}")]
+        [InlineData("{LeftCenter}", "{LeftDown}")]
+        public void Can_parse_named_states_in_Or_elements(string checker1, string checker2)
         {
-            var state = PuzzleStateParser.Parse(
+            var solver = Solver.Empty
+                .With("LeftCenter", SingleColorChecker.Create("Left", "Blue"))
+                .With("LeftDown", EdgeChecker.Create("LeftDown", "Blue", "White"));
+            var xml =
                 new XElement(
                     "State",
-                    new XElement("Checks", beforeCheck),
                     new XElement(
                         "Or",
-                        new XElement("Checks", orCheck1),
-                        new XElement("Checks", orCheck2)),
-                    new XElement("Checks", afterCheck)),
-                null);
-            Assert.True(state.Matches(Puzzle.Solved));
+                        new XElement("Checks", checker1),
+                        new XElement("Checks", checker2)));
+            var orChecker = Assert.IsType<OrChecker>(
+                PuzzleStateParser.Parse(xml, solver).Checker);
+
+            Assert.Collection(
+                orChecker.Checkers,
+                checker => Assert.Equal(Location.Left, ((SingleColorChecker)checker).Location),
+                checker => Assert.Equal(Location.LeftDown, ((EdgeChecker)checker).Location));
         }
     }
-
-    //    public class When_parsing_complex_puzzle_states
-    //    {
-    //        [Fact]
-    //        public void MyTestMethod()
-    //        {
-    //            const string xmlText =
-    //@"<InitialState>
-    //  <Checks>!FrontDown* Blue Red</Checks>
-    //  <Checks>!FrontDown* Blue Orange</Checks>
-    //  <Checks>!LeftFrontUp White Red Blue, !FrontUp Red Blue</Checks>
-    //  <Checks>!RightFrontUp White Red Blue, !FrontUp Blue Red</Checks>
-    //  <Checks>!LeftBackUp White Red Blue, !BackUp Blue Red</Checks>
-    //  <Checks>!RightBackUp White Red Blue, !BackUp Red Blue</Checks>
-    //  <Or>
-    //    <Checks>!LeftFront Blue Red</Checks>
-    //    <Checks>!LeftFrontDown Blue White Red</Checks>
-    //  </Or>
-    //</InitialState>";
-    //            var xml = XElement.Parse(xmlText);
-    //            var checker = PuzzleStateParser.Parse(xml, null);
-    //        }
-    //    }
 }

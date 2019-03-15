@@ -67,5 +67,11 @@ namespace RubiksCubeTrainer.Solver3x3
                 ImmutableArray.CreateRange(
                     from checker in this.Checkers
                     select checker.WithColors(colors)));
+
+        public IChecker Negate()
+            => new OrChecker(
+                ImmutableArray.CreateRange(
+                    from checker in this.Checkers
+                    select checker.Negate()));
     }
 }

@@ -6,15 +6,12 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public class OrChecker : IChecker
     {
-        public OrChecker(ImmutableArray<IChecker> checkers, bool isNot)
+        public OrChecker(ImmutableArray<IChecker> checkers)
         {
             this.Checkers = checkers;
-            this.IsNot = isNot;
         }
 
         public ImmutableArray<IChecker> Checkers { get; }
-
-        public bool IsNot { get; }
 
         public bool Matches(Puzzle puzzle)
         {
@@ -22,16 +19,15 @@ namespace RubiksCubeTrainer.Solver3x3
             {
                 if (this.Checkers[i].Matches(puzzle))
                 {
-                    return !this.IsNot;
+                    return true;
                 }
             }
 
-            return this.IsNot;
+            return false;
         }
 
         public override string ToString()
-            => (this.IsNot ? "!" : string.Empty)
-            + "("
+            => "("
             + string.Join(" || ", from checker in this.Checkers select checker.ToString())
             + ")";
 
@@ -39,10 +35,12 @@ namespace RubiksCubeTrainer.Solver3x3
             => new OrChecker(
                 ImmutableArray.CreateRange(
                     from checker in this.Checkers
-                    select checker.WithColors(colors)),
-                this.IsNot);
+                    select checker.WithColors(colors)));
 
-        public IChecker WithNot()
-            => new OrChecker(this.Checkers, !this.IsNot);
+        public IChecker Negate()
+            => new AndChecker(
+                ImmutableArray.CreateRange(
+                    from checker in this.Checkers
+                    select checker.Negate()));
     }
 }

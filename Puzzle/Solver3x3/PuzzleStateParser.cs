@@ -7,24 +7,20 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public static class PuzzleStateParser
     {
-        public static IChecker Parse(XElement stateElement, Solver solver)
+        public static (string Name, IChecker Checker) Parse(XElement stateElement, Solver solver)
         {
             var previousState = GetPreviousStateIfAny(stateElement, solver);
 
+            var name = stateElement.Attribute("Name")?.Value;
             var state = stateElement.HasElements
-                ? ParseStateElements(stateElement)
-                : ParseStateValue(stateElement.Value);
+                ? ParseStateElements(stateElement, solver)
+                : ParseStateValue(stateElement.Value, solver);
 
-            return AndChecker.Combine(previousState, state);
+            return (name, AndChecker.Combine(previousState, state));
         }
 
         private static IChecker GetPreviousStateIfAny(XElement stateElement, Solver solver)
         {
-            if (stateElement == null)
-            {
-                System.Diagnostics.Debugger.Break();
-            }
-
             // The previous state is the finished state of the previous step.
             var previousStepName = stateElement.Attribute("PreviousStep")?.Value;
             if (previousStepName == null)
@@ -37,21 +33,21 @@ namespace RubiksCubeTrainer.Solver3x3
                 : throw new InvalidOperationException($"Unknown step name {previousStepName}");
         }
 
-        private static IChecker ParseStateElements(XElement element)
-            => (from childElement in element.Elements() select ParseChildElement(childElement))
+        private static IChecker ParseStateElements(XElement element, Solver solver)
+            => (from childElement in element.Elements() select ParseChildElement(childElement, solver))
             .Aggregate(AndChecker.Combine);
 
-        private static IChecker ParseChildElement(XElement childElement)
+        private static IChecker ParseChildElement(XElement childElement, Solver solver)
         {
             switch (childElement.Name.LocalName)
             {
                 case "Checks":
-                    return ParseStateValue(childElement.Value);
+                    return ParseStateValue(childElement.Value, solver);
 
                 case "Or":
-                    var orChecker = ParseOrElement(childElement);
+                    var orChecker = ParseOrElement(childElement, solver);
                     return ParseIsNot(childElement)
-                        ? orChecker.WithNot()
+                        ? orChecker.Negate()
                         : orChecker;
 
                 default:
@@ -60,13 +56,11 @@ namespace RubiksCubeTrainer.Solver3x3
             }
         }
 
-        private static OrChecker ParseOrElement(XElement orElement)
-        {
-            var checkers = ImmutableArray.CreateRange(
-                from childElement in orElement.Elements()
-                select ParseChildElement(childElement));
-            return new OrChecker(checkers, false);
-        }
+        private static OrChecker ParseOrElement(XElement orElement, Solver solver)
+            => new OrChecker(
+                ImmutableArray.CreateRange(
+                    from childElement in orElement.Elements()
+                    select ParseChildElement(childElement, solver)));
 
         private static bool ParseIsNot(XElement element)
         {
@@ -76,17 +70,49 @@ namespace RubiksCubeTrainer.Solver3x3
                 : bool.Parse(isNotText);
         }
 
-        private static IChecker ParseStateValue(string state)
+        private static IChecker ParseStateValue(string state, Solver solver)
         {
             var checkers = ImmutableArray.CreateRange(
                 from matcher in state.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                select ParseMatch(matcher));
+                select ParseMatch(matcher, solver));
             return checkers.Length == 1
                 ? checkers[0]
                 : new AndChecker(checkers);
         }
 
-        private static IChecker ParseMatch(string match)
+        private static IChecker ParseMatch(string match, Solver solver)
+        {
+            match = match.Trim();
+            return (match.StartsWith("{") || match.StartsWith("!{"))
+                ? ParseMatchFromNamedState(match, solver)
+                : ParseMatchFromParts(match);
+        }
+
+        private static IChecker ParseMatchFromNamedState(string match, Solver solver)
+        {
+            if (!match.EndsWith("}"))
+            {
+                throw new InvalidOperationException($"Named state must end with '}}': '{match}'");
+            }
+
+            var isNot = match.StartsWith("!");
+            if (isNot)
+            {
+                match = match.Substring(1);
+            }
+
+            var stateName = match.Substring(1, match.Length - 2).Trim();
+            if (!solver.States.TryGetValue(stateName, out IChecker state))
+            {
+                throw new InvalidOperationException($"Unknown named state '{stateName}'");
+            }
+
+            return isNot
+                ? state.Negate()
+                : state;
+        }
+
+        private static IChecker ParseMatchFromParts(string match)
         {
             var parts = match.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             switch (parts.Length)

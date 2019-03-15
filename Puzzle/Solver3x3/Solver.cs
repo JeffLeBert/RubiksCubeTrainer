@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
@@ -9,17 +10,22 @@ namespace RubiksCubeTrainer.Solver3x3
     {
         private Solver(
             ImmutableDictionary<string, Step> steps,
-            ImmutableDictionary<string, AlgorithmCollection> algorithmCollectionTemplates)
+            ImmutableDictionary<string, IChecker> states,
+            ImmutableDictionary<string, AlgorithmCollection> algorithmCollections)
         {
             this.Steps = steps;
-            this.AlgorithmCollectionTemplates = algorithmCollectionTemplates;
+            this.States = states;
+            this.AlgorithmCollections = algorithmCollections;
         }
 
         public static Solver Empty { get; } = new Solver(
-            ImmutableDictionary<string, Step>.Empty,
-            ImmutableDictionary<string, AlgorithmCollection>.Empty);
+            ImmutableDictionary.Create<string, Step>(StringComparer.OrdinalIgnoreCase),
+            ImmutableDictionary.Create<string, IChecker>(StringComparer.OrdinalIgnoreCase),
+            ImmutableDictionary.Create<string, AlgorithmCollection>(StringComparer.OrdinalIgnoreCase));
 
-        public ImmutableDictionary<string, AlgorithmCollection> AlgorithmCollectionTemplates { get; }
+        public ImmutableDictionary<string, AlgorithmCollection> AlgorithmCollections { get; }
+
+        public ImmutableDictionary<string, IChecker> States { get; }
 
         public ImmutableDictionary<string, Step> Steps { get; }
 
@@ -29,9 +35,21 @@ namespace RubiksCubeTrainer.Solver3x3
                select step;
 
         public Solver With(AlgorithmCollection algorithmCollection)
-            => new Solver(this.Steps, this.AlgorithmCollectionTemplates.Add(algorithmCollection.Name, algorithmCollection));
+            => new Solver(
+                this.Steps,
+                this.States,
+                this.AlgorithmCollections.Add(algorithmCollection.Name, algorithmCollection));
+
+        public Solver With(string name, IChecker state)
+            => new Solver(
+                this.Steps,
+                this.States.Add(name, state),
+                this.AlgorithmCollections);
 
         public Solver With(Step step)
-            => new Solver(this.Steps.Add(step.Name, step), this.AlgorithmCollectionTemplates);
+            => new Solver(
+                this.Steps.Add(step.Name, step),
+                this.States,
+                this.AlgorithmCollections);
     }
 }

@@ -34,5 +34,12 @@ namespace RubiksCubeTrainer.Solver3x3
                 UpdateColorIfTemplated(this.Color, colors),
                 this.IsNot,
                 this.IsRotated);
+
+        public override IChecker Negate()
+            => new SingleColorChecker(
+                this.Location,
+                this.Color,
+                !this.IsNot,
+                this.IsRotated);
     }
 }

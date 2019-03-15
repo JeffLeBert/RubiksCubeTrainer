@@ -9,5 +9,7 @@ namespace RubiksCubeTrainer.Solver3x3
         string ToString();
 
         IChecker WithColors(PuzzleColor[] colors);
+
+        IChecker Negate();
     }
 }

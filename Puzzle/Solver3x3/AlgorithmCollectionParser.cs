@@ -16,12 +16,12 @@ namespace RubiksCubeTrainer.Solver3x3
                 return new AlgorithmCollection(
                     element.Attribute(nameof(AlgorithmCollection.Name))?.Value,
                     element.Element(nameof(AlgorithmCollection.Description)).Value,
-                    PuzzleStateParser.Parse(element.Element(nameof(AlgorithmCollection.InitialState)), solver),
+                    PuzzleStateParser.Parse(element.Element(nameof(AlgorithmCollection.InitialState)), solver).Checker,
                     ParseAlgorithms(element.Element(nameof(AlgorithmCollection.Algorithms)).Value));
             }
             else
             {
-                var fromTemplate = solver.AlgorithmCollectionTemplates[fromTemplateName];
+                var fromTemplate = solver.AlgorithmCollections[fromTemplateName];
                 var colors =
                     (from color in element.Attribute("Colors").Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                      select PuzzleColorParser.Parse(color.Trim()))

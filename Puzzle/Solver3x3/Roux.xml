@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Solver>
 
+  <States>
+    <State Name="LeftCenter">Left Blue</State>
+  </States>
+
   <Step Name="MoveBlueCenterToLeft">
-    <InitialState>!Left Blue</InitialState>
+    <InitialState>!{LeftCenter}</InitialState>
 
     <AlgorithmCollection>
       <Description>Move blue face from Back to Left</Description>
@@ -30,11 +34,15 @@
       <Algorithms>z</Algorithms>
     </AlgorithmCollection>
 
-    <FinishedState>Left Blue</FinishedState>
+    <FinishedState>{LeftCenter}</FinishedState>
   </Step>
 
+  <States>
+    <State Name="LeftCenterAndBottomEdge">{LeftCenter}, LeftDown Blue White</State>
+  </States>
+
   <Step Name="FirstPieceToBottomLeft">
-    <InitialState PreviousStep="MoveBlueCenterToLeft">!LeftDown Blue White</InitialState>
+    <InitialState>{LeftCenter}, !LeftDown Blue White</InitialState>
 
     <AlgorithmCollection>
       <Description>Flip down left edge</Description>
@@ -154,88 +162,106 @@
       <Algorithms>U F' L, R B' D, R' F D', U' B L'</Algorithms>
     </AlgorithmCollection>
 
-    <FinishedState PreviousStep="MoveBlueCenterToLeft">LeftDown Blue White</FinishedState>
+    <FinishedState>{LeftCenterAndBottomEdge}</FinishedState>
   </Step>
 
   <!-- TODO: Add in step if pair already joined. -->
 
-  <AlgorithmCollection Name="FrontUpToFrontDown">
-    <Description>Move edge from Front Up</Description>
-    <InitialState>FrontUp* C1 C2</InitialState>
-    <Algorithms>M</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="BackUpToFrontDown">
-    <Description>Move edge from Back Up</Description>
-    <InitialState>UpBack* C1 C2</InitialState>
-    <Algorithms>M2</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="RightUpToFrontDown">
-    <Description>Move edge from Right Up</Description>
-    <InitialState>RightUp* C1 C2</InitialState>
-    <Algorithms>U M</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="LeftUpToFrontDown">
-    <Description>Move edge from Left Up</Description>
-    <InitialState>LeftUp* C1 C2</InitialState>
-    <Algorithms>U' M</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="FrontLeftToFrontDown">
-    <Description>Move edge from Front Left</Description>
-    <InitialState>FrontLeft* C1 C2</InitialState>
-    <Algorithms>F'</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="FrontRightToFrontDown">
-    <Description>Move edge from front right</Description>
-    <InitialState>FrontRight* C1 C2</InitialState>
-    <Algorithms>R U M</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="LeftBackToFrontDown">
-    <Description>Move edge from Left Back</Description>
-    <InitialState>LeftBack* C1 C2</InitialState>
-    <Algorithms>B' M2, B M'</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="BackRightToFrontDown">
-    <Description>Move edge from back right</Description>
-    <InitialState>BackRight* C1 C2</InitialState>
-    <Algorithms>B M2, B' M'</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="BackDownToFrontDown">
-    <Description>Move edge from back down</Description>
-    <InitialState>BackDown* C1 C2</InitialState>
-    <Algorithms>M'</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="RightDownToFrontDown">
-    <Description>Move edge from Right Down</Description>
-    <InitialState>RightDown* C1 C2</InitialState>
-    <Algorithms>R2 U M</Algorithms>
-  </AlgorithmCollection>
-
-  <Step Name="MoveRedBlueToFrontBottom">
-    <InitialState PreviousStep="FirstPieceToBottomLeft">
-      <!-- Left Front or Back can't already be in Front Down. -->
-      <Checks>!FrontDown* Blue Red</Checks>
-      <Checks>!FrontDown* Blue Orange</Checks>
-      <!-- Pair not already joined at top. -->
-      <Or IsNot="True">
+  <States>
+    <State Name="FrontDownForLeftBlockIsInPosition">
+      <Or>
+        <Checks>FrontDown* Blue Red</Checks>
+        <Checks>FrontDown* Blue Orange</Checks>
+      </Or>
+    </State>
+    <State Name="LeftFrontBlockPairInPositionAtTop">
+      <Or>
         <Checks>LeftFrontUp White Red Blue, FrontUp Red Blue</Checks>
         <Checks>RightFrontUp White Red Blue, FrontUp Blue Red</Checks>
         <Checks>LeftBackUp White Red Blue, BackUp Blue Red</Checks>
         <Checks>RightBackUp White Red Blue, BackUp Red Blue</Checks>
       </Or>
+    </State>
+    <State Name="LeftBackBlockPairInPositionAtTop">
       <Or>
-        <!-- Left Front pair not already solved. -->
-        <Checks>!LeftFront Blue Red</Checks>
-        <Checks>!LeftFrontDown Blue White Red</Checks>
+        <Checks>LeftFrontUp White Blue Orange, FrontUp Blue Orange</Checks>
+        <Checks>RightFrontUp White Blue Orange, FrontUp Orange Blue</Checks>
+        <Checks>LeftBackUp White Blue Orange, BackUp Orange Blue</Checks>
+        <Checks>RightBackUp White Blue Blue, BackUp Blue Orange</Checks>
       </Or>
+    </State>
+    <State Name="LeftFrontBlockPairSolved">LeftFront Blue Red, LeftFrontDown Blue White Red</State>
+    <State Name="LeftBackBlockPairSolved">LeftBack Blue Orange, LeftBackDown Blue Orange White</State>
+  </States>
+
+  <AlgorithmCollections>
+    <AlgorithmCollection Name="FrontUpToFrontDown">
+      <Description>Move edge from Front Up</Description>
+      <InitialState>FrontUp* C1 C2</InitialState>
+      <Algorithms>M</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="BackUpToFrontDown">
+      <Description>Move edge from Back Up</Description>
+      <InitialState>UpBack* C1 C2</InitialState>
+      <Algorithms>M2</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="RightUpToFrontDown">
+      <Description>Move edge from Right Up</Description>
+      <InitialState>RightUp* C1 C2</InitialState>
+      <Algorithms>U M</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="LeftUpToFrontDown">
+      <Description>Move edge from Left Up</Description>
+      <InitialState>LeftUp* C1 C2</InitialState>
+      <Algorithms>U' M</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="FrontLeftToFrontDown">
+      <Description>Move edge from Front Left</Description>
+      <InitialState>FrontLeft* C1 C2</InitialState>
+      <Algorithms>F'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="FrontRightToFrontDown">
+      <Description>Move edge from front right</Description>
+      <InitialState>FrontRight* C1 C2</InitialState>
+      <Algorithms>R U M</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="LeftBackToFrontDown">
+      <Description>Move edge from Left Back</Description>
+      <InitialState>LeftBack* C1 C2</InitialState>
+      <Algorithms>B' M2, B M'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="BackRightToFrontDown">
+      <Description>Move edge from back right</Description>
+      <InitialState>BackRight* C1 C2</InitialState>
+      <Algorithms>B M2, B' M'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="BackDownToFrontDown">
+      <Description>Move edge from back down</Description>
+      <InitialState>BackDown* C1 C2</InitialState>
+      <Algorithms>M'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="RightDownToFrontDown">
+      <Description>Move edge from Right Down</Description>
+      <InitialState>RightDown* C1 C2</InitialState>
+      <Algorithms>R2 U M</Algorithms>
+    </AlgorithmCollection>
+  </AlgorithmCollections>
+
+  <Step Name="MoveRedBlueToFrontBottom">
+    <InitialState>
+      {LeftCenterAndBottomEdge},
+      !{FrontDownForLeftBlockIsInPosition},
+      !{LeftFrontBlockPairInPositionAtTop},
+      !{LeftFrontBlockPairSolved}
     </InitialState>
 
     <AlgorithmCollection FromTemplate="FrontUpToFrontDown" Colors="Red, Blue" />
@@ -258,109 +284,142 @@
 
     <AlgorithmCollection FromTemplate="RightDownToFrontDown" Colors="Red, Blue" />
 
-    <FinishedState PreviousStep="FirstPieceToBottomLeft">FrontDown* Blue Red</FinishedState>
+    <FinishedState>{LeftCenterAndBottomEdge}, FrontDown* Red Blue</FinishedState>
   </Step>
 
-  <AlgorithmCollection Name="LeftFrontDownToUpFacingOut1">
-    <Description>Move Left Front Down corner to top</Description>
-    <InitialState>LeftFrontDown White C1 C2</InitialState>
-    <Algorithms>L' U2 L</Algorithms>
-  </AlgorithmCollection>
-  <AlgorithmCollection Name="LeftFrontDownToUpFacingOut2">
-    <Description>Move Front Left Down corner to top</Description>
-    <InitialState>FrontLeftDown White C1 C2</InitialState>
-    <Algorithms>F U F'</Algorithms>
-  </AlgorithmCollection>
-  <AlgorithmCollection Name="LeftFrontDownToUpFacingOut3">
-    <Description>Move Down Front Left corner to top</Description>
-    <InitialState>DownFrontLeft White C1 C2</InitialState>
-    <Algorithms>L' U' L</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="RightFrontDownToUpFacingOut1">
-    <Description>Move Right Front Down corner to top</Description>
-    <InitialState>RightFrontDown White C1 C2</InitialState>
-    <Algorithms>R U2</Algorithms>
-  </AlgorithmCollection>
-  <AlgorithmCollection Name="RightFrontDownToUpFacingOut2">
-    <Description>Move Front Right Down corner to top</Description>
-    <InitialState>FrontRightDown White C1 C2</InitialState>
-    <Algorithms>F' U' F</Algorithms>
-  </AlgorithmCollection>
-  <AlgorithmCollection Name="RightFrontDownToUpFacingOut3">
-    <Description>Move Down Front Right corner to top</Description>
-    <InitialState>DownFrontRight White C1 C2</InitialState>
-    <Algorithms>R U</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="LeftBackDownToUpFacingOut1">
-    <Description>Move Left Back Down corner to top</Description>
-    <InitialState>LeftBackDown White C1 C2</InitialState>
-    <Algorithms>L U2 L'</Algorithms>
-  </AlgorithmCollection>
-  <AlgorithmCollection Name="LeftBackDownToUpFacingOut2">
-    <Description>Move Back Left Down corner to top</Description>
-    <InitialState>BackLeftDown White C1 C2</InitialState>
-    <Algorithms>B' U'</Algorithms>
-  </AlgorithmCollection>
-  <AlgorithmCollection Name="LeftBackDownToUpFacingOut3">
-    <Description>Move Down Back Left corner to top</Description>
-    <InitialState>DownBackLeft White C1 C2</InitialState>
-    <Algorithms>B' U2</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="RightBackDownToUpFacingOut1">
-    <Description>Move Right Back Down corner to top</Description>
-    <InitialState>RightBackDown White C1 C2</InitialState>
-    <Algorithms>R' U2</Algorithms>
-  </AlgorithmCollection>
-  <AlgorithmCollection Name="RightBackDownToUpFacingOut2">
-    <Description>Move Back Down Right corner to top</Description>
-    <InitialState>BackRightDown White C1 C2</InitialState>
-    <Algorithms>R2 U</Algorithms>
-  </AlgorithmCollection>
-  <AlgorithmCollection Name="RightBackDownToUpFacingOut3">
-    <Description>Move Down Back Right corner to top</Description>
-    <InitialState>DownBackRight White C1 C2</InitialState>
-    <Algorithms>R' U'</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="UpWhiteCornerToFacingOut">
-    <Description>Rotate white corner out facing out</Description>
+  <Step Name="MoveBlueOrangeToFrontBottom">
     <InitialState>
-      <Or>
-        <Checks>BackLeftUp White C1 C2</Checks>
-        <Checks>BackRightUp White C1 C2</Checks>
-        <Checks>FrontLeftUp White C1 C2</Checks>
-        <Checks>FrontRightUp White C1 C2</Checks>
-      </Or>
+      {LeftCenterAndBottomEdge},
+      !{FrontDownForLeftBlockIsInPosition},
+      !{LeftBackBlockPairInPositionAtTop},
+      !{LeftBackBlockPairSolved}
     </InitialState>
-    <Algorithms>U, U'</Algorithms>
-  </AlgorithmCollection>
 
-  <AlgorithmCollection Name="UpFrontLeftToFacingOut">
-    <Description>Rotate white Left Front Up corner out</Description>
-    <InitialState>UpFrontLeft White C1 C2</InitialState>
-    <Algorithms>U' R U</Algorithms>
-  </AlgorithmCollection>
+    <AlgorithmCollection FromTemplate="FrontUpToFrontDown" Colors="Blue, Orange" />
 
-  <AlgorithmCollection Name="UpBackLeftToFacingOut">
-    <Description>Rotate white Left Back Up corner out</Description>
-    <InitialState>UpBackLeft White C1 C2</InitialState>
-    <Algorithms>U R' U</Algorithms>
-  </AlgorithmCollection>
+    <AlgorithmCollection FromTemplate="BackUpToFrontDown" Colors="Blue, Orange" />
 
-  <AlgorithmCollection Name="UpBackRightToFacingOut">
-    <Description>Rotate white Right Back Up corner out</Description>
-    <InitialState>UpBackRight White C1 C2</InitialState>
-    <Algorithms>R' U, R' U'</Algorithms>
-  </AlgorithmCollection>
+    <AlgorithmCollection FromTemplate="RightUpToFrontDown" Colors="Blue, Orange" />
 
-  <AlgorithmCollection Name="UpFrontRightToFacingOut">
-    <Description>Rotate white Right Front Up corner out</Description>
-    <InitialState>UpFrontRight White C1 C2</InitialState>
-    <Algorithms>R U'</Algorithms>
-  </AlgorithmCollection>
+    <AlgorithmCollection FromTemplate="LeftUpToFrontDown" Colors="Blue, Orange" />
+
+    <AlgorithmCollection FromTemplate="FrontLeftToFrontDown" Colors="Blue, Orange" />
+
+    <AlgorithmCollection FromTemplate="FrontRightToFrontDown" Colors="Blue, Orange" />
+
+    <AlgorithmCollection FromTemplate="LeftBackToFrontDown" Colors="Blue, Orange" />
+
+    <AlgorithmCollection FromTemplate="BackRightToFrontDown" Colors="Blue, Orange" />
+
+    <AlgorithmCollection FromTemplate="BackDownToFrontDown" Colors="Blue, Orange" />
+
+    <AlgorithmCollection FromTemplate="RightDownToFrontDown" Colors="Blue, Orange" />
+
+    <FinishedState>{LeftCenterAndBottomEdge}, FrontDown* Blue Orange</FinishedState>
+  </Step>
+
+  <AlgorithmCollections>
+    <AlgorithmCollection Name="LeftFrontDownToUpFacingOut1">
+      <Description>Move Left Front Down corner to top</Description>
+      <InitialState>LeftFrontDown White C1 C2</InitialState>
+      <Algorithms>L' U2 L</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection Name="LeftFrontDownToUpFacingOut2">
+      <Description>Move Front Left Down corner to top</Description>
+      <InitialState>FrontLeftDown White C1 C2</InitialState>
+      <Algorithms>F U F'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection Name="LeftFrontDownToUpFacingOut3">
+      <Description>Move Down Front Left corner to top</Description>
+      <InitialState>DownFrontLeft White C1 C2</InitialState>
+      <Algorithms>L' U' L</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="RightFrontDownToUpFacingOut1">
+      <Description>Move Right Front Down corner to top</Description>
+      <InitialState>RightFrontDown White C1 C2</InitialState>
+      <Algorithms>R U2</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection Name="RightFrontDownToUpFacingOut2">
+      <Description>Move Front Right Down corner to top</Description>
+      <InitialState>FrontRightDown White C1 C2</InitialState>
+      <Algorithms>F' U' F</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection Name="RightFrontDownToUpFacingOut3">
+      <Description>Move Down Front Right corner to top</Description>
+      <InitialState>DownFrontRight White C1 C2</InitialState>
+      <Algorithms>R U</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="LeftBackDownToUpFacingOut1">
+      <Description>Move Left Back Down corner to top</Description>
+      <InitialState>LeftBackDown White C1 C2</InitialState>
+      <Algorithms>L U2 L'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection Name="LeftBackDownToUpFacingOut2">
+      <Description>Move Back Left Down corner to top</Description>
+      <InitialState>BackLeftDown White C1 C2</InitialState>
+      <Algorithms>B' U'</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection Name="LeftBackDownToUpFacingOut3">
+      <Description>Move Down Back Left corner to top</Description>
+      <InitialState>DownBackLeft White C1 C2</InitialState>
+      <Algorithms>B' U2</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="RightBackDownToUpFacingOut1">
+      <Description>Move Right Back Down corner to top</Description>
+      <InitialState>RightBackDown White C1 C2</InitialState>
+      <Algorithms>R' U2</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection Name="RightBackDownToUpFacingOut2">
+      <Description>Move Back Down Right corner to top</Description>
+      <InitialState>BackRightDown White C1 C2</InitialState>
+      <Algorithms>R2 U</Algorithms>
+    </AlgorithmCollection>
+    <AlgorithmCollection Name="RightBackDownToUpFacingOut3">
+      <Description>Move Down Back Right corner to top</Description>
+      <InitialState>DownBackRight White C1 C2</InitialState>
+      <Algorithms>R' U'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="UpWhiteCornerToFacingOut">
+      <Description>Rotate white corner out facing out</Description>
+      <InitialState>
+        <Or>
+          <Checks>BackLeftUp White C1 C2</Checks>
+          <Checks>BackRightUp White C1 C2</Checks>
+          <Checks>FrontLeftUp White C1 C2</Checks>
+          <Checks>FrontRightUp White C1 C2</Checks>
+        </Or>
+      </InitialState>
+      <Algorithms>U, U'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="UpFrontLeftToFacingOut">
+      <Description>Rotate white Left Front Up corner out</Description>
+      <InitialState>UpFrontLeft White C1 C2</InitialState>
+      <Algorithms>U' R U</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="UpBackLeftToFacingOut">
+      <Description>Rotate white Left Back Up corner out</Description>
+      <InitialState>UpBackLeft White C1 C2</InitialState>
+      <Algorithms>U R' U</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="UpBackRightToFacingOut">
+      <Description>Rotate white Right Back Up corner out</Description>
+      <InitialState>UpBackRight White C1 C2</InitialState>
+      <Algorithms>R' U, R' U'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="UpFrontRightToFacingOut">
+      <Description>Rotate white Right Front Up corner out</Description>
+      <InitialState>UpFrontRight White C1 C2</InitialState>
+      <Algorithms>R U'</Algorithms>
+    </AlgorithmCollection>
+  </AlgorithmCollections>
 
   <Step Name="MoveWhiteRedBlueCornerToTopFacingOut">
     <InitialState PreviousStep="MoveRedBlueToFrontBottom">
@@ -404,152 +463,6 @@
         <Checks>RightBackUp White Red Blue</Checks>
       </Or>
     </FinishedState>
-  </Step>
-
-  <AlgorithmCollection Name="JoinLeftFrontUpPairFlip">
-    <Description>Join pair at top</Description>
-    <InitialState>LeftFrontUp White C1 C2, FrontDown C1 C2</InitialState>
-    <Algorithms>U2 M2</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="JoinLeftFrontUpPair">
-    <Description>Join pair at top</Description>
-    <InitialState>LeftFrontUp White C1 C2, FrontDown C2 C1</InitialState>
-    <Algorithms>M'</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="JoinRightFrontUpPair">
-    <Description>Join pair at top</Description>
-    <InitialState>RightFrontUp White C1 C2, FrontDown C1 C2</InitialState>
-    <Algorithms>M'</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="JoinRightFrontUpPairFlip">
-    <Description>Join pair at top</Description>
-    <InitialState>RightFrontUp White C1 C2, FrontDown C2 C1</InitialState>
-    <Algorithms>U2 M2</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="JoinLeftBackUpPairFlip">
-    <Description>Join pair at top</Description>
-    <InitialState>LeftBackUp White C1 C2, FrontDown C1 C2</InitialState>
-    <Algorithms>U2 M'</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="JoinLeftBackUpPair">
-    <Description>Join pair at top</Description>
-    <InitialState>LeftBackUp White C1 C2, FrontDown C2 C1</InitialState>
-    <Algorithms>M2</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="JoinRightBackUpPair">
-    <Description>Join pair at top</Description>
-    <InitialState>RightBackUp White C1 C2, FrontDown C1 C2</InitialState>
-    <Algorithms>M2</Algorithms>
-  </AlgorithmCollection>
-
-  <AlgorithmCollection Name="JoinRightBackUpPairFlip">
-    <Description>Join pair at top</Description>
-    <InitialState>RightBackUp White C1 C2, FrontDown C2 C1</InitialState>
-    <Algorithms>U2 M'</Algorithms>
-  </AlgorithmCollection>
-
-  <Step Name="JoinFrontDownToBlueRedTopCorner">
-    <InitialState PreviousStep="MoveWhiteRedBlueCornerToTopFacingOut" />
-
-    <AlgorithmCollection FromTemplate="JoinLeftFrontUpPair" Colors="Red, Blue" />
-    <AlgorithmCollection FromTemplate="JoinLeftFrontUpPairFlip" Colors="Red, Blue" />
-
-    <AlgorithmCollection FromTemplate="JoinRightFrontUpPair" Colors="Red, Blue" />
-    <AlgorithmCollection FromTemplate="JoinRightFrontUpPairFlip" Colors="Red, Blue" />
-
-    <AlgorithmCollection FromTemplate="JoinLeftBackUpPairFlip" Colors="Red, Blue" />
-    <AlgorithmCollection FromTemplate="JoinLeftBackUpPair" Colors="Red, Blue" />
-
-    <AlgorithmCollection FromTemplate="JoinRightBackUpPair" Colors="Red, Blue" />
-    <AlgorithmCollection FromTemplate="JoinRightBackUpPairFlip" Colors="Red, Blue" />
-
-    <FinishedState PreviousStep="FirstPieceToBottomLeft">
-      <Or>
-        <!-- Pair joined at top. -->
-        <Checks>LeftFrontUp White Red Blue, FrontUp Red Blue</Checks>
-        <Checks>RightFrontUp White Red Blue, FrontUp Blue Red</Checks>
-        <Checks>LeftBackUp White Red Blue, BackUp Blue Red</Checks>
-        <Checks>RightBackUp White Red Blue, BackUp Red Blue</Checks>
-      </Or>
-    </FinishedState>
-  </Step>
-
-  <Step Name="PairToLeftFront">
-    <InitialState PreviousStep="JoinFrontDownToBlueRedTopCorner" />
-
-    <AlgorithmCollection>
-      <Description>Pair to Left Front</Description>
-      <InitialState>LeftFrontUp White Red Blue, FrontUp Red Blue</InitialState>
-      <Algorithms>F'</Algorithms>
-    </AlgorithmCollection>
-
-    <AlgorithmCollection>
-      <Description>Pair to Left Front</Description>
-      <InitialState>RightFrontUp White Red Blue, FrontUp Blue Red</InitialState>
-      <Algorithms>L' U L</Algorithms>
-    </AlgorithmCollection>
-
-    <AlgorithmCollection>
-      <Description>Pair to Left Front</Description>
-      <InitialState>LeftBackUp White Red Blue, BackUp Blue Red</InitialState>
-      <Algorithms>U2 L' U L</Algorithms>
-    </AlgorithmCollection>
-
-    <AlgorithmCollection>
-      <Description>Pair to Left Front</Description>
-      <InitialState>RightBackUp White Red Blue, BackUp Red Blue</InitialState>
-      <Algorithms>U2 F'</Algorithms>
-    </AlgorithmCollection>
-
-    <FinishedState PreviousStep="FirstPieceToBottomLeft">LeftFront Blue Red, LeftFrontDown Blue White Red</FinishedState>
-  </Step>
-  
-  <Step Name="MoveBlueOrangeToFrontBottom">
-    <InitialState PreviousStep="FirstPieceToBottomLeft">
-      <!-- Left Front or Back can't already be in Front Down. -->
-      <Checks>!FrontDown* Blue Red</Checks>
-      <Checks>!FrontDown* Blue Orange</Checks>
-      <!-- Pair not already joined at top. -->
-      <Or IsNot="True">
-        <Checks>LeftFrontUp White Blue Orange, FrontUp Blue Orange</Checks>
-        <Checks>RightFrontUp White Blue Orange, FrontUp Orange Blue</Checks>
-        <Checks>LeftBackUp White Blue Orange, BackUp Orange Blue</Checks>
-        <Checks>RightBackUp White Blue Blue, BackUp Blue Orange</Checks>
-      </Or>
-      <Or>
-        <!-- Left Back pair not already solved. -->
-        <Checks>!LeftBack Blue Orange</Checks>
-        <Checks>!LeftBackDown Blue Orange White</Checks>
-      </Or>
-    </InitialState>
-
-    <AlgorithmCollection FromTemplate="FrontUpToFrontDown" Colors="Blue, Orange" />
-
-    <AlgorithmCollection FromTemplate="BackUpToFrontDown" Colors="Blue, Orange" />
-
-    <AlgorithmCollection FromTemplate="RightUpToFrontDown" Colors="Blue, Orange" />
-
-    <AlgorithmCollection FromTemplate="LeftUpToFrontDown" Colors="Blue, Orange" />
-
-    <AlgorithmCollection FromTemplate="FrontLeftToFrontDown" Colors="Blue, Orange" />
-
-    <AlgorithmCollection FromTemplate="FrontRightToFrontDown" Colors="Blue, Orange" />
-
-    <AlgorithmCollection FromTemplate="LeftBackToFrontDown" Colors="Blue, Orange" />
-
-    <AlgorithmCollection FromTemplate="BackRightToFrontDown" Colors="Blue, Orange" />
-
-    <AlgorithmCollection FromTemplate="BackDownToFrontDown" Colors="Blue, Orange" />
-
-    <AlgorithmCollection FromTemplate="RightDownToFrontDown" Colors="Blue, Orange" />
-
-    <FinishedState PreviousStep="FirstPieceToBottomLeft">FrontDown* Blue Orange</FinishedState>
   </Step>
 
   <Step Name="MoveWhiteBlueOrangeCornerToTopFacingOut">
@@ -596,6 +509,82 @@
     </FinishedState>
   </Step>
 
+  <AlgorithmCollections>
+    <AlgorithmCollection Name="JoinLeftFrontUpPairFlip">
+      <Description>Join pair at top</Description>
+      <InitialState>LeftFrontUp White C1 C2, FrontDown C1 C2</InitialState>
+      <Algorithms>U2 M2</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="JoinLeftFrontUpPair">
+      <Description>Join pair at top</Description>
+      <InitialState>LeftFrontUp White C1 C2, FrontDown C2 C1</InitialState>
+      <Algorithms>M'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="JoinRightFrontUpPair">
+      <Description>Join pair at top</Description>
+      <InitialState>RightFrontUp White C1 C2, FrontDown C1 C2</InitialState>
+      <Algorithms>M'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="JoinRightFrontUpPairFlip">
+      <Description>Join pair at top</Description>
+      <InitialState>RightFrontUp White C1 C2, FrontDown C2 C1</InitialState>
+      <Algorithms>U2 M2</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="JoinLeftBackUpPairFlip">
+      <Description>Join pair at top</Description>
+      <InitialState>LeftBackUp White C1 C2, FrontDown C1 C2</InitialState>
+      <Algorithms>U2 M'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="JoinLeftBackUpPair">
+      <Description>Join pair at top</Description>
+      <InitialState>LeftBackUp White C1 C2, FrontDown C2 C1</InitialState>
+      <Algorithms>M2</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="JoinRightBackUpPair">
+      <Description>Join pair at top</Description>
+      <InitialState>RightBackUp White C1 C2, FrontDown C1 C2</InitialState>
+      <Algorithms>M2</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection Name="JoinRightBackUpPairFlip">
+      <Description>Join pair at top</Description>
+      <InitialState>RightBackUp White C1 C2, FrontDown C2 C1</InitialState>
+      <Algorithms>U2 M'</Algorithms>
+    </AlgorithmCollection>
+  </AlgorithmCollections>
+
+  <Step Name="JoinFrontDownToBlueRedTopCorner">
+    <InitialState PreviousStep="MoveWhiteRedBlueCornerToTopFacingOut" />
+
+    <AlgorithmCollection FromTemplate="JoinLeftFrontUpPair" Colors="Red, Blue" />
+    <AlgorithmCollection FromTemplate="JoinLeftFrontUpPairFlip" Colors="Red, Blue" />
+
+    <AlgorithmCollection FromTemplate="JoinRightFrontUpPair" Colors="Red, Blue" />
+    <AlgorithmCollection FromTemplate="JoinRightFrontUpPairFlip" Colors="Red, Blue" />
+
+    <AlgorithmCollection FromTemplate="JoinLeftBackUpPairFlip" Colors="Red, Blue" />
+    <AlgorithmCollection FromTemplate="JoinLeftBackUpPair" Colors="Red, Blue" />
+
+    <AlgorithmCollection FromTemplate="JoinRightBackUpPair" Colors="Red, Blue" />
+    <AlgorithmCollection FromTemplate="JoinRightBackUpPairFlip" Colors="Red, Blue" />
+
+    <FinishedState PreviousStep="FirstPieceToBottomLeft">
+      <Or>
+        <!-- Pair joined at top. -->
+        <Checks>LeftFrontUp White Red Blue, FrontUp Red Blue</Checks>
+        <Checks>RightFrontUp White Red Blue, FrontUp Blue Red</Checks>
+        <Checks>LeftBackUp White Red Blue, BackUp Blue Red</Checks>
+        <Checks>RightBackUp White Red Blue, BackUp Red Blue</Checks>
+      </Or>
+    </FinishedState>
+  </Step>
+
   <Step Name="JoinFrontDownToBlueOrangeTopCorner">
     <InitialState PreviousStep="MoveWhiteBlueOrangeCornerToTopFacingOut" />
 
@@ -620,6 +609,36 @@
         <Checks>RightBackUp White Blue Orange, BackUp Blue Orange</Checks>
       </Or>
     </FinishedState>
+  </Step>
+
+  <Step Name="PairToLeftFront">
+    <InitialState PreviousStep="JoinFrontDownToBlueRedTopCorner" />
+
+    <AlgorithmCollection>
+      <Description>Pair to Left Front</Description>
+      <InitialState>LeftFrontUp White Red Blue, FrontUp Red Blue</InitialState>
+      <Algorithms>F'</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection>
+      <Description>Pair to Left Front</Description>
+      <InitialState>RightFrontUp White Red Blue, FrontUp Blue Red</InitialState>
+      <Algorithms>L' U L</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection>
+      <Description>Pair to Left Front</Description>
+      <InitialState>LeftBackUp White Red Blue, BackUp Blue Red</InitialState>
+      <Algorithms>U2 L' U L</Algorithms>
+    </AlgorithmCollection>
+
+    <AlgorithmCollection>
+      <Description>Pair to Left Front</Description>
+      <InitialState>RightBackUp White Red Blue, BackUp Red Blue</InitialState>
+      <Algorithms>U2 F'</Algorithms>
+    </AlgorithmCollection>
+
+    <FinishedState PreviousStep="FirstPieceToBottomLeft">LeftFront Blue Red, LeftFrontDown Blue White Red</FinishedState>
   </Step>
 
   <Step Name="PairToLeftBack">

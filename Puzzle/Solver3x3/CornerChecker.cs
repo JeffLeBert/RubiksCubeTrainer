@@ -64,6 +64,17 @@ namespace RubiksCubeTrainer.Solver3x3
                 this.IsNot,
                 this.IsRotated);
 
+        public override IChecker Negate()
+            => new CornerChecker(
+                this.Location,
+                this.Location2,
+                this.Location3,
+                this.Color,
+                this.Color2,
+                this.Color3,
+                !this.IsNot,
+                this.IsRotated);
+
         private bool MatchesWithoutIsNot(Puzzle puzzle)
         {
             if (this.IsRotated)
