@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Xml.Linq;
@@ -7,26 +8,40 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public static class PuzzleStateParser
     {
-        public static (string Name, IChecker Checker) Parse(XElement stateElement, Solver solver)
-        {
-            var name = stateElement.Attribute("Name")?.Value;
-            var state = stateElement.HasElements
-                ? ParseStateElements(stateElement, solver)
-                : ParseStateValue(stateElement.Value, solver);
+        public static (string Name, IChecker Checker) Parse(XElement element, Solver solver)
+            => (element.Attribute("Name")?.Value,
+                EnumerateCheckers(element, solver).Aggregate((IChecker)null, AndChecker.Combine));
 
-            return (name, state);
+        private static IEnumerable<IChecker> EnumerateCheckers(XElement element, Solver solver)
+            => from node in element.Nodes()
+               from checker in Parse(node, solver)
+               select checker;
+
+        private static IEnumerable<IChecker> Parse(XNode node, Solver solver)
+        {
+            switch (node)
+            {
+                case XText textNode:
+                    return ParseText(textNode.Value, solver);
+
+                case XElement element:
+                    return new[] { ParseChildElement(element, solver) };
+
+                default:
+                    return new IChecker[] { };
+            }
         }
 
-        private static IChecker ParseStateElements(XElement element, Solver solver)
-            => (from childElement in element.Elements() select ParseChildElement(childElement, solver))
-            .Aggregate(AndChecker.Combine);
+        private static IEnumerable<IChecker> ParseText(string text, Solver solver)
+            => from checker in text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+               select ParseMatch(checker.Trim(), solver);
 
         private static IChecker ParseChildElement(XElement childElement, Solver solver)
         {
             switch (childElement.Name.LocalName)
             {
                 case "Checks":
-                    return ParseStateValue(childElement.Value, solver);
+                    return Parse(childElement, solver).Checker;
 
                 case "Or":
                     var orChecker = ParseOrElement(childElement, solver);
@@ -54,40 +69,14 @@ namespace RubiksCubeTrainer.Solver3x3
                 : bool.Parse(isNotText);
         }
 
-        private static IChecker ParseStateValue(string state, Solver solver)
-        {
-            var checkers = ImmutableArray.CreateRange(
-                from matcher in state.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                select ParseMatch(matcher, solver));
-            return checkers.Length == 1
-                ? checkers[0]
-                : new AndChecker(checkers);
-        }
-
         private static IChecker ParseMatch(string match, Solver solver)
-        {
-            match = match.Trim();
-            return (match.StartsWith("{") || match.StartsWith("!{"))
-                ? ParseMatchFromNamedState(match, solver)
+            => ExpressionParser.IsExpression(match, true)
+                ? ParseMatchFromExpression(match, solver)
                 : ParseMatchFromParts(match);
-        }
 
-        private static IChecker ParseMatchFromNamedState(string match, Solver solver)
+        private static IChecker ParseMatchFromExpression(string match, Solver solver)
         {
-            if (!match.EndsWith("}"))
-            {
-                throw new InvalidOperationException($"Named state must end with '}}': '{match}'");
-            }
-
-            var isNot = match.StartsWith("!");
-            if (isNot)
-            {
-                match = match.Substring(1);
-            }
-
-            var stateInfo = match.Substring(1, match.Length - 2).Trim();
-
-            var (stateName, colors) = ExpressionParser.Parse(stateInfo);
+            var (stateName, isNot, colors) = ExpressionParser.Parse(match);
             if (!solver.States.TryGetValue(stateName, out IChecker state))
             {
                 throw new InvalidOperationException($"Unknown named state '{stateName}'");

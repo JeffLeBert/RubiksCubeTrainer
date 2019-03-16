@@ -20,6 +20,10 @@ namespace RubiksCubeTrainer.Solver3x3
             {
                 return checker2;
             }
+            if (checker2 == null)
+            {
+                return checker1;
+            }
 
             var andChecker1 = checker1 as AndChecker;
             var andChecker2 = checker2 as AndChecker;

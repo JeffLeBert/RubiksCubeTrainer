@@ -165,8 +165,6 @@
     <FinishedState>{LeftCenterAndBottomEdge}</FinishedState>
   </Step>
 
-  <!-- TODO: Add in step if pair already joined. -->
-
   <States>
     <State Name="AFrontDownPieceIsInPosition">
       <Or>
@@ -174,6 +172,7 @@
         <Checks>FrontDown* C1 C3</Checks>
       </Or>
     </State>
+    <State Name="SpecificFrontDownPieceInPosition">{LeftCenterAndBottomEdge}, FrontDown* C1 C2</State>
     <State Name="BlockPairInPositionAtTop">
       <Or>
         <Checks>LeftFrontUp White C1 C2, FrontUp C1 C2</Checks>
@@ -184,7 +183,6 @@
     </State>
     <State Name="LeftFrontBlockPairSolved">LeftFront Blue Red, LeftFrontDown Blue White Red</State>
     <State Name="LeftBackBlockPairSolved">LeftBack Blue Orange, LeftBackDown Blue Orange White</State>
-    <State Name="SpecificFrontDownPieceInPosition">{LeftCenterAndBottomEdge}, FrontDown* C1 C2</State>
   </States>
 
   <Algorithms>
@@ -256,26 +254,17 @@
       !{AFrontDownPieceIsInPosition Blue Red Orange},
       !{BlockPairInPositionAtTop Red Blue}
     </InitialState>
-
-    <Algorithm FromTemplate="FrontUpToFrontDown" Colors="Red, Blue" />
-
-    <Algorithm FromTemplate="BackUpToFrontDown" Colors="Red, Blue" />
-
-    <Algorithm FromTemplate="RightUpToFrontDown" Colors="Red, Blue" />
-
-    <Algorithm FromTemplate="LeftUpToFrontDown" Colors="Red, Blue" />
-
-    <Algorithm FromTemplate="FrontLeftToFrontDown" Colors="Red, Blue" />
-
-    <Algorithm FromTemplate="FrontRightToFrontDown" Colors="Red, Blue" />
-
-    <Algorithm FromTemplate="LeftBackToFrontDown" Colors="Red, Blue" />
-
-    <Algorithm FromTemplate="BackRightToFrontDown" Colors="Red, Blue" />
-
-    <Algorithm FromTemplate="BackDownToFrontDown" Colors="Red, Blue" />
-
-    <Algorithm FromTemplate="RightDownToFrontDown" Colors="Red, Blue" />
+    
+    {FrontUpToFrontDown Red Blue},
+    {BackUpToFrontDown Red Blue},
+    {RightUpToFrontDown Red Blue},
+    {LeftUpToFrontDown Red Blue},
+    {FrontLeftToFrontDown Red Blue},
+    {FrontRightToFrontDown Red Blue},
+    {LeftBackToFrontDown Red Blue},
+    {BackRightToFrontDown Red Blue},
+    {BackDownToFrontDown Red Blue},
+    {RightDownToFrontDown Red Blue}
 
     <FinishedState>{SpecificFrontDownPieceInPosition Red Blue}</FinishedState>
   </Step>
@@ -288,25 +277,16 @@
       !{BlockPairInPositionAtTop Blue Orange}
     </InitialState>
 
-    <Algorithm FromTemplate="FrontUpToFrontDown" Colors="Blue, Orange" />
-
-    <Algorithm FromTemplate="BackUpToFrontDown" Colors="Blue, Orange" />
-
-    <Algorithm FromTemplate="RightUpToFrontDown" Colors="Blue, Orange" />
-
-    <Algorithm FromTemplate="LeftUpToFrontDown" Colors="Blue, Orange" />
-
-    <Algorithm FromTemplate="FrontLeftToFrontDown" Colors="Blue, Orange" />
-
-    <Algorithm FromTemplate="FrontRightToFrontDown" Colors="Blue, Orange" />
-
-    <Algorithm FromTemplate="LeftBackToFrontDown" Colors="Blue, Orange" />
-
-    <Algorithm FromTemplate="BackRightToFrontDown" Colors="Blue, Orange" />
-
-    <Algorithm FromTemplate="BackDownToFrontDown" Colors="Blue, Orange" />
-
-    <Algorithm FromTemplate="RightDownToFrontDown" Colors="Blue, Orange" />
+    {FrontUpToFrontDown Blue Orange},
+    {BackUpToFrontDown Blue Orange},
+    {RightUpToFrontDown Blue Orange},
+    {LeftUpToFrontDown Blue Orange},
+    {FrontLeftToFrontDown Blue Orange},
+    {FrontRightToFrontDown Blue Orange},
+    {LeftBackToFrontDown Blue Orange},
+    {BackRightToFrontDown Blue Orange},
+    {BackDownToFrontDown Blue Orange},
+    {RightDownToFrontDown Blue Orange}
 
     <FinishedState>{SpecificFrontDownPieceInPosition Blue Orange}</FinishedState>
   </Step>
@@ -435,31 +415,31 @@
       !RightBackUp White Red Blue
     </InitialState>
 
-    <Algorithm FromTemplate="LeftFrontDownToUpFacingOut1" Colors="Red, Blue" />
-    <Algorithm FromTemplate="LeftFrontDownToUpFacingOut2" Colors="Red, Blue" />
-    <Algorithm FromTemplate="LeftFrontDownToUpFacingOut3" Colors="Red, Blue" />
+    {LeftFrontDownToUpFacingOut1 Red Blue},
+    {LeftFrontDownToUpFacingOut2 Red Blue},
+    {LeftFrontDownToUpFacingOut3 Red Blue},
 
-    <Algorithm FromTemplate="RightFrontDownToUpFacingOut1" Colors="Red, Blue" />
-    <Algorithm FromTemplate="RightFrontDownToUpFacingOut2" Colors="Red, Blue" />
-    <Algorithm FromTemplate="RightFrontDownToUpFacingOut3" Colors="Red, Blue" />
+    {RightFrontDownToUpFacingOut1 Red Blue},
+    {RightFrontDownToUpFacingOut2 Red Blue},
+    {RightFrontDownToUpFacingOut3 Red Blue},
 
-    <Algorithm FromTemplate="LeftBackDownToUpFacingOut1" Colors="Red, Blue" />
-    <Algorithm FromTemplate="LeftBackDownToUpFacingOut2" Colors="Red, Blue" />
-    <Algorithm FromTemplate="LeftBackDownToUpFacingOut3" Colors="Red, Blue" />
+    {LeftBackDownToUpFacingOut1 Red Blue},
+    {LeftBackDownToUpFacingOut2 Red Blue},
+    {LeftBackDownToUpFacingOut3 Red Blue},
 
-    <Algorithm FromTemplate="RightBackDownToUpFacingOut1" Colors="Red, Blue" />
-    <Algorithm FromTemplate="RightBackDownToUpFacingOut2" Colors="Red, Blue" />
-    <Algorithm FromTemplate="RightBackDownToUpFacingOut3" Colors="Red, Blue" />
+    {RightBackDownToUpFacingOut1 Red Blue},
+    {RightBackDownToUpFacingOut2 Red Blue},
+    {RightBackDownToUpFacingOut3 Red Blue},
 
-    <Algorithm FromTemplate="UpWhiteCornerToFacingOut" Colors="Red, Blue" />
+    {UpWhiteCornerToFacingOut Red Blue},
 
-    <Algorithm FromTemplate="UpFrontLeftToFacingOut" Colors="Red, Blue" />
+    {UpFrontLeftToFacingOut Red Blue},
 
-    <Algorithm FromTemplate="UpFrontRightToFacingOut" Colors="Red, Blue" />
+    {UpFrontRightToFacingOut Red Blue},
 
-    <Algorithm FromTemplate="UpBackLeftToFacingOut" Colors="Red, Blue" />
+    {UpBackLeftToFacingOut Red Blue},
 
-    <Algorithm FromTemplate="UpBackRightToFacingOut" Colors="Red, Blue" />
+    {UpBackRightToFacingOut Red Blue}
 
     <FinishedState>{ReadyToJoinPairAtTop Red Blue}</FinishedState>
   </Step>
@@ -473,31 +453,31 @@
       !RightBackUp White Blue Orange
     </InitialState>
 
-    <Algorithm FromTemplate="LeftFrontDownToUpFacingOut1" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="LeftFrontDownToUpFacingOut2" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="LeftFrontDownToUpFacingOut3" Colors="Blue, Orange" />
+    {LeftFrontDownToUpFacingOut1 Blue Orange},
+    {LeftFrontDownToUpFacingOut2 Blue Orange},
+    {LeftFrontDownToUpFacingOut3 Blue Orange},
 
-    <Algorithm FromTemplate="RightFrontDownToUpFacingOut1" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="RightFrontDownToUpFacingOut2" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="RightFrontDownToUpFacingOut3" Colors="Blue, Orange" />
+    {RightFrontDownToUpFacingOut1 Blue Orange},
+    {RightFrontDownToUpFacingOut2 Blue Orange},
+    {RightFrontDownToUpFacingOut3 Blue Orange},
 
-    <Algorithm FromTemplate="LeftBackDownToUpFacingOut1" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="LeftBackDownToUpFacingOut2" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="LeftBackDownToUpFacingOut3" Colors="Blue, Orange" />
+    {LeftBackDownToUpFacingOut1 Blue Orange},
+    {LeftBackDownToUpFacingOut2 Blue Orange},
+    {LeftBackDownToUpFacingOut3 Blue Orange},
 
-    <Algorithm FromTemplate="RightBackDownToUpFacingOut1" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="RightBackDownToUpFacingOut2" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="RightBackDownToUpFacingOut3" Colors="Blue, Orange" />
+    {RightBackDownToUpFacingOut1 Blue Orange},
+    {RightBackDownToUpFacingOut2 Blue Orange},
+    {RightBackDownToUpFacingOut3 Blue Orange},
 
-    <Algorithm FromTemplate="UpWhiteCornerToFacingOut" Colors="Blue, Orange" />
+    {UpWhiteCornerToFacingOut Blue Orange},
 
-    <Algorithm FromTemplate="UpFrontLeftToFacingOut" Colors="Blue, Orange" />
+    {UpFrontLeftToFacingOut Blue Orange},
 
-    <Algorithm FromTemplate="UpFrontRightToFacingOut" Colors="Blue, Orange" />
+    {UpFrontRightToFacingOut Blue Orange},
 
-    <Algorithm FromTemplate="UpBackLeftToFacingOut" Colors="Blue, Orange" />
+    {UpBackLeftToFacingOut Blue Orange},
 
-    <Algorithm FromTemplate="UpBackRightToFacingOut" Colors="Blue, Orange" />
+    {UpBackRightToFacingOut Blue Orange}
 
     <FinishedState>{ReadyToJoinPairAtTop Blue Orange}</FinishedState>
   </Step>
@@ -555,17 +535,17 @@
   <Step Name="JoinFrontDownToBlueRedTopCorner">
     <InitialState>{ReadyToJoinPairAtTop Red Blue}</InitialState>
 
-    <Algorithm FromTemplate="JoinLeftFrontUpPair" Colors="Red, Blue" />
-    <Algorithm FromTemplate="JoinLeftFrontUpPairFlip" Colors="Red, Blue" />
+    {JoinLeftFrontUpPair Red Blue},
+    {JoinLeftFrontUpPairFlip Red Blue},
 
-    <Algorithm FromTemplate="JoinRightFrontUpPair" Colors="Red, Blue" />
-    <Algorithm FromTemplate="JoinRightFrontUpPairFlip" Colors="Red, Blue" />
+    {JoinRightFrontUpPair Red Blue},
+    {JoinRightFrontUpPairFlip Red Blue},
 
-    <Algorithm FromTemplate="JoinLeftBackUpPairFlip" Colors="Red, Blue" />
-    <Algorithm FromTemplate="JoinLeftBackUpPair" Colors="Red, Blue" />
+    {JoinLeftBackUpPairFlip Red Blue},
+    {JoinLeftBackUpPair Red Blue},
 
-    <Algorithm FromTemplate="JoinRightBackUpPair" Colors="Red, Blue" />
-    <Algorithm FromTemplate="JoinRightBackUpPairFlip" Colors="Red, Blue" />
+    {JoinRightBackUpPair Red Blue},
+    {JoinRightBackUpPairFlip Red Blue}
 
     <FinishedState>{LeftCenterAndBottomEdge}, {BlockPairInPositionAtTop Red Blue}</FinishedState>
   </Step>
@@ -573,17 +553,17 @@
   <Step Name="JoinFrontDownToBlueOrangeTopCorner">
     <InitialState>{ReadyToJoinPairAtTop Blue Orange}</InitialState>
 
-    <Algorithm FromTemplate="JoinLeftFrontUpPair" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="JoinLeftFrontUpPairFlip" Colors="Blue, Orange" />
+    {JoinLeftFrontUpPair Blue Orange},
+    {JoinLeftFrontUpPairFlip Blue Orange},
 
-    <Algorithm FromTemplate="JoinRightFrontUpPair" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="JoinRightFrontUpPairFlip" Colors="Blue, Orange" />
+    {JoinRightFrontUpPair Blue Orange},
+    {JoinRightFrontUpPairFlip Blue Orange},
 
-    <Algorithm FromTemplate="JoinLeftBackUpPairFlip" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="JoinLeftBackUpPair" Colors="Blue, Orange" />
+    {JoinLeftBackUpPairFlip Blue Orange},
+    {JoinLeftBackUpPair Blue Orange},
 
-    <Algorithm FromTemplate="JoinRightBackUpPair" Colors="Blue, Orange" />
-    <Algorithm FromTemplate="JoinRightBackUpPairFlip" Colors="Blue, Orange" />
+    {JoinRightBackUpPair Blue Orange},
+    {JoinRightBackUpPairFlip Blue Orange}
 
     <FinishedState>{LeftCenterAndBottomEdge}, {BlockPairInPositionAtTop Blue Orange}</FinishedState>
   </Step>
