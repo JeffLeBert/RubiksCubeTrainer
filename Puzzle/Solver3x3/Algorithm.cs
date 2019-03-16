@@ -4,28 +4,28 @@ using RubiksCubeTrainer.Puzzle3x3;
 namespace RubiksCubeTrainer.Solver3x3
 {
     /// <summary>
-    /// A collection of algorithms that will all produce the same result.
+    /// A collection of moves that will all produce the same result.
     /// </summary>
     /// <remarks>
-    /// There are many cases where there are different algorithms that will all supply
+    /// There are many cases where there are different moves that will all supply
     /// the same result. In some scrambles, one might be better than the other so we
     /// keep a list of all the ones that will work.
     /// </remarks>
-    public class AlgorithmCollection
+    public class Algorithm
     {
-        public AlgorithmCollection(
+        public Algorithm(
             string name,
             string description,
             IChecker initialState,
-            ImmutableArray<ImmutableArray<NotationMoveType>> algorithms)
+            ImmutableArray<ImmutableArray<NotationMoveType>> moves)
         {
             this.Name = name;
             this.Description = description;
             this.InitialState = initialState;
-            this.Algorithms = algorithms;
+            this.Moves = moves;
         }
 
-        public ImmutableArray<ImmutableArray<NotationMoveType>> Algorithms { get; }
+        public ImmutableArray<ImmutableArray<NotationMoveType>> Moves { get; }
 
         public string Description { get; }
 
@@ -33,13 +33,11 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public string Name { get; }
 
-        public AlgorithmCollection WithColors(PuzzleColor[] colors)
-        {
-            return new AlgorithmCollection(
+        public Algorithm WithColors(PuzzleColor[] colors)
+            => new Algorithm(
                 this.Name,
                 this.Description,
                 this.InitialState.WithColors(colors),
-                this.Algorithms);
-        }
+                this.Moves);
     }
 }

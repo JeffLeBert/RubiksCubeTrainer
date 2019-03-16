@@ -11,7 +11,7 @@ namespace RubiksCubeTrainer.Solver3x3
             var document = GetSolverDocument(name);
 
             var solver = SolverWithPuzzleStates(Solver.Empty, document);
-            solver = SolverWithAlgorithmCollections(solver, document);
+            solver = SolverWithAlgorithms(solver, document);
             return SolverWithSteps(solver, document);
         }
 
@@ -27,13 +27,13 @@ namespace RubiksCubeTrainer.Solver3x3
                     return solver.With(name, checker);
                 });
 
-        private static Solver SolverWithAlgorithmCollections(Solver initialSolver, XDocument document)
-            => (from algorithmCollectionsElement in document.Root.Elements("AlgorithmCollections")
-               from algorithmCollectionElement in algorithmCollectionsElement.Elements("AlgorithmCollection")
-               select algorithmCollectionElement)
+        private static Solver SolverWithAlgorithms(Solver initialSolver, XDocument document)
+            => (from algorithmsElement in document.Root.Elements("Algorithms")
+               from algorithmElement in algorithmsElement.Elements("Algorithm")
+               select algorithmElement)
             .Aggregate(
                 initialSolver,
-                (solver, element) => solver.With(AlgorithmCollectionParser.Parse(element, solver)));
+                (solver, element) => solver.With(AlgorithmParser.Parse(element, solver)));
 
         private static Solver SolverWithSteps(Solver initialSolver, XDocument document)
             => document.Root.Elements(nameof(Step))

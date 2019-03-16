@@ -62,28 +62,28 @@ namespace RubiksCubeTrainer.Solver3x3
             Puzzle puzzle,
             SolverFailureInformation failureInfo,
             Step step,
-            AlgorithmCollection[] possibleAlgorithmCollections)
+            Algorithm[] possibleAlgorithms)
         {
             if (failureInfo.Algorithms.Length > 50)
             {
                 return failureInfo.WithFailed("Cycle found.");
             }
 
-            foreach (var algorithmCollection in possibleAlgorithmCollections)
+            foreach (var algorithm in possibleAlgorithms)
             {
-                foreach (var algorithm in algorithmCollection.Algorithms)
+                foreach (var moves in algorithm.Moves)
                 {
-                    var newPuzzle = Rotator.ApplyMoves(puzzle, algorithm);
+                    var newPuzzle = Rotator.ApplyMoves(puzzle, moves);
                     if (!step.FinishedState.Matches(newPuzzle))
                     {
                         return failureInfo.WithFailed(
-                            $"{algorithmCollection.Description}\r\nAlgorithm: {NotationParser.FormatMoves(algorithm)}\r\nStep initial state: {step.InitialState.ToString()}\r\nAlgorithm initial state: {algorithmCollection.InitialState.ToString()}\r\nFinished state: {step.FinishedState.ToString()}");
+                            $"{algorithm.Description}\r\nAlgorithm: {NotationParser.FormatMoves(moves)}\r\nStep initial state: {step.InitialState.ToString()}\r\nAlgorithm initial state: {algorithm.InitialState.ToString()}\r\nFinished state: {step.FinishedState.ToString()}");
                     }
 
                     var algorithmFailureInfo = FindFailure(
                         solver,
                         newPuzzle,
-                        failureInfo.WithAlgorithm(algorithm));
+                        failureInfo.WithMoves(moves));
                     if (algorithmFailureInfo.AtEnd)
                     {
                         return algorithmFailureInfo;

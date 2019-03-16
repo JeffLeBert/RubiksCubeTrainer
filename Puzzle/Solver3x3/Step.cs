@@ -12,15 +12,15 @@ namespace RubiksCubeTrainer.Solver3x3
             string name,
             IChecker initialState,
             IChecker finishedState,
-            ImmutableArray<AlgorithmCollection> algorithmCollections)
+            ImmutableArray<Algorithm> algorithms)
         {
             this.Name = name;
             this.InitialState = initialState;
             this.FinishedState = finishedState;
-            this.AlgorithmCollections = algorithmCollections;
+            this.Algorithms = algorithms;
         }
 
-        public ImmutableArray<AlgorithmCollection> AlgorithmCollections { get; }
+        public ImmutableArray<Algorithm> Algorithms { get; }
 
         public IChecker FinishedState { get; }
 
@@ -28,9 +28,9 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public string Name { get; }
 
-        public IEnumerable<AlgorithmCollection> GetPossibleAlgorithms(Puzzle puzzle)
-            => from algorithmCollection in this.AlgorithmCollections
-               where algorithmCollection.InitialState.Matches(puzzle)
-               select algorithmCollection;
+        public IEnumerable<Algorithm> GetPossibleAlgorithms(Puzzle puzzle)
+            => from algorithm in this.Algorithms
+               where algorithm.InitialState.Matches(puzzle)
+               select algorithm;
     }
 }

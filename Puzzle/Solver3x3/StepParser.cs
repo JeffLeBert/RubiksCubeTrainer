@@ -12,10 +12,10 @@ namespace RubiksCubeTrainer.Solver3x3
                 stepElement.Attribute(nameof(Step.Name)).Value,
                 PuzzleStateParser.Parse(stepElement.Element(nameof(Step.InitialState)), solver).Checker,
                 PuzzleStateParser.Parse(stepElement.Element(nameof(Step.FinishedState)), solver).Checker,
-                ImmutableArray.CreateRange(ParseAlgorithmCollections(stepElement, solver)));
+                ImmutableArray.CreateRange(ParseAlgorithms(stepElement, solver)));
 
-        private static IEnumerable<AlgorithmCollection> ParseAlgorithmCollections(XElement stepElement, Solver solver)
-            => from element in stepElement.Elements(nameof(AlgorithmCollection))
-               select AlgorithmCollectionParser.Parse(element, solver);
+        private static IEnumerable<Algorithm> ParseAlgorithms(XElement stepElement, Solver solver)
+            => from element in stepElement.Elements(nameof(Algorithm))
+               select AlgorithmParser.Parse(element, solver);
     }
 }

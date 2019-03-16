@@ -26,8 +26,8 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public string FailDescription { get; }
 
-        public SolverFailureInformation WithAlgorithm(ImmutableArray<NotationMoveType> algorithm)
-            => new SolverFailureInformation(this.Algorithms.Add(algorithm), this.Solved, this.FailDescription);
+        public SolverFailureInformation WithMoves(ImmutableArray<NotationMoveType> moves)
+            => new SolverFailureInformation(this.Algorithms.Add(moves), this.Solved, this.FailDescription);
 
         public SolverFailureInformation WithFailed(string failDescription)
             => new SolverFailureInformation(this.Algorithms, this.Solved, failDescription);

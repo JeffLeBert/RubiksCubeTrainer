@@ -9,28 +9,12 @@ namespace RubiksCubeTrainer.Solver3x3
     {
         public static (string Name, IChecker Checker) Parse(XElement stateElement, Solver solver)
         {
-            var previousState = GetPreviousStateIfAny(stateElement, solver);
-
             var name = stateElement.Attribute("Name")?.Value;
             var state = stateElement.HasElements
                 ? ParseStateElements(stateElement, solver)
                 : ParseStateValue(stateElement.Value, solver);
 
-            return (name, AndChecker.Combine(previousState, state));
-        }
-
-        private static IChecker GetPreviousStateIfAny(XElement stateElement, Solver solver)
-        {
-            // The previous state is the finished state of the previous step.
-            var previousStepName = stateElement.Attribute("PreviousStep")?.Value;
-            if (previousStepName == null)
-            {
-                return null;
-            }
-
-            return solver.Steps.TryGetValue(previousStepName, out Step previousStep)
-                ? previousStep.FinishedState
-                : throw new InvalidOperationException($"Unknown step name {previousStepName}");
+            return (name, state);
         }
 
         private static IChecker ParseStateElements(XElement element, Solver solver)
@@ -101,11 +85,15 @@ namespace RubiksCubeTrainer.Solver3x3
                 match = match.Substring(1);
             }
 
-            var stateName = match.Substring(1, match.Length - 2).Trim();
+            var stateInfo = match.Substring(1, match.Length - 2).Trim();
+
+            var (stateName, colors) = ExpressionParser.Parse(stateInfo);
             if (!solver.States.TryGetValue(stateName, out IChecker state))
             {
                 throw new InvalidOperationException($"Unknown named state '{stateName}'");
             }
+
+            state = state.WithColors(colors);
 
             return isNot
                 ? state.Negate()

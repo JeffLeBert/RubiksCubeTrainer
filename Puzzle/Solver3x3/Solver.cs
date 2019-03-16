@@ -11,19 +11,19 @@ namespace RubiksCubeTrainer.Solver3x3
         private Solver(
             ImmutableDictionary<string, Step> steps,
             ImmutableDictionary<string, IChecker> states,
-            ImmutableDictionary<string, AlgorithmCollection> algorithmCollections)
+            ImmutableDictionary<string, Algorithm> algorithms)
         {
             this.Steps = steps;
             this.States = states;
-            this.AlgorithmCollections = algorithmCollections;
+            this.Algorithms = algorithms;
         }
 
         public static Solver Empty { get; } = new Solver(
             ImmutableDictionary.Create<string, Step>(StringComparer.OrdinalIgnoreCase),
             ImmutableDictionary.Create<string, IChecker>(StringComparer.OrdinalIgnoreCase),
-            ImmutableDictionary.Create<string, AlgorithmCollection>(StringComparer.OrdinalIgnoreCase));
+            ImmutableDictionary.Create<string, Algorithm>(StringComparer.OrdinalIgnoreCase));
 
-        public ImmutableDictionary<string, AlgorithmCollection> AlgorithmCollections { get; }
+        public ImmutableDictionary<string, Algorithm> Algorithms { get; }
 
         public ImmutableDictionary<string, IChecker> States { get; }
 
@@ -34,22 +34,22 @@ namespace RubiksCubeTrainer.Solver3x3
                where step.InitialState.Matches(puzzle)
                select step;
 
-        public Solver With(AlgorithmCollection algorithmCollection)
+        public Solver With(Algorithm algorithm)
             => new Solver(
                 this.Steps,
                 this.States,
-                this.AlgorithmCollections.Add(algorithmCollection.Name, algorithmCollection));
+                this.Algorithms.Add(algorithm.Name, algorithm));
 
         public Solver With(string name, IChecker state)
             => new Solver(
                 this.Steps,
                 this.States.Add(name, state),
-                this.AlgorithmCollections);
+                this.Algorithms);
 
         public Solver With(Step step)
             => new Solver(
                 this.Steps.Add(step.Name, step),
                 this.States,
-                this.AlgorithmCollections);
+                this.Algorithms);
     }
 }
