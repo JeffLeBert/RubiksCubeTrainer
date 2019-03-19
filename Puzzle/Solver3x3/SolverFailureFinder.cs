@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Linq;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
 {
     public static class SolverFailureFinder
     {
-        private static IChecker solvedChecker = BuildSolvedChecker();
-
         public static SolverFailureInformation FindFailure(Solver solver, Puzzle puzzle)
         {
             var failInfo = FindFailure(solver, puzzle, SolverFailureInformation.Empty);
@@ -19,6 +15,7 @@ namespace RubiksCubeTrainer.Solver3x3
             }
 
             var solvedPuzzle = Rotator.ApplyMoves(puzzle, failInfo.Algorithms);
+            var solvedChecker = solver.States["Solved"];
             return solvedChecker.Matches(solvedPuzzle)
                 ? failInfo
                 : failInfo.WithFailed("Solution not found.");
@@ -77,7 +74,7 @@ namespace RubiksCubeTrainer.Solver3x3
                     if (!step.FinishedState.Matches(newPuzzle))
                     {
                         return failureInfo.WithFailed(
-                            $"{algorithm.Description}\r\nAlgorithm: {NotationParser.FormatMoves(moves)}\r\nStep initial state: {step.InitialState.ToString()}\r\nAlgorithm initial state: {algorithm.InitialState.ToString()}\r\nFinished state: {step.FinishedState.ToString()}");
+                            $"Step name: {step.Name}\r\nAlgorithm name: {algorithm.Name}\r\nDescription: {algorithm.Description}\r\nMoves: {NotationParser.FormatMoves(moves)}\r\nStep initial state: {step.InitialState.ToString()}\r\nAlgorithm initial state: {algorithm.InitialState.ToString()}\r\nFinished state: {step.FinishedState.ToString()}");
                     }
 
                     var algorithmFailureInfo = FindFailure(
@@ -93,15 +90,5 @@ namespace RubiksCubeTrainer.Solver3x3
 
             return failureInfo;
         }
-
-        private static IChecker BuildSolvedChecker()
-            => new AndChecker(
-                ImmutableArray.Create<IChecker>(
-                    SingleColorChecker.Create("Left", "Blue"),
-                    EdgeChecker.Create("LeftDown", "Blue", "White"),
-                    EdgeChecker.Create("LeftFront", "Blue", "Red"),
-                    EdgeChecker.Create("LeftBack", "Blue", "Orange"),
-                    CornerChecker.Create("LeftFrontDown", "Blue", "White", "Red"),
-                    CornerChecker.Create("LeftBackDown", "Blue", "Orange", "White")));
     }
 }
