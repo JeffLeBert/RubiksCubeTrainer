@@ -41,7 +41,7 @@ namespace RubiksCubeTrainer.Solver3x3
                 var possibleAlgorithms = possibleStep.GetPossibleAlgorithms(puzzle).ToArray();
                 if (!possibleAlgorithms.Any())
                 {
-                    return failureInfo.WithFailed("No more algorithms found.");
+                    return failureInfo.WithFailed($"No more algorithms found for step '{possibleStep.Name}'.");
                 }
 
                 var stepsFailureInfo = FindFailure(solver, puzzle, failureInfo, possibleStep, possibleAlgorithms);

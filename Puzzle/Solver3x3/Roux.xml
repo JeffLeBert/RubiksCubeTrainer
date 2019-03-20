@@ -739,6 +739,8 @@
     <FinishedState>{RightDownSolved}</FinishedState>
   </Step>
 
+  <!-- RightBack and RightFront pair steps -->
+  
   <States>
     <State Name="RightFrontBlockPairSolved">RightFront Green Red, RightFrontDown Green Red White</State>
     <State Name="RightBackBlockPairSolved">RightBack Green Orange, RightBackDown Green White Orange</State>
@@ -749,7 +751,6 @@
 
   <Step Name="MoveRedGreenToFrontBottom">
     <InitialState>
-      {LeftBlockSolved},
       {RightDownSolved},
       !{RightFrontBlockPairSolved},
       !{AFrontDownPieceIsInPosition Green Red Orange},
@@ -765,6 +766,25 @@
     {BackDownToFrontDown Green Red}
 
     <FinishedState>{RightBlockSpecificFrontDownPieceInPosition Green Red}</FinishedState>
+  </Step>
+
+  <Step Name="MoveOrangeGreenToFrontBottom">
+    <InitialState>
+      {RightDownSolved},
+      !{RightBackBlockPairSolved},
+      !{AFrontDownPieceIsInPosition Green Red Orange},
+      !{BlockPairInPositionAtTop Orange Green}
+    </InitialState>
+
+    {FrontUpToFrontDown Orange Green},
+    {BackUpToFrontDown Orange Green},
+    {RightUpToFrontDown Orange Green},
+    {LeftUpToFrontDown Orange Green},
+    {FrontRightToFrontDown Orange Green},
+    {RightPair_BackRightToFrontDown Orange Green},
+    {BackDownToFrontDown Orange Green}
+
+    <FinishedState>{RightBlockSpecificFrontDownPieceInPosition Orange Green}</FinishedState>
   </Step>
 
   <Algorithms>
@@ -806,10 +826,22 @@
       <Moves>U' R U' R'</Moves>
     </Algorithm>
 
+    <Algorithm Name="WhiteOrangeGreen_UpFrontLeftToFacingOut">
+      <Description>Rotate white Left Front Up corner out</Description>
+      <InitialState>UpFrontLeft White Orange Green</InitialState>
+      <Moves>U2 R' U R</Moves>
+    </Algorithm>
+
     <Algorithm Name="WhiteGreenRed_UpFrontRightToFacingOut">
       <Description>Rotate white Right Front Up corner out</Description>
       <InitialState>UpFrontRight White Green Red</InitialState>
       <Moves>R U' R'</Moves>
+    </Algorithm>
+
+    <Algorithm Name="WhiteOrangeGreen_UpFrontRightToFacingOut">
+      <Description>Rotate white Right Front Up corner out</Description>
+      <InitialState>UpFrontRight White Orange Green</InitialState>
+      <Moves>U' R' U R</Moves>
     </Algorithm>
 
     <Algorithm Name="WhiteGreenRed_UpBackLeftToFacingOut">
@@ -818,10 +850,22 @@
       <Moves>U2 R U' R'</Moves>
     </Algorithm>
 
+    <Algorithm Name="WhiteOrangeGreen_UpBackLeftToFacingOut">
+      <Description>Rotate white Left Back Up corner out</Description>
+      <InitialState>UpBackLeft White Orange Green</InitialState>
+      <Moves>U R' U R</Moves>
+    </Algorithm>
+
     <Algorithm Name="WhiteGreenRed_UpBackRightToFacingOut">
       <Description>Rotate white Right Back Up corner out</Description>
       <InitialState>UpBackRight White Green Red</InitialState>
       <Moves>U R U' R'</Moves>
+    </Algorithm>
+
+    <Algorithm Name="WhiteOrangeGreen_UpBackRightToFacingOut">
+      <Description>Rotate white Right Back Up corner out</Description>
+      <InitialState>UpBackRight White Orange Green</InitialState>
+      <Moves>R' U R</Moves>
     </Algorithm>
   </Algorithms>
 
@@ -849,6 +893,30 @@
     <FinishedState>{ReadyToJoinRightPairAtTop Green Red}</FinishedState>
   </Step>
 
+  <Step Name="MoveWhiteOrangeGreenCornerToTopFacingOut">
+    <InitialState>{RightBlockSpecificFrontDownPieceInPosition Orange Green}, !{TopCornerWhitePointingOut Orange Green}</InitialState>
+
+    {RightPair_RightFrontDownToUpFacingOut1 Orange Green},
+    {RightPair_RightFrontDownToUpFacingOut2 Orange Green},
+    {RightPair_RightFrontDownToUpFacingOut3 Orange Green},
+
+    {RightPair_RightBackDownToUpFacingOut1 Orange Green},
+    {RightPair_RightBackDownToUpFacingOut2 Orange Green},
+    {RightPair_RightBackDownToUpFacingOut3 Orange Green},
+
+    {UpWhiteCornerToFacingOut Orange Green},
+
+    {WhiteOrangeGreen_UpFrontLeftToFacingOut},
+
+    {WhiteOrangeGreen_UpFrontRightToFacingOut},
+
+    {WhiteOrangeGreen_UpBackLeftToFacingOut},
+
+    {WhiteOrangeGreen_UpBackRightToFacingOut}
+
+    <FinishedState>{ReadyToJoinRightPairAtTop Orange Green}</FinishedState>
+  </Step>
+
   <Step Name="JoinFrontDownToGreenRedTopCorner">
     <InitialState>{ReadyToJoinRightPairAtTop Green Red}</InitialState>
 
@@ -865,6 +933,24 @@
     {JoinRightBackUpPairFlip Green Red}
 
     <FinishedState>{RightPairJoinedAtTop Green Red}</FinishedState>
+  </Step>
+
+  <Step Name="JoinFrontDownToOrangeGreenTopCorner">
+    <InitialState>{ReadyToJoinRightPairAtTop Orange Green}</InitialState>
+
+    {JoinLeftFrontUpPair Orange Green},
+    {JoinLeftFrontUpPairFlip Orange Green},
+
+    {JoinRightFrontUpPair Orange Green},
+    {JoinRightFrontUpPairFlip Orange Green},
+
+    {JoinLeftBackUpPairFlip Orange Green},
+    {JoinLeftBackUpPair Orange Green},
+
+    {JoinRightBackUpPair Orange Green},
+    {JoinRightBackUpPairFlip Orange Green}
+
+    <FinishedState>{RightPairJoinedAtTop Orange Green}</FinishedState>
   </Step>
 
   <Step Name="PairToRightFront">
@@ -897,7 +983,37 @@
     <FinishedState>{RightDownSolved}, {RightFrontBlockPairSolved}</FinishedState>
   </Step>
 
+  <Step Name="PairToRightBack">
+    <InitialState>{RightPairJoinedAtTop Orange Green}</InitialState>
+
+    <Algorithm>
+      <Description>Pair to Left Back</Description>
+      <InitialState>LeftFrontUp White Orange Green, FrontUp Orange Green</InitialState>
+      <Moves>U2 r' U' r, U2 r' U' R</Moves>
+    </Algorithm>
+
+    <Algorithm>
+      <Description>Pair to Left Back</Description>
+      <InitialState>RightFrontUp White Orange Green, UpFront Orange Green</InitialState>
+      <Moves>U2 R' U R</Moves>
+    </Algorithm>
+
+    <Algorithm>
+      <Description>Pair to Left Back</Description>
+      <InitialState>LeftBackUp White Orange Green, UpBack Orange Green</InitialState>
+      <Moves>R' U R</Moves>
+    </Algorithm>
+
+    <Algorithm>
+      <Description>Pair to Left Back</Description>
+      <InitialState>RightBackUp White Orange Green, BackUp Orange Green</InitialState>
+      <Moves>r' U' R, r' U' r</Moves>
+    </Algorithm>
+
+    <FinishedState>{RightDownSolved}, {RightBackBlockPairSolved}</FinishedState>
+  </Step>
+
   <States>
-    <State Name="Solved">{RightDownSolved}, {RightFrontBlockPairSolved}</State>
+    <State Name="Solved">{RightDownSolved}, {RightFrontBlockPairSolved}, {RightBackBlockPairSolved}</State>
   </States>
 </Solver>
