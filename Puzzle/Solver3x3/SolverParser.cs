@@ -11,40 +11,50 @@ namespace RubiksCubeTrainer.Solver3x3
             var document = GetSolverDocument(name);
 
             var solver = SolverWithPuzzleStates(Solver.Empty, document);
-            solver = SolverWithAlgorithms(solver, document);
-            return SolverWithSteps(solver, document);
+            return SolverWithAlgorithms(solver, document);
         }
 
         private static Solver SolverWithPuzzleStates(Solver initialSolver, XDocument document)
             => (from statesElement in document.Root.Elements("States")
-               from stateElement in statesElement.Elements("State")
-               select stateElement)
+                let baseName = statesElement.Attribute("Name")?.Value
+                from stateElement in statesElement.Elements("State")
+                select (stateElement, baseName))
             .Aggregate(
                 initialSolver,
-                (solver, element) =>
+                (solver, info) =>
                 {
-                    var (name, checker) = PuzzleStateParser.Parse(element, solver);
-                    return solver.With(name, checker);
+                    var (name, state) = StateParser.Parse(info.baseName, null, info.stateElement, solver);
+                    return solver.With(name, state);
                 });
 
         private static Solver SolverWithAlgorithms(Solver initialSolver, XDocument document)
             => (from algorithmsElement in document.Root.Elements("Algorithms")
-               from algorithmElement in algorithmsElement.Elements("Algorithm")
-               select algorithmElement)
+                let baseName = algorithmsElement.Attribute("Name")?.Value
+                let initialState = GetChildState(algorithmsElement, nameof(Algorithm.InitialState), initialSolver)
+                let finishedState = GetChildState(algorithmsElement, nameof(Algorithm.FinishedState), initialSolver)
+                from algorithmElement in algorithmsElement.Elements("Algorithm")
+                select (algorithmElement, baseName, initialState, finishedState))
             .Aggregate(
                 initialSolver,
-                (solver, element) => solver.With(AlgorithmParser.Parse(element, solver)));
-
-        private static Solver SolverWithSteps(Solver initialSolver, XDocument document)
-            => document.Root.Elements(nameof(Step))
-            .Aggregate(
-                initialSolver,
-                (solver, element) => solver.With(StepParser.Parse(element, solver)));
+                (solver, info) => solver.With(AlgorithmParser.Parse(
+                    info.baseName,
+                    info.initialState,
+                    info.finishedState,
+                    info.algorithmElement,
+                    solver)));
 
         private static XDocument GetSolverDocument(string name)
             => XDocument.Load(GetSolverStream(name));
 
         private static Stream GetSolverStream(string name)
             => typeof(Solver).Assembly.GetManifestResourceStream(typeof(Solver), name + ".xml");
+
+        private static IState GetChildState(XElement element, string name, Solver solver)
+        {
+            var stateElement = element.Element(name);
+            return stateElement == null
+                ? null
+                : StateParser.Parse(null, null, stateElement, solver).State;
+        }
     }
 }

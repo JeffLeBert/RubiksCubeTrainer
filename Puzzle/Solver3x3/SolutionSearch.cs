@@ -18,13 +18,13 @@ namespace RubiksCubeTrainer.Solver3x3
             NotationMoveType.BackClockwise, NotationMoveType.BackCounterClockwise, NotationMoveType.BackDouble);
 
         private readonly ImmutableArray<NotationMoveType> availableMoves;
-        private readonly IChecker isFinished;
+        private readonly IState isFinished;
         private int shortestSolutionLength;
 
         public SolutionSearch(
             int shortestSolutionLength,
             ImmutableArray<NotationMoveType> availableMoves,
-            IChecker isFinished)
+            IState isFinished)
         {
             this.shortestSolutionLength = shortestSolutionLength;
             this.availableMoves = availableMoves;

@@ -2,14 +2,14 @@
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public interface IChecker
+    public interface IState
     {
         bool Matches(Puzzle puzzle);
 
         string ToString();
 
-        IChecker WithColors(PuzzleColor[] colors);
+        IState WithColors(PuzzleColor[] colors);
 
-        IChecker Negate();
+        IState Negate();
     }
 }

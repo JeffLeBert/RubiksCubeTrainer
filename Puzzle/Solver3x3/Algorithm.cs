@@ -16,12 +16,14 @@ namespace RubiksCubeTrainer.Solver3x3
         public Algorithm(
             string name,
             string description,
-            IChecker initialState,
+            IState initialState,
+            IState finalState,
             ImmutableArray<ImmutableArray<NotationMoveType>> moves)
         {
             this.Name = name;
             this.Description = description;
             this.InitialState = initialState;
+            this.FinishedState = finalState;
             this.Moves = moves;
         }
 
@@ -29,7 +31,9 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public string Description { get; }
 
-        public IChecker InitialState { get; }
+        public IState FinishedState { get; }
+
+        public IState InitialState { get; }
 
         public string Name { get; }
 
@@ -38,6 +42,7 @@ namespace RubiksCubeTrainer.Solver3x3
                 this.Name,
                 this.Description,
                 this.InitialState.WithColors(colors),
+                this.FinishedState.WithColors(colors),
                 this.Moves);
     }
 }

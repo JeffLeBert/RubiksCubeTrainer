@@ -2,9 +2,9 @@
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public class CornerChecker : CheckerBase
+    public class CornerState : StateBase
     {
-        private CornerChecker(
+        private CornerState(
             Location location,
             Location location2,
             Location location3,
@@ -32,11 +32,11 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public Location Location3 { get; }
 
-        public static CornerChecker Create(string location, string color1, string color2, string color3)
+        public static CornerState Create(string location, string color1, string color2, string color3)
         {
             var info = GetLocationInformation(location.Trim());
             var adjacentCorner = info.Location.AdjacentCorner;
-            return new CornerChecker(
+            return new CornerState(
                 info.Location,
                 adjacentCorner,
                 adjacentCorner.AdjacentCorner,
@@ -53,8 +53,8 @@ namespace RubiksCubeTrainer.Solver3x3
         public override string ToString()
             => $"{this.FormattedLocation} {this.Color.ToString()} {this.Color2.ToString()} {this.Color3.ToString()}";
 
-        public override IChecker WithColors(PuzzleColor[] colors)
-            => new CornerChecker(
+        public override IState WithColors(PuzzleColor[] colors)
+            => new CornerState(
                 this.Location,
                 this.Location2,
                 this.Location3,
@@ -64,8 +64,8 @@ namespace RubiksCubeTrainer.Solver3x3
                 this.IsNot,
                 this.IsRotated);
 
-        public override IChecker Negate()
-            => new CornerChecker(
+        public override IState Negate()
+            => new CornerState(
                 this.Location,
                 this.Location2,
                 this.Location3,

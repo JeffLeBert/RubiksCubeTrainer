@@ -2,9 +2,9 @@
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public class EdgeChecker : CheckerBase
+    public class EdgeState : StateBase
     {
-        private EdgeChecker(Location location, Location location2, PuzzleColor color, PuzzleColor color2, bool isNot, bool isRotated)
+        private EdgeState(Location location, Location location2, PuzzleColor color, PuzzleColor color2, bool isNot, bool isRotated)
             : base(location, isNot, isRotated)
         {
             this.Location2 = location2;
@@ -18,10 +18,10 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public Location Location2 { get; }
 
-        public static EdgeChecker Create(string location, string color1, string color2)
+        public static EdgeState Create(string location, string color1, string color2)
         {
             var info = GetLocationInformation(location.Trim());
-            return new EdgeChecker(
+            return new EdgeState(
                 info.Location,
                 info.Location.AdjacentEdge,
                 PuzzleColorParser.Parse(color1),
@@ -36,8 +36,8 @@ namespace RubiksCubeTrainer.Solver3x3
         public override bool Matches(Puzzle puzzle)
             => this.MatchesWithoutIsNot(puzzle) != this.IsNot;
 
-        public override IChecker WithColors(PuzzleColor[] colors)
-            => new EdgeChecker(
+        public override IState WithColors(PuzzleColor[] colors)
+            => new EdgeState(
                 this.Location,
                 this.Location2,
                 UpdateColorIfTemplated(this.Color, colors),
@@ -45,8 +45,8 @@ namespace RubiksCubeTrainer.Solver3x3
                 this.IsNot,
                 this.IsRotated);
 
-        public override IChecker Negate()
-            => new EdgeChecker(
+        public override IState Negate()
+            => new EdgeState(
                 this.Location,
                 this.Location2,
                 this.Color,

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
@@ -15,51 +15,20 @@ namespace RubiksCubeTrainer.Solver3x3
             }
 
             var solvedPuzzle = Rotator.ApplyMoves(puzzle, failInfo.Algorithms);
-            var solvedChecker = solver.States["Solved"];
-            return solvedChecker.Matches(solvedPuzzle)
+            var solvedState = solver.States["Solved"];
+            return solvedState.Matches(solvedPuzzle)
                 ? failInfo
                 : failInfo.WithFailed("Solution not found.");
         }
 
-        private static SolverFailureInformation FindFailure(
-            Solver solver,
-            Puzzle puzzle,
-            SolverFailureInformation failureInfo)
-        {
-            var nextSteps = solver.NextSteps(puzzle).ToArray();
-            return FindFailure(solver, puzzle, failureInfo, nextSteps);
-        }
+        private static SolverFailureInformation FindFailure(Solver solver, Puzzle puzzle, SolverFailureInformation failureInfo)
+            => FindFailure(solver, puzzle, failureInfo, solver.NextAlgorithms(puzzle));
 
         private static SolverFailureInformation FindFailure(
             Solver solver,
             Puzzle puzzle,
             SolverFailureInformation failureInfo,
-            Step[] possibleSteps)
-        {
-            foreach (var possibleStep in possibleSteps)
-            {
-                var possibleAlgorithms = possibleStep.GetPossibleAlgorithms(puzzle).ToArray();
-                if (!possibleAlgorithms.Any())
-                {
-                    return failureInfo.WithFailed($"No more algorithms found for step '{possibleStep.Name}'.");
-                }
-
-                var stepsFailureInfo = FindFailure(solver, puzzle, failureInfo, possibleStep, possibleAlgorithms);
-                if (stepsFailureInfo.AtEnd)
-                {
-                    return stepsFailureInfo;
-                }
-            }
-
-            return failureInfo.WithSolved();
-        }
-
-        private static SolverFailureInformation FindFailure(
-            Solver solver,
-            Puzzle puzzle,
-            SolverFailureInformation failureInfo,
-            Step step,
-            Algorithm[] possibleAlgorithms)
+            IEnumerable<Algorithm> possibleAlgorithms)
         {
             if (failureInfo.Algorithms.Length > 50)
             {
@@ -71,10 +40,10 @@ namespace RubiksCubeTrainer.Solver3x3
                 foreach (var moves in algorithm.Moves)
                 {
                     var newPuzzle = Rotator.ApplyMoves(puzzle, moves);
-                    if (!step.FinishedState.Matches(newPuzzle))
+                    if (!algorithm.FinishedState.Matches(newPuzzle))
                     {
                         return failureInfo.WithFailed(
-                            $"Step name: {step.Name}\r\nAlgorithm name: {algorithm.Name}\r\nDescription: {algorithm.Description}\r\nMoves: {NotationParser.FormatMoves(moves)}\r\nStep initial state: {step.InitialState.ToString()}\r\nAlgorithm initial state: {algorithm.InitialState.ToString()}\r\nFinished state: {step.FinishedState.ToString()}");
+                            $"Algorithm name: {algorithm.Name}\r\nDescription: {algorithm.Description}\r\nMoves: {NotationParser.FormatMoves(moves)}\r\nInitial state: {algorithm.InitialState.ToString()}\r\nFinished state: {algorithm.FinishedState.ToString()}");
                     }
 
                     var algorithmFailureInfo = FindFailure(

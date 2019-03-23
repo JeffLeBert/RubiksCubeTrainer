@@ -2,9 +2,9 @@
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public class SingleColorChecker : CheckerBase
+    public class SingleColorState : StateBase
     {
-        private SingleColorChecker(Location location, PuzzleColor color, bool isNot, bool isRotated)
+        private SingleColorState(Location location, PuzzleColor color, bool isNot, bool isRotated)
             : base(location, isNot, isRotated)
         {
             this.Color = color;
@@ -12,10 +12,10 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public PuzzleColor Color { get; }
 
-        public static SingleColorChecker Create(string location, string color1)
+        public static SingleColorState Create(string location, string color1)
         {
             var info = GetLocationInformation(location.Trim());
-            return new SingleColorChecker(
+            return new SingleColorState(
                 info.Location,
                 PuzzleColorParser.Parse(color1),
                 info.IsNot,
@@ -28,15 +28,15 @@ namespace RubiksCubeTrainer.Solver3x3
         public override bool Matches(Puzzle puzzle)
             => (puzzle[this.Location] == this.Color) != this.IsNot;
 
-        public override IChecker WithColors(PuzzleColor[] colors)
-            => new SingleColorChecker(
+        public override IState WithColors(PuzzleColor[] colors)
+            => new SingleColorState(
                 this.Location,
                 UpdateColorIfTemplated(this.Color, colors),
                 this.IsNot,
                 this.IsRotated);
 
-        public override IChecker Negate()
-            => new SingleColorChecker(
+        public override IState Negate()
+            => new SingleColorState(
                 this.Location,
                 this.Color,
                 !this.IsNot,

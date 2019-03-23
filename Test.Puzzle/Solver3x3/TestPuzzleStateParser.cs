@@ -9,22 +9,22 @@ namespace RubiksCubeTrainer.Solver3x3
         [Fact]
         public void Can_parse_the_main_parts()
         {
-            var checker = Assert.IsType<SingleColorChecker>(
-                PuzzleStateParser.Parse(new XElement("State", "Left Blue"), null).Checker);
+            var state = Assert.IsType<SingleColorState>(
+                StateParser.Parse(null, null, new XElement("State", "Left Blue"), null).State);
 
-            Assert.Equal(Location.Left, checker.Location);
-            Assert.Equal(PuzzleColor.Blue, checker.Color);
-            Assert.False(checker.IsNot);
-            Assert.False(checker.IsRotated);
+            Assert.Equal(Location.Left, state.Location);
+            Assert.Equal(PuzzleColor.Blue, state.Color);
+            Assert.False(state.IsNot);
+            Assert.False(state.IsRotated);
         }
 
         [Fact]
         public void Can_parse_is_not()
         {
-            var checker = Assert.IsType<SingleColorChecker>(
-                PuzzleStateParser.Parse(new XElement("State", "!Left Blue"), null).Checker);
+            var state = Assert.IsType<SingleColorState>(
+                StateParser.Parse(null, null, new XElement("State", "!Left Blue"), null).State);
 
-            Assert.True(checker.IsNot);
+            Assert.True(state.IsNot);
         }
     }
 
@@ -33,33 +33,33 @@ namespace RubiksCubeTrainer.Solver3x3
         [Fact]
         public void Can_parse_main_parts()
         {
-            var checker = Assert.IsType<EdgeChecker>(
-                PuzzleStateParser.Parse(new XElement("State", "LeftDown Blue White"), null).Checker);
+            var state = Assert.IsType<EdgeState>(
+                StateParser.Parse(null, null, new XElement("State", "LeftDown Blue White"), null).State);
 
-            Assert.Equal(Location.LeftDown, checker.Location);
-            Assert.Equal(Location.LeftDown.AdjacentEdge, checker.Location2);
-            Assert.Equal(PuzzleColor.Blue, checker.Color);
-            Assert.Equal(PuzzleColor.White, checker.Color2);
-            Assert.False(checker.IsNot);
-            Assert.False(checker.IsRotated);
+            Assert.Equal(Location.LeftDown, state.Location);
+            Assert.Equal(Location.LeftDown.AdjacentEdge, state.Location2);
+            Assert.Equal(PuzzleColor.Blue, state.Color);
+            Assert.Equal(PuzzleColor.White, state.Color2);
+            Assert.False(state.IsNot);
+            Assert.False(state.IsRotated);
         }
 
         [Fact]
         public void Can_parse_is_not()
         {
-            var checker = Assert.IsType<EdgeChecker>(
-                PuzzleStateParser.Parse(new XElement("State", "!LeftUp Blue White"), null).Checker);
+            var state = Assert.IsType<EdgeState>(
+                StateParser.Parse(null, null, new XElement("State", "!LeftUp Blue White"), null).State);
 
-            Assert.True(checker.IsNot);
+            Assert.True(state.IsNot);
         }
 
         [Fact]
         public void Edge_false_if_flipped()
         {
-            var checker = Assert.IsType<EdgeChecker>(
-                PuzzleStateParser.Parse(new XElement("State", "LeftDown* White Blue"), null).Checker);
+            var state = Assert.IsType<EdgeState>(
+                StateParser.Parse(null, null, new XElement("State", "LeftDown* White Blue"), null).State);
 
-            Assert.True(checker.IsRotated);
+            Assert.True(state.IsRotated);
         }
     }
 
@@ -68,33 +68,33 @@ namespace RubiksCubeTrainer.Solver3x3
         [Fact]
         public void Parses_main_parts()
         {
-            var checker = Assert.IsType<CornerChecker>(
-                PuzzleStateParser.Parse(new XElement("State", "LeftFrontDown Blue White Red"), null).Checker);
+            var state = Assert.IsType<CornerState>(
+                StateParser.Parse(null, null, new XElement("State", "LeftFrontDown Blue White Red"), null).State);
 
-            Assert.Equal(Location.LeftFrontDown, checker.Location);
-            Assert.Equal(Location.DownFrontLeft, checker.Location2);
-            Assert.Equal(Location.FrontLeftDown, checker.Location3);
-            Assert.Equal(PuzzleColor.Blue, checker.Color);
-            Assert.Equal(PuzzleColor.White, checker.Color2);
-            Assert.Equal(PuzzleColor.Red, checker.Color3);
+            Assert.Equal(Location.LeftFrontDown, state.Location);
+            Assert.Equal(Location.DownFrontLeft, state.Location2);
+            Assert.Equal(Location.FrontLeftDown, state.Location3);
+            Assert.Equal(PuzzleColor.Blue, state.Color);
+            Assert.Equal(PuzzleColor.White, state.Color2);
+            Assert.Equal(PuzzleColor.Red, state.Color3);
         }
 
         [Fact]
         public void Can_parse_is_not()
         {
-            var checker = Assert.IsType<CornerChecker>(
-                PuzzleStateParser.Parse(new XElement("State", "!LeftFrontDown Blue White Red"), null).Checker);
+            var state = Assert.IsType<CornerState>(
+                StateParser.Parse(null, null, new XElement("State", "!LeftFrontDown Blue White Red"), null).State);
 
-            Assert.True(checker.IsNot);
+            Assert.True(state.IsNot);
         }
 
         [Fact]
         public void Corner_false_if_rotated()
         {
-            var checker = Assert.IsType<CornerChecker>(
-                PuzzleStateParser.Parse(new XElement("State", "LeftFrontDown* Red Blue White"), null).Checker);
+            var state = Assert.IsType<CornerState>(
+                StateParser.Parse(null, null, new XElement("State", "LeftFrontDown* Red Blue White"), null).State);
 
-            Assert.True(checker.IsRotated);
+            Assert.True(state.IsRotated);
         }
     }
 
@@ -103,13 +103,13 @@ namespace RubiksCubeTrainer.Solver3x3
         [Fact]
         public void Can_parse_multiple_comma_separated_states()
         {
-            var andChecker = Assert.IsType<AndChecker>(
-                PuzzleStateParser.Parse(new XElement("State", "Left Blue, LeftDown Blue White"), null).Checker);
+            var andState = Assert.IsType<AndState>(
+                StateParser.Parse(null, null, new XElement("State", "Left Blue, LeftDown Blue White"), null).State);
 
             Assert.Collection(
-                andChecker.Checkers,
-                checker => Assert.Equal(Location.Left, ((SingleColorChecker)checker).Location),
-                checker => Assert.Equal(Location.LeftDown, ((EdgeChecker)checker).Location));
+                andState.States,
+                state => Assert.Equal(Location.Left, ((SingleColorState)state).Location),
+                state => Assert.Equal(Location.LeftDown, ((EdgeState)state).Location));
         }
 
         [Theory]
@@ -119,63 +119,63 @@ namespace RubiksCubeTrainer.Solver3x3
         public void Can_parse_named_states(string xmlText)
         {
             var solver = Solver.Empty
-                .With("LeftCenter", SingleColorChecker.Create("Left", "Blue"))
-                .With("LeftDown", EdgeChecker.Create("LeftDown", "Blue", "White"));
-            var andChecker = Assert.IsType<AndChecker>(
-                PuzzleStateParser.Parse(new XElement("State", xmlText), solver).Checker);
+                .With("LeftCenter", SingleColorState.Create("Left", "Blue"))
+                .With("LeftDown", EdgeState.Create("LeftDown", "Blue", "White"));
+            var andState = Assert.IsType<AndState>(
+                StateParser.Parse(null, null, new XElement("State", xmlText), solver).State);
 
             Assert.Collection(
-                andChecker.Checkers,
-                checker => Assert.Equal(Location.Left, ((SingleColorChecker)checker).Location),
-                checker => Assert.Equal(Location.LeftDown, ((EdgeChecker)checker).Location));
+                andState.States,
+                state => Assert.Equal(Location.Left, ((SingleColorState)state).Location),
+                state => Assert.Equal(Location.LeftDown, ((EdgeState)state).Location));
         }
 
         [Theory]
         [InlineData("{LeftCenter}", "LeftDown Blue White")]
         [InlineData("Left Blue", "{LeftDown}")]
         [InlineData("{LeftCenter}", "{LeftDown}")]
-        public void Can_parse_named_states_in_separate_elements(string checker1, string checker2)
+        public void Can_parse_named_states_in_separate_elements(string state1, string state2)
         {
             var solver = Solver.Empty
-                .With("LeftCenter", SingleColorChecker.Create("Left", "Blue"))
-                .With("LeftDown", EdgeChecker.Create("LeftDown", "Blue", "White"));
+                .With("LeftCenter", SingleColorState.Create("Left", "Blue"))
+                .With("LeftDown", EdgeState.Create("LeftDown", "Blue", "White"));
             var xml =
                 new XElement(
                     "State",
-                    new XElement("Checks", checker1),
-                    new XElement("Checks", checker2));
-            var andChecker = Assert.IsType<AndChecker>(
-                PuzzleStateParser.Parse(xml, solver).Checker);
+                    new XElement("State", state1),
+                    new XElement("State", state2));
+            var andState = Assert.IsType<AndState>(
+                StateParser.Parse(null, null, xml, solver).State);
 
             Assert.Collection(
-                andChecker.Checkers,
-                checker => Assert.Equal(Location.Left, ((SingleColorChecker)checker).Location),
-                checker => Assert.Equal(Location.LeftDown, ((EdgeChecker)checker).Location));
+                andState.States,
+                state => Assert.Equal(Location.Left, ((SingleColorState)state).Location),
+                state => Assert.Equal(Location.LeftDown, ((EdgeState)state).Location));
         }
 
         [Theory]
         [InlineData("{LeftCenter}", "LeftDown Blue White")]
         [InlineData("Left Blue", "{LeftDown}")]
         [InlineData("{LeftCenter}", "{LeftDown}")]
-        public void Can_parse_named_states_in_Or_elements(string checker1, string checker2)
+        public void Can_parse_named_states_in_Or_elements(string state1, string state2)
         {
             var solver = Solver.Empty
-                .With("LeftCenter", SingleColorChecker.Create("Left", "Blue"))
-                .With("LeftDown", EdgeChecker.Create("LeftDown", "Blue", "White"));
+                .With("LeftCenter", SingleColorState.Create("Left", "Blue"))
+                .With("LeftDown", EdgeState.Create("LeftDown", "Blue", "White"));
             var xml =
                 new XElement(
                     "State",
                     new XElement(
                         "Or",
-                        new XElement("Checks", checker1),
-                        new XElement("Checks", checker2)));
-            var orChecker = Assert.IsType<OrChecker>(
-                PuzzleStateParser.Parse(xml, solver).Checker);
+                        new XElement("State", state1),
+                        new XElement("State", state2)));
+            var orState = Assert.IsType<OrState>(
+                StateParser.Parse(null, null, xml, solver).State);
 
             Assert.Collection(
-                orChecker.Checkers,
-                checker => Assert.Equal(Location.Left, ((SingleColorChecker)checker).Location),
-                checker => Assert.Equal(Location.LeftDown, ((EdgeChecker)checker).Location));
+                orState.States,
+                state => Assert.Equal(Location.Left, ((SingleColorState)state).Location),
+                state => Assert.Equal(Location.LeftDown, ((EdgeState)state).Location));
         }
     }
 }

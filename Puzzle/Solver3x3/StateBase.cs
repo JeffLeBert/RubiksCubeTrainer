@@ -2,9 +2,9 @@
 
 namespace RubiksCubeTrainer.Solver3x3
 {
-    public abstract class CheckerBase : IChecker
+    public abstract class StateBase : IState
     {
-        protected CheckerBase(Location location, bool isNot, bool isRotated)
+        protected StateBase(Location location, bool isNot, bool isRotated)
         {
             this.Location = location;
             this.IsNot = isNot;
@@ -24,9 +24,9 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public abstract bool Matches(Puzzle puzzle);
 
-        public abstract IChecker WithColors(PuzzleColor[] colors);
+        public abstract IState WithColors(PuzzleColor[] colors);
 
-        public abstract IChecker Negate();
+        public abstract IState Negate();
 
         protected string FormattedLocation
             => (this.IsNot ? "!" : "")

@@ -83,14 +83,7 @@ namespace RubiksCubeTrainer.WinFormsUI
             var tryCount = 0;
             while (true)
             {
-                var nextStep = WellKnownSolvers.Roux.NextSteps(currentPuzzle).FirstOrDefault();
-                if (nextStep == null)
-                {
-                    solutionDescription += "No steps found.";
-                    break;
-                }
-
-                var firstAlgorithmInfo = nextStep.GetPossibleAlgorithms(currentPuzzle).FirstOrDefault();
+                var firstAlgorithmInfo = WellKnownSolvers.Roux.NextAlgorithms(currentPuzzle).FirstOrDefault();
                 if (firstAlgorithmInfo == null)
                 {
                     solutionDescription += "No algorithms found.";
@@ -178,9 +171,9 @@ namespace RubiksCubeTrainer.WinFormsUI
             this.txtSolutionMoves.Text = string.Empty;
             this.txtSolutionDescription.Text = string.Empty;
 
-            var step = WellKnownSolvers.Roux.Steps["RotateLeftFrontDownWhiteCornerFacingOut"];
+            var algorithm = WellKnownSolvers.Roux.Algorithms["RotateLeftFrontDownWhiteCornerFacingOut"];
             var stopwatch = Stopwatch.StartNew();
-            var solutions = new SolutionSearch(6, SolutionSearch.AllFaceMoves, step.FinishedState)
+            var solutions = new SolutionSearch(6, SolutionSearch.AllFaceMoves, algorithm.FinishedState)
                 .Search(this.puzzle);
             stopwatch.Stop();
 

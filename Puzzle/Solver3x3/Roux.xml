@@ -1,203 +1,204 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Solver>
 
-  <!-- Left and LeftDown steps -->
+  <!-- Left algorithms -->
   
-  <States>
-    <State Name="LeftCenter">Left Blue</State>
+  <States Name="Left">
+    <State Name="Solved">Left Blue</State>
   </States>
 
-  <Step Name="MoveBlueCenterToLeft">
-    <InitialState>!{LeftCenter}</InitialState>
-
-    <Algorithm>
+  <Algorithms Name="MoveBlueCenterToLeft">
+    <InitialState>!{Left.Solved}</InitialState>
+    <FinishedState>{Left.Solved}</FinishedState>
+    
+    <Algorithm Name="FromBack">
       <Description>Move blue face from Back to Left</Description>
       <InitialState>Back Blue</InitialState>
       <Moves>y'</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FromFront">
       <Description>Move blue face from Front to Left</Description>
       <InitialState>Front Blue</InitialState>
       <Moves>y</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FromRight">
       <Description>Move blue face from Right to Left</Description>
       <InitialState>Right Blue</InitialState>
       <Moves>y2</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FromUp">
       <Description>Move blue face from Up to Left</Description>
       <InitialState>Up Blue</InitialState>
       <Moves>z'</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FromDown">
       <Description>Move blue face from Down to Left</Description>
       <InitialState>Down Blue</InitialState>
       <Moves>z</Moves>
     </Algorithm>
+  </Algorithms>
 
-    <FinishedState>{LeftCenter}</FinishedState>
-  </Step>
-
-  <States>
-    <State Name="LeftCenterAndBottomEdgeSolved">{LeftCenter}, LeftDown Blue White</State>
+  <!-- LeftDown edge algorithms -->
+  
+  <States Name="LeftDown">
+    <State Name="NotSolved">{Left.Solved}, !LeftDown Blue White</State>
+    <State Name="Solved">{Left.Solved}, LeftDown Blue White</State>
   </States>
 
-  <Step Name="FirstPieceToBottomLeft">
-    <InitialState>{LeftCenter}, !LeftDown Blue White</InitialState>
+  <Algorithms Name="LeftDown">
+    <InitialState>{LeftDown.NotSolved}</InitialState>
+    <FinishedState>{LeftDown.Solved}</FinishedState>
 
-    <Algorithm>
+    <Algorithm Name="LeftDown White Blue">
       <Description>Flip down left edge</Description>
       <InitialState>LeftDown White Blue</InitialState>
       <Moves>D F L, D' B' L', L B D, L' F' D'</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="BackLeft White Blue">
       <Description>Move edge from back left</Description>
       <InitialState>BackLeft White Blue</InitialState>
       <Moves>L'</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="BackLeft Blue White">
       <Description>Move edit from back left and flip</Description>
       <InitialState>BackLeft Blue White</InitialState>
       <Moves>B D</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="LeftUp Blue White">
       <Description>Move edge from top left</Description>
       <InitialState>LeftUp Blue White</InitialState>
       <Moves>L2</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="LeftUp White Blue">
       <Description>Move edge from top left and flip</Description>
       <InitialState>LeftUp White Blue</InitialState>
       <Moves>U B L', U' F' L, L F' D', L' B D</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FrontLeft White Blue">
       <Description>Move edge from front left</Description>
       <InitialState>FrontLeft White Blue</InitialState>
       <Moves>L</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FrontLeft Blue White">
       <Description>Move edge from front left and flip</Description>
       <InitialState>FrontLeft Blue White</InitialState>
       <Moves>F' D'</Moves>
     </Algorithm>
 
-    <Algorithm>
+    <Algorithm Name="BackDown Blue White">
       <Description>Move edge from back bottom</Description>
       <InitialState>BackDown Blue White</InitialState>
       <Moves>D</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="BackDown White Blue">
       <Description>Move edge from back bottom and flip</Description>
       <InitialState>BackDown White Blue</InitialState>
       <Moves>B' L'</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="BackUp Blue White">
       <Description>Move edge from back top</Description>
       <InitialState>BackUp Blue White</InitialState>
       <Moves>U' L2, B2 D</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="BackUp White Blue">
       <Description>Move edge from back top and flip</Description>
       <InitialState>BackUp White Blue</InitialState>
       <Moves>B L'</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FrontDown Blue White">
       <Description>Move edge from front bottom</Description>
       <InitialState>FrontDown Blue White</InitialState>
       <Moves>D'</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FrontDown White Blue">
       <Description>Move edge from front bottom and flip</Description>
       <InitialState>FrontDown White Blue</InitialState>
       <Moves>F L</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FrontUp Blue White">
       <Description>Move edge from front up</Description>
       <InitialState>FrontUp Blue White</InitialState>
       <Moves>F2 D', U L2</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="FrontUp White Blue">
       <Description>Move edge from front up and flip</Description>
       <InitialState>FrontUp White Blue</InitialState>
       <Moves>F' L</Moves>
     </Algorithm>
 
-    <Algorithm>
+    <Algorithm Name="RightDown Blue White">
       <Description>Move edge from right down</Description>
       <InitialState>RightDown Blue White</InitialState>
       <Moves>D2</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="RightDown White Blue">
       <Description>Move edge from right down and flip</Description>
       <InitialState>RightDown White Blue</InitialState>
       <Moves>R F D', R' B' D, D B' L', D' F L</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="RightBack White Blue">
       <Description>Move edge from right back</Description>
       <InitialState>RightBack White Blue</InitialState>
       <Moves>B' D</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="RightBack Blue White">
       <Description>Move edge from right back and flip</Description>
       <InitialState>RightBack Blue White</InitialState>
       <Moves>R D2, B2 L'</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="RightFront Blue White">
       <Description>Move edge from right front</Description>
       <InitialState>RightFront Blue White</InitialState>
       <Moves>R' D2, F2 L</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="RightFront White Blue">
       <Description>Move edge from right front and flip</Description>
       <InitialState>RightFront White Blue</InitialState>
       <Moves>F D'</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="RightUp Blue White">
       <Description>Move edge from right up</Description>
       <InitialState>RightUp Blue White</InitialState>
       <Moves>U2 L2, R2 D2</Moves>
     </Algorithm>
-    <Algorithm>
+    <Algorithm Name="RightUp White Blue">
       <Description>Move edge from right up</Description>
       <InitialState>RightUp White Blue</InitialState>
       <Moves>U F' L, R B' D, R' F D', U' B L'</Moves>
     </Algorithm>
+  </Algorithms>
 
-    <FinishedState>{LeftCenterAndBottomEdgeSolved}</FinishedState>
-  </Step>
-
-  <!-- LeftBack and LeftFront pair steps -->
+  <!-- LeftBack and LeftFront pair algorithms -->
 
   <States>
     <State Name="AFrontDownPieceIsInPosition">
       <Or>
-        <Checks>FrontDown* C1 C2</Checks>
-        <Checks>FrontDown* C1 C3</Checks>
+        <State>FrontDown* C1 C2</State>
+        <State>FrontDown* C1 C3</State>
       </Or>
     </State>
-    <State Name="LeftBlockSpecificFrontDownPieceInPosition">{LeftCenterAndBottomEdgeSolved}, FrontDown* C1 C2</State>
+    <State Name="LeftBlockSpecificFrontDownPieceInPosition">{LeftDown.Solved}, FrontDown* C1 C2</State>
     <State Name="TopCornerWhitePointingOut">
       <Or>
-        <Checks>LeftFrontUp White C1 C2</Checks>
-        <Checks>RightFrontUp White C1 C2</Checks>
-        <Checks>LeftBackUp White C1 C2</Checks>
-        <Checks>RightBackUp White C1 C2</Checks>
+        <State>LeftFrontUp White C1 C2</State>
+        <State>RightFrontUp White C1 C2</State>
+        <State>LeftBackUp White C1 C2</State>
+        <State>RightBackUp White C1 C2</State>
       </Or>
     </State>
     <State Name="BlockPairInPositionAtTop">
       <Or>
-        <Checks>LeftFrontUp White C1 C2, FrontUp C1 C2</Checks>
-        <Checks>RightBackUp White C1 C2, BackUp C1 C2</Checks>
-        <Checks>RightFrontUp White C1 C2, FrontUp C2 C1</Checks>
-        <Checks>LeftBackUp White C1 C2, BackUp C2 C1</Checks>
+        <State>LeftFrontUp White C1 C2, FrontUp C1 C2</State>
+        <State>RightBackUp White C1 C2, BackUp C1 C2</State>
+        <State>RightFrontUp White C1 C2, FrontUp C2 C1</State>
+        <State>LeftBackUp White C1 C2, BackUp C2 C1</State>
       </Or>
     </State>
     <State Name="LeftFrontBlockPairSolved">LeftFront Blue Red, LeftFrontDown Blue White Red</State>
     <State Name="LeftBackBlockPairSolved">LeftBack Blue Orange, LeftBackDown Blue Orange White</State>
   </States>
 
-  <Algorithms>
+  <AlgorithmsX>
     <Algorithm Name="FrontUpToFrontDown">
       <Description>Move edge from Front Up</Description>
       <InitialState>FrontUp* C1 C2</InitialState>
@@ -263,11 +264,11 @@
       <InitialState>RightDown* C1 C2</InitialState>
       <Moves>R2 U M</Moves>
     </Algorithm>
-  </Algorithms>
+  </AlgorithmsX>
 
   <Step Name="MoveRedBlueToFrontBottom">
     <InitialState>
-      {LeftCenterAndBottomEdgeSolved},
+      {LeftDown.Solved},
       !{LeftFrontBlockPairSolved},
       !{AFrontDownPieceIsInPosition Blue Red Orange},
       !{BlockPairInPositionAtTop Red Blue}
@@ -289,7 +290,7 @@
 
   <Step Name="MoveBlueOrangeToFrontBottom">
     <InitialState>
-      {LeftCenterAndBottomEdgeSolved},
+      {LeftDown.Solved},
       !{LeftBackBlockPairSolved},
       !{AFrontDownPieceIsInPosition Blue Red Orange},
       !{BlockPairInPositionAtTop Blue Orange}
@@ -309,11 +310,11 @@
     <FinishedState>{LeftBlockSpecificFrontDownPieceInPosition Blue Orange}</FinishedState>
   </Step>
 
-  <States>
+  <StatesX>
     <State Name="ReadyToJoinLeftPairAtTop">{LeftBlockSpecificFrontDownPieceInPosition C1 C2}, {TopCornerWhitePointingOut C1 C2}</State>
-  </States>
+  </StatesX>
 
-  <Algorithms>
+  <AlgorithmsX>
     <Algorithm Name="LeftFrontDownToUpFacingOut1">
       <Description>Move Left Front Down corner to top</Description>
       <InitialState>LeftFrontDown White C1 C2</InitialState>
@@ -382,10 +383,10 @@
       <Description>Rotate white corner out facing out</Description>
       <InitialState>
         <Or>
-          <Checks>BackLeftUp White C1 C2</Checks>
-          <Checks>BackRightUp White C1 C2</Checks>
-          <Checks>FrontLeftUp White C1 C2</Checks>
-          <Checks>FrontRightUp White C1 C2</Checks>
+          <State>BackLeftUp White C1 C2</State>
+          <State>BackRightUp White C1 C2</State>
+          <State>FrontLeftUp White C1 C2</State>
+          <State>FrontRightUp White C1 C2</State>
         </Or>
       </InitialState>
       <Moves>U, U'</Moves>
@@ -414,7 +415,7 @@
       <InitialState>UpFrontRight White C1 C2</InitialState>
       <Moves>R U'</Moves>
     </Algorithm>
-  </Algorithms>
+  </AlgorithmsX>
 
   <Step Name="MoveWhiteRedBlueCornerToTopFacingOut">
     <InitialState>{LeftBlockSpecificFrontDownPieceInPosition Red Blue}, !{TopCornerWhitePointingOut Red Blue}</InitialState>
@@ -480,7 +481,7 @@
     <FinishedState>{ReadyToJoinLeftPairAtTop Blue Orange}</FinishedState>
   </Step>
 
-  <Algorithms>
+  <AlgorithmsX>
     <Algorithm Name="JoinLeftFrontUpPairFlip">
       <Description>Join pair at top</Description>
       <InitialState>LeftFrontUp White C1 C2, FrontDown C1 C2</InitialState>
@@ -528,7 +529,7 @@
       <InitialState>RightBackUp White C1 C2, FrontDown C2 C1</InitialState>
       <Moves>U2 M'</Moves>
     </Algorithm>
-  </Algorithms>
+  </AlgorithmsX>
 
   <Step Name="JoinFrontDownToBlueRedTopCorner">
     <InitialState>{ReadyToJoinLeftPairAtTop Red Blue}</InitialState>
@@ -545,7 +546,7 @@
     {JoinRightBackUpPair Red Blue},
     {JoinRightBackUpPairFlip Red Blue}
 
-    <FinishedState>{LeftCenterAndBottomEdgeSolved}, {BlockPairInPositionAtTop Red Blue}</FinishedState>
+    <FinishedState>{LeftDown.Solved}, {BlockPairInPositionAtTop Red Blue}</FinishedState>
   </Step>
 
   <Step Name="JoinFrontDownToBlueOrangeTopCorner">
@@ -563,7 +564,7 @@
     {JoinRightBackUpPair Blue Orange},
     {JoinRightBackUpPairFlip Blue Orange}
 
-    <FinishedState>{LeftCenterAndBottomEdgeSolved}, {BlockPairInPositionAtTop Blue Orange}</FinishedState>
+    <FinishedState>{LeftDown.Solved}, {BlockPairInPositionAtTop Blue Orange}</FinishedState>
   </Step>
 
   <States>
@@ -572,7 +573,7 @@
   </States>
 
   <Step Name="PairToLeftFront">
-    <InitialState>{LeftCenterAndBottomEdgeSolved}, {BlockPairInPositionAtTop Red Blue}</InitialState>
+    <InitialState>{LeftDown.Solved}, {BlockPairInPositionAtTop Red Blue}</InitialState>
 
     <Algorithm>
       <Description>Pair to Left Front</Description>
@@ -598,11 +599,11 @@
       <Moves>U2 F'</Moves>
     </Algorithm>
 
-    <FinishedState>{LeftCenterAndBottomEdgeSolved}, {LeftFrontPairSolved}</FinishedState>
+    <FinishedState>{LeftDown.Solved}, {LeftFrontPairSolved}</FinishedState>
   </Step>
 
   <Step Name="PairToLeftBack">
-    <InitialState>{LeftCenterAndBottomEdgeSolved}, {BlockPairInPositionAtTop Blue Orange}</InitialState>
+    <InitialState>{LeftDown.Solved}, {BlockPairInPositionAtTop Blue Orange}</InitialState>
 
     <Algorithm>
       <Description>Pair to Left Back</Description>
@@ -628,13 +629,13 @@
       <Moves>L U' L'</Moves>
     </Algorithm>
 
-    <FinishedState>{LeftCenterAndBottomEdgeSolved}, {LeftBackPairSolved}</FinishedState>
+    <FinishedState>{LeftDown.Solved}, {LeftBackPairSolved}</FinishedState>
   </Step>
 
-  <!-- RightDown steps -->
+  <!-- RightDown algorithms -->
 
   <States>
-    <State Name="LeftBlockSolved">{LeftCenterAndBottomEdgeSolved}, {LeftFrontPairSolved}, {LeftBackPairSolved}</State>
+    <State Name="LeftBlockSolved">{LeftDown.Solved}, {LeftFrontPairSolved}, {LeftBackPairSolved}</State>
     <State Name="RightBottomEdge">RightDown Green White</State>
     <State Name="RightDownSolved">{LeftBlockSolved}, {RightBottomEdge}</State>
   </States>
@@ -739,7 +740,7 @@
     <FinishedState>{RightDownSolved}</FinishedState>
   </Step>
 
-  <!-- RightBack and RightFront pair steps -->
+  <!-- RightBack and RightFront pair algorithms -->
   
   <States>
     <State Name="RightFrontBlockPairSolved">RightFront Green Red, RightFrontDown Green Red White</State>
@@ -787,7 +788,7 @@
     <FinishedState>{RightBlockSpecificFrontDownPieceInPosition Orange Green}</FinishedState>
   </Step>
 
-  <Algorithms>
+  <AlgorithmsX>
     <Algorithm Name="RightPair_RightFrontDownToUpFacingOut1">
       <Description>Move Right Front Down corner to top</Description>
       <InitialState>RightFrontDown White C1 C2</InitialState>
@@ -867,7 +868,7 @@
       <InitialState>UpBackRight White Orange Green</InitialState>
       <Moves>R' U R</Moves>
     </Algorithm>
-  </Algorithms>
+  </AlgorithmsX>
 
   <Step Name="MoveWhiteGreenRedCornerToTopFacingOut">
     <InitialState>{RightBlockSpecificFrontDownPieceInPosition Green Red}, !{TopCornerWhitePointingOut Green Red}</InitialState>
@@ -1012,8 +1013,59 @@
 
     <FinishedState>{RightDownSolved}, {RightBackBlockPairSolved}</FinishedState>
   </Step>
+  
+  <!-- Top four corners facing up steps -->
 
+  <!--<States>
+    <State Name="LeftAndRightBlocksSolved">{RightDownSolved}, {RightFrontBlockPairSolved}, {RightBackBlockPairSolved}</State>
+    <State Name="TopCornersFacingUpSolved">
+      {LeftAndRightBlocksSolved},
+      UpBackLeft Yellow,
+      UpBackRight Yellow,
+      UpFrontLeft Yellow,
+      UpFrontRight Yellow
+    </State>
+  </States>
+
+  <Step Name="NoTopCornersFacingUp">
+    <InitialState>
+      {LeftAndRightBlocksSolved},
+      !UpBackLeft Yellow,
+      !UpBackRight Yellow,
+      !UpFrontLeft Yellow,
+      !UpFrontRight Yellow
+    </InitialState>
+
+    <Algorithm>
+      <Description>No corners yellow up</Description>
+      <InitialState>RightFrontUp Yellow</InitialState>
+      <Moves>L' U' L U' L' U2 L</Moves>
+    </Algorithm>
+
+    <Algorithm>
+      <Description>No corners yellow up</Description>
+      <InitialState>FrontLeftUp Yellow</InitialState>
+      <Moves>U' L' U' L U' L' U2 L</Moves>
+    </Algorithm>
+
+    <Algorithm>
+      <Description>No corners yellow up</Description>
+      <InitialState>LeftBackUp Yellow</InitialState>
+      <Moves>U2 L' U' L U' L' U2 L</Moves>
+    </Algorithm>
+
+    <FinishedState>
+      {TopCornersFacingUpSolved}
+      <Or>
+        <State>UpBackLeft Yellow</State>
+        <State>UpBackRight Yellow</State>
+        <State>UpFrontLeft Yellow</State>
+        <State>UpFrontRight Yellow</State>
+      </Or>
+    </FinishedState>
+  </Step>-->
+  
   <States>
-    <State Name="Solved">{RightDownSolved}, {RightFrontBlockPairSolved}, {RightBackBlockPairSolved}</State>
+    <State Name="Solved">{LeftDown.Solved}</State>
   </States>
 </Solver>
