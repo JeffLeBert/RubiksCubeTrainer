@@ -7,7 +7,7 @@
     <State Name="Solved">Left Blue</State>
   </States>
 
-  <Algorithms Name="MoveBlueCenterToLeft">
+  <Algorithms Name="Left">
     <InitialState>!{Left.Solved}</InitialState>
     <FinishedState>{Left.Solved}</FinishedState>
     

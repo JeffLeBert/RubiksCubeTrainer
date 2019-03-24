@@ -22,7 +22,7 @@ namespace RubiksCubeTrainer.Solver3x3
         }
 
         private static SolverFailureInformation FindFailure(Solver solver, Puzzle puzzle, SolverFailureInformation failureInfo)
-            => FindFailure(solver, puzzle, failureInfo, solver.NextAlgorithms(puzzle));
+            => FindFailure(solver, puzzle, failureInfo, solver.PossibleAlgorithms(puzzle));
 
         private static SolverFailureInformation FindFailure(
             Solver solver,

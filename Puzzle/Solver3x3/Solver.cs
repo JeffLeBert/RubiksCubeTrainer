@@ -22,7 +22,7 @@ namespace RubiksCubeTrainer.Solver3x3
 
         public ImmutableDictionary<string, IState> States { get; }
 
-        public IEnumerable<Algorithm> NextAlgorithms(Puzzle puzzle)
+        public IEnumerable<Algorithm> PossibleAlgorithms(Puzzle puzzle)
             => from algorithm in this.Algorithms.Values
                where algorithm.InitialState.Matches(puzzle)
                select algorithm;

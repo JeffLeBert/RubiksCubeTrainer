@@ -41,7 +41,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findFailureX1000ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.findFailureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.picPuzzle)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -187,7 +186,6 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.findFailureX1000ToolStripMenuItem,
-            this.findFailureToolStripMenuItem,
             this.testToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
@@ -196,23 +194,16 @@
             // findFailureX1000ToolStripMenuItem
             // 
             this.findFailureX1000ToolStripMenuItem.Name = "findFailureX1000ToolStripMenuItem";
-            this.findFailureX1000ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.findFailureX1000ToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.findFailureX1000ToolStripMenuItem.Text = "&Find Failure x 10000";
             this.findFailureX1000ToolStripMenuItem.Click += new System.EventHandler(this.FindFailureX10000ToolStripMenuItem_Click);
-            // 
-            // findFailureToolStripMenuItem
-            // 
-            this.findFailureToolStripMenuItem.Name = "findFailureToolStripMenuItem";
-            this.findFailureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.findFailureToolStripMenuItem.Text = "Find Failure";
-            this.findFailureToolStripMenuItem.Click += new System.EventHandler(this.findFailureToolStripMenuItem_Click);
             // 
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.testToolStripMenuItem.Text = "&Test";
-            this.testToolStripMenuItem.Click += new System.EventHandler(this.TestToolStripMenuItem_Click);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.testToolStripMenuItem.Text = "Find algorithm &solutions";
+            this.testToolStripMenuItem.Click += new System.EventHandler(this.FindAlgorithmSolutionsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -248,7 +239,6 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem findFailureToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findFailureX1000ToolStripMenuItem;
     }

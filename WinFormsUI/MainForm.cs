@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -77,43 +78,11 @@ namespace RubiksCubeTrainer.WinFormsUI
 
         private void cmdSolve_Click(object sender, EventArgs e)
         {
-            var solutionMoves = string.Empty;
-            var solutionDescription = string.Empty;
-            var currentPuzzle = Rotator.ApplyMoves(Puzzle.Solved, this.txtScrambleMoves.Text);
-            var tryCount = 0;
-            while (true)
-            {
-                var firstAlgorithmInfo = WellKnownSolvers.Roux.NextAlgorithms(currentPuzzle).FirstOrDefault();
-                if (firstAlgorithmInfo == null)
-                {
-                    solutionDescription += "No algorithms found.";
-                    break;
-                }
+            var solutionFinder = new ShortestSolutionFinder(WellKnownSolvers.Roux);
+            var (foundSolution, description, states) = solutionFinder.FindSolution(
+                Rotator.ApplyMoves(Puzzle.Solved, this.txtScrambleMoves.Text));
 
-                currentPuzzle = Rotator.ApplyMoves(currentPuzzle, firstAlgorithmInfo.Moves[0]);
-
-                // Update the UI.
-                var moves = NotationParser.FormatMoves(firstAlgorithmInfo.Moves[0]);
-                solutionMoves += "(" + moves + ") ";
-                solutionDescription += firstAlgorithmInfo.Description
-                    + Environment.NewLine
-                    + moves
-                    + Environment.NewLine
-                    + Environment.NewLine;
-
-                // Fail if we seen to not be able to find a solution.
-                tryCount++;
-                if (tryCount > 100)
-                {
-                    solutionDescription += "Got stuck in a loop somewhere...";
-                    break;
-                }
-            }
-
-            this.txtSolutionMoves.Text = solutionMoves;
-            this.txtSolutionDescription.Text = solutionDescription;
-
-            this.Refresh();
+            UpdateSolutionUI(description, states);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -125,17 +94,16 @@ namespace RubiksCubeTrainer.WinFormsUI
             const int SearchCount = 10000;
             for (int i = 0; i < SearchCount; i++)
             {
-                var scramble = Scrambler.Scamble();
-                var currentPuzzle = Rotator.ApplyMoves(
-                    Puzzle.Solved,
-                    NotationParser.EnumerateMoves(scramble));
-                var failureInfo = SolverFailureFinder.FindFailure(WellKnownSolvers.Roux, currentPuzzle);
-                if (failureInfo.FailDescription != null)
+                var solutionFinder = new ShortestSolutionFinder(WellKnownSolvers.Roux);
+                var (foundSolution, description, states) = solutionFinder.FindSolution(
+                    Rotator.ApplyMoves(Puzzle.Solved, Scrambler.Scamble()));
+
+                if (!foundSolution)
                 {
-                    this.txtScrambleMoves.Text = scramble;
-                    this.UpdateUIForFindFailure(failureInfo);
+                    this.UpdateSolutionUI(description, states);
                     return;
                 }
+
             }
             stopwatch.Stop();
 
@@ -145,45 +113,62 @@ namespace RubiksCubeTrainer.WinFormsUI
             this.Refresh();
         }
 
-        private void findFailureToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UpdateSolutionUI(string description, IEnumerable<SolveWalkerState> states)
         {
-            var currentPuzzle = Rotator.ApplyMoves(
-                Puzzle.Solved,
-                NotationParser.EnumerateMoves(this.txtScrambleMoves.Text));
-
-            var failureInfo = SolverFailureFinder.FindFailure(WellKnownSolvers.Roux, currentPuzzle);
-            this.UpdateUIForFindFailure(failureInfo);
+            this.txtSolutionMoves.Text =
+                string.Join(
+                    " ",
+                    from solveState in states
+                    select "(" + NotationParser.FormatMoves(solveState.Moves) + ")");
+            this.txtSolutionDescription.Text = description + Environment.NewLine + Environment.NewLine
+                + string.Join(
+                    Environment.NewLine + Environment.NewLine,
+                    from solveState in states
+                    select solveState.Algorithm.Name + Environment.NewLine + NotationParser.FormatMoves(solveState.Moves));
         }
 
-        private void UpdateUIForFindFailure(SolverFailureInformation failureInfo)
+        private void FindAlgorithmSolutionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.txtSolutionDescription.Text = failureInfo.FailDescription ?? "Solved!";
-            this.txtSolutionMoves.Text = string.Join(
-                " ",
-                from algorithm in failureInfo.Algorithms
-                select "(" + NotationParser.FormatMoves(algorithm) + ")");
-
-            this.Refresh();
-        }
-
-        private void TestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+            this.txtScrambleMoves.Text = string.Empty;
             this.txtSolutionMoves.Text = string.Empty;
             this.txtSolutionDescription.Text = string.Empty;
-
-            var algorithm = WellKnownSolvers.Roux.Algorithms["RotateLeftFrontDownWhiteCornerFacingOut"];
-            var stopwatch = Stopwatch.StartNew();
-            var solutions = new SolutionSearch(6, SolutionSearch.AllFaceMoves, algorithm.FinishedState)
-                .Search(this.puzzle);
-            stopwatch.Stop();
-
-            this.txtSolutionDescription.Text = "Results. Finished in " + stopwatch.ElapsedMilliseconds.ToString() + "ms\r\n" + string.Join(
-                Environment.NewLine,
-                from solution in solutions
-                orderby solution.Count()
-                select NotationParser.FormatMoves(solution));
-
             this.Refresh();
+
+            var solver = WellKnownSolvers.Roux;
+            var algorithm = solver.Algorithms["LeftDown.RightUp White Blue"];
+            var stopwatch1 = Stopwatch.StartNew();
+            Puzzle foundPuzzle = null;
+            for (int i = 0; i < 10000; i++)
+            {
+                var initialPuzzle = Rotator.ApplyMoves(Puzzle.Solved, Scrambler.Scamble());
+                foundPuzzle = new AlgorithmUsageFinder(WellKnownSolvers.Roux, algorithm).FindUsage(initialPuzzle);
+                if (foundPuzzle != null)
+                {
+                    break;
+                }
+            }
+            stopwatch1.Stop();
+
+            if (foundPuzzle == null)
+            {
+                this.txtSolutionDescription.Text = "No usage of this algorithm in this puzzle.";
+                return;
+            }
+
+            var stopwatch2 = Stopwatch.StartNew();
+            var solutions = new SolutionSearch(6, SolutionSearch.AllFaceMoves, algorithm.FinishedState)
+                .Search(foundPuzzle);
+            stopwatch2.Stop();
+
+            var message = "Found puzzle for algorithm in " + stopwatch1.ElapsedMilliseconds.ToString() + "ms\r\n"
+                + "Found solutions in " + stopwatch2.ElapsedMilliseconds.ToString() + "ms\r\n"
+                + string.Join(
+                    Environment.NewLine,
+                    from solution in solutions
+                    orderby solution.Count()
+                    select NotationParser.FormatMoves(solution));
+
+            this.txtSolutionDescription.Text = message;
         }
     }
 }
