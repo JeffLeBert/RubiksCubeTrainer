@@ -32,7 +32,9 @@ namespace RubiksCubeTrainer.Solver3x3
             + ")";
 
         public IState WithColors(PuzzleColor[] colors)
-            => new OrState(
+            => (colors == null) || (colors.Length == 0)
+            ? this
+            : new OrState(
                 ImmutableArray.CreateRange(
                     from state in this.States
                     select state.WithColors(colors)));

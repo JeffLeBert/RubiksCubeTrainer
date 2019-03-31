@@ -9,13 +9,16 @@ namespace RubiksCubeTrainer.Solver3x3
 {
     public class SolutionSearch
     {
-        public static readonly ImmutableArray<NotationMoveType> AllFaceMoves = ImmutableArray.Create(
+        public static readonly ImmutableArray<NotationMoveType> AllRouxMoves = ImmutableArray.Create(
             NotationMoveType.FrontClockwise, NotationMoveType.FrontCounterClockwise, NotationMoveType.FrontDouble,
             NotationMoveType.RightClockwise, NotationMoveType.RightCounterClockwise, NotationMoveType.RightDouble,
             NotationMoveType.UpClockwise, NotationMoveType.UpCounterClockwise, NotationMoveType.UpDouble,
             NotationMoveType.LeftClockwise, NotationMoveType.LeftCounterClockwise, NotationMoveType.LeftDouble,
             NotationMoveType.DownClockwise, NotationMoveType.DownCounterClockwise, NotationMoveType.DownDouble,
-            NotationMoveType.BackClockwise, NotationMoveType.BackCounterClockwise, NotationMoveType.BackDouble);
+            NotationMoveType.BackClockwise, NotationMoveType.BackCounterClockwise, NotationMoveType.BackDouble,
+            NotationMoveType.MiddleMClockwise, NotationMoveType.MiddleMCounterClockwise, NotationMoveType.MiddleMDouble,
+            NotationMoveType.WideLeftClockwise, NotationMoveType.WideLeftCounterClockwise, NotationMoveType.WideLeftDouble,
+            NotationMoveType.WideRightClockwise, NotationMoveType.WideRightCounterClockwise, NotationMoveType.WideRightDouble);
 
         private readonly ImmutableArray<NotationMoveType> availableMoves;
         private readonly IState isFinished;
@@ -82,7 +85,7 @@ namespace RubiksCubeTrainer.Solver3x3
 
                 Interlocked.CompareExchange(ref this.shortestSolutionLength, length, initialLength);
 
-                System.Diagnostics.Debug.WriteLine("Dropped length to: " + initialLength.ToString() + " from " + length.ToString());
+                System.Diagnostics.Debug.WriteLine($"Dropped length to: {initialLength.ToString()} from {length.ToString()}");
             }
         }
 

@@ -39,7 +39,7 @@ namespace RubiksCubeTrainer.Solver3x3
 
         private static IEnumerable<IState> ParseText(string text, Solver solver)
             => from state in text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-               select ParseMatch(state.Trim(), solver);
+               select ParseState(state.Trim(), solver);
 
         private static IState ParseChildElement(string baseName, XElement childElement, Solver solver)
         {
@@ -74,12 +74,12 @@ namespace RubiksCubeTrainer.Solver3x3
                 : bool.Parse(isNotText);
         }
 
-        private static IState ParseMatch(string match, Solver solver)
+        private static IState ParseState(string match, Solver solver)
             => ExpressionParser.IsExpression(match, true)
-                ? ParseMatchFromExpression(match, solver)
-                : ParseMatchFromParts(match);
+                ? ParseStateFromExpression(match, solver)
+                : ParseStateFromParts(match);
 
-        private static IState ParseMatchFromExpression(string match, Solver solver)
+        private static IState ParseStateFromExpression(string match, Solver solver)
         {
             var (stateName, isNot, colors) = ExpressionParser.Parse(match);
             if (!solver.States.TryGetValue(stateName, out IState state))
@@ -94,7 +94,7 @@ namespace RubiksCubeTrainer.Solver3x3
                 : state;
         }
 
-        private static IState ParseMatchFromParts(string match)
+        private static IState ParseStateFromParts(string match)
         {
             var parts = match.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             switch (parts.Length)

@@ -40,11 +40,11 @@ foreach (var colorName in colorNames)
             // Used in templates to signify a replacable color.
             if (color.StartsWith("C", StringComparison.OrdinalIgnoreCase))
             {
-                var number = int.Parse(color.Substring(2));
+                var number = int.Parse(color.Substring(1));
                 return PuzzleColor.TemplateColors + number;
             }
 
-			throw new InvalidOperationException();
+			throw new InvalidOperationException($"Unknown color '{color}'.");
 		}
 	}
 }

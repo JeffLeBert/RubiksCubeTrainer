@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Immutable;
 using RubiksCubeTrainer.Puzzle3x3;
 
 namespace RubiksCubeTrainer.Solver3x3
@@ -31,11 +31,10 @@ namespace RubiksCubeTrainer.Solver3x3
 
         protected override bool FoundSolution()
         {
-            var solutionLength = this.WalkerStates.Sum(state => state.Moves.Length);
-            if (solutionLength < this.bestSolutionLength)
+            if (this.TotalMoves < this.bestSolutionLength)
             {
                 this.message = "Solution found.";
-                this.bestSolutionLength = solutionLength;
+                this.bestSolutionLength = this.TotalMoves;
                 this.bestSolution = this.WalkerStates.ToArray();
             }
 
@@ -48,5 +47,10 @@ namespace RubiksCubeTrainer.Solver3x3
             this.bestSolutionLength = int.MaxValue;
             this.bestSolution = this.WalkerStates.ToArray();
         }
+
+        protected override bool Visit(Puzzle puzzle, Algorithm algorithm, ImmutableArray<NotationMoveType> moves)
+            => this.TotalMoves + moves.Length > this.bestSolutionLength
+            ? true
+            : base.Visit(puzzle, algorithm, moves);
     }
 }

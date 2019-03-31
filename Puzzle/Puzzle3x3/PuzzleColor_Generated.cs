@@ -31,7 +31,7 @@ namespace RubiksCubeTrainer.Puzzle3x3
                 return PuzzleColor.TemplateColors + number;
             }
 
-			throw new InvalidOperationException();
+			throw new InvalidOperationException($"Unknown color '{color}'.");
 		}
 	}
 }

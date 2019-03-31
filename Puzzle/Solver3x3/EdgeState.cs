@@ -37,7 +37,9 @@ namespace RubiksCubeTrainer.Solver3x3
             => this.MatchesWithoutIsNot(puzzle) != this.IsNot;
 
         public override IState WithColors(PuzzleColor[] colors)
-            => new EdgeState(
+            => (colors == null) || (colors.Length == 0)
+            ? this
+            : new EdgeState(
                 this.Location,
                 this.Location2,
                 UpdateColorIfTemplated(this.Color, colors),

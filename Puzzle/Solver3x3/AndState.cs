@@ -65,7 +65,9 @@ namespace RubiksCubeTrainer.Solver3x3
             + ")";
 
         public IState WithColors(PuzzleColor[] colors)
-            => new AndState(
+            => (colors == null) || (colors.Length == 0)
+            ? this
+            : new AndState(
                 ImmutableArray.CreateRange(
                     from state in this.States
                     select state.WithColors(colors)));

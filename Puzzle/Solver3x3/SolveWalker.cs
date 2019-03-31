@@ -17,22 +17,21 @@ namespace RubiksCubeTrainer.Solver3x3
             this.solvedState = this.Solver.States["Solved"];
         }
 
-        public int Depth { get; private set; }
+        public int AlgorithmsTried { get; private set; }
 
         public int MaximumDepth { get; }
 
         public Solver Solver { get; }
 
+        public int TotalMoves { get; private set; }
+
         public List<SolveWalkerState> WalkerStates { get; } = new List<SolveWalkerState>();
 
         protected bool Visit(Puzzle puzzle)
         {
-            this.Depth = 0;
-
             if (this.solvedState.Matches(puzzle))
             {
-                this.FoundSolution();
-                return true;
+                return this.FoundSolution();
             }
 
             return this.Visit(puzzle, this.Solver.PossibleAlgorithms(puzzle).ToArray());
@@ -72,8 +71,7 @@ namespace RubiksCubeTrainer.Solver3x3
 
         protected virtual bool Visit(Puzzle puzzle, Algorithm algorithm, ImmutableArray<NotationMoveType> moves)
         {
-            this.Depth++;
-            if (this.Depth > this.MaximumDepth)
+            if (this.WalkerStates.Count > this.MaximumDepth)
             {
                 this.AtMaximumDepth();
                 return false;
@@ -82,23 +80,15 @@ namespace RubiksCubeTrainer.Solver3x3
             this.WalkerStates.Add(new SolveWalkerState(puzzle, algorithm, moves));
             try
             {
-                var newPuzzle = Rotator.ApplyMoves(puzzle, moves);
-                if (this.solvedState.Matches(newPuzzle))
-                {
-                    return this.FoundSolution();
-                }
-
-                if (!this.Visit(newPuzzle, this.Solver.PossibleAlgorithms(newPuzzle).ToArray()))
-                {
-                    return false;
-                }
+                this.AlgorithmsTried++;
+                this.TotalMoves += moves.Length;
+                return this.Visit(Rotator.ApplyMoves(puzzle, moves));
             }
             finally
             {
                 this.WalkerStates.RemoveAt(this.WalkerStates.Count - 1);
+                this.TotalMoves -= moves.Length;
             }
-
-            return false;
         }
 
         protected virtual void AtMaximumDepth()

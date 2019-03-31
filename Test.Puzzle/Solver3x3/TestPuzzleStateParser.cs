@@ -119,8 +119,8 @@ namespace RubiksCubeTrainer.Solver3x3
         public void Can_parse_named_states(string xmlText)
         {
             var solver = Solver.Empty
-                .With("LeftCenter", SingleColorState.Create("Left", "Blue"))
-                .With("LeftDown", EdgeState.Create("LeftDown", "Blue", "White"));
+                .WithState("LeftCenter", SingleColorState.Create("Left", "Blue"))
+                .WithState("LeftDown", EdgeState.Create("LeftDown", "Blue", "White"));
             var andState = Assert.IsType<AndState>(
                 StateParser.Parse(null, null, new XElement("State", xmlText), solver).State);
 
@@ -137,8 +137,8 @@ namespace RubiksCubeTrainer.Solver3x3
         public void Can_parse_named_states_in_separate_elements(string state1, string state2)
         {
             var solver = Solver.Empty
-                .With("LeftCenter", SingleColorState.Create("Left", "Blue"))
-                .With("LeftDown", EdgeState.Create("LeftDown", "Blue", "White"));
+                .WithState("LeftCenter", SingleColorState.Create("Left", "Blue"))
+                .WithState("LeftDown", EdgeState.Create("LeftDown", "Blue", "White"));
             var xml =
                 new XElement(
                     "State",
@@ -160,8 +160,8 @@ namespace RubiksCubeTrainer.Solver3x3
         public void Can_parse_named_states_in_Or_elements(string state1, string state2)
         {
             var solver = Solver.Empty
-                .With("LeftCenter", SingleColorState.Create("Left", "Blue"))
-                .With("LeftDown", EdgeState.Create("LeftDown", "Blue", "White"));
+                .WithState("LeftCenter", SingleColorState.Create("Left", "Blue"))
+                .WithState("LeftDown", EdgeState.Create("LeftDown", "Blue", "White"));
             var xml =
                 new XElement(
                     "State",

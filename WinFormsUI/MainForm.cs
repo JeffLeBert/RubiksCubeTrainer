@@ -79,7 +79,7 @@ namespace RubiksCubeTrainer.WinFormsUI
         private void cmdSolve_Click(object sender, EventArgs e)
         {
             var solutionFinder = new ShortestSolutionFinder(WellKnownSolvers.Roux);
-            var (foundSolution, description, states) = solutionFinder.FindSolution(
+            var (_, description, states) = solutionFinder.FindSolution(
                 Rotator.ApplyMoves(Puzzle.Solved, this.txtScrambleMoves.Text));
 
             UpdateSolutionUI(description, states);
@@ -91,15 +91,17 @@ namespace RubiksCubeTrainer.WinFormsUI
         private void FindFailureX10000ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var stopwatch = Stopwatch.StartNew();
-            const int SearchCount = 10000;
+            const int SearchCount = 10;
             for (int i = 0; i < SearchCount; i++)
             {
+                var scramble = Scrambler.Scamble();
                 var solutionFinder = new ShortestSolutionFinder(WellKnownSolvers.Roux);
                 var (foundSolution, description, states) = solutionFinder.FindSolution(
-                    Rotator.ApplyMoves(Puzzle.Solved, Scrambler.Scamble()));
+                    Rotator.ApplyMoves(Puzzle.Solved, scramble));
 
                 if (!foundSolution)
                 {
+                    this.txtScrambleMoves.Text = scramble;
                     this.UpdateSolutionUI(description, states);
                     return;
                 }
@@ -135,7 +137,7 @@ namespace RubiksCubeTrainer.WinFormsUI
             this.Refresh();
 
             var solver = WellKnownSolvers.Roux;
-            var algorithm = solver.Algorithms["LeftDown.RightUp White Blue"];
+            var algorithm = solver.Algorithms["PairToRightFront.RightBackUp"];
             var stopwatch1 = Stopwatch.StartNew();
             Puzzle foundPuzzle = null;
             for (int i = 0; i < 10000; i++)
@@ -155,17 +157,21 @@ namespace RubiksCubeTrainer.WinFormsUI
                 return;
             }
 
+            this.txtSolutionDescription.Text = $"Found puzzle for algorithm in {stopwatch1.ElapsedMilliseconds.ToString()}ms";
+
             var stopwatch2 = Stopwatch.StartNew();
-            var solutions = new SolutionSearch(6, SolutionSearch.AllFaceMoves, algorithm.FinishedState)
+            var solutions = new SolutionSearch(4, SolutionSearch.AllRouxMoves, algorithm.FinishedState)
                 .Search(foundPuzzle);
             stopwatch2.Stop();
 
-            var message = "Found puzzle for algorithm in " + stopwatch1.ElapsedMilliseconds.ToString() + "ms\r\n"
-                + "Found solutions in " + stopwatch2.ElapsedMilliseconds.ToString() + "ms\r\n"
+            var shortestLength = solutions.Min(value => value.Count());
+
+            var message = this.txtSolutionDescription.Text + Environment.NewLine
+                + $"Found solutions in {stopwatch2.ElapsedMilliseconds.ToString()}ms\r\n"
                 + string.Join(
-                    Environment.NewLine,
+                    ", ",
                     from solution in solutions
-                    orderby solution.Count()
+                    where solution.Count() == shortestLength
                     select NotationParser.FormatMoves(solution));
 
             this.txtSolutionDescription.Text = message;

@@ -29,7 +29,9 @@ namespace RubiksCubeTrainer.Solver3x3
             => (puzzle[this.Location] == this.Color) != this.IsNot;
 
         public override IState WithColors(PuzzleColor[] colors)
-            => new SingleColorState(
+            => (colors == null) || (colors.Length == 0)
+            ? this
+            : new SingleColorState(
                 this.Location,
                 UpdateColorIfTemplated(this.Color, colors),
                 this.IsNot,

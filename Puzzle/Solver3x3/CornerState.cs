@@ -54,7 +54,9 @@ namespace RubiksCubeTrainer.Solver3x3
             => $"{this.FormattedLocation} {this.Color.ToString()} {this.Color2.ToString()} {this.Color3.ToString()}";
 
         public override IState WithColors(PuzzleColor[] colors)
-            => new CornerState(
+            => (colors == null) || (colors.Length == 0)
+            ? this
+            : new CornerState(
                 this.Location,
                 this.Location2,
                 this.Location3,

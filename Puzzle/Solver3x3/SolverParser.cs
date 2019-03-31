@@ -11,6 +11,7 @@ namespace RubiksCubeTrainer.Solver3x3
             var document = GetSolverDocument(name);
 
             var solver = SolverWithPuzzleStates(Solver.Empty, document);
+            solver = SolverWithAlgorithmTemplates(solver, document);
             return SolverWithAlgorithms(solver, document);
         }
 
@@ -24,8 +25,24 @@ namespace RubiksCubeTrainer.Solver3x3
                 (solver, info) =>
                 {
                     var (name, state) = StateParser.Parse(info.baseName, null, info.stateElement, solver);
-                    return solver.With(name, state);
+                    return solver.WithState(name, state);
                 });
+
+        private static Solver SolverWithAlgorithmTemplates(Solver initialSolver, XDocument document)
+            => (from algorithmsElement in document.Root.Elements("AlgorithmTemplates")
+                let baseName = algorithmsElement.Attribute("Name")?.Value
+                let initialState = GetChildState(algorithmsElement, nameof(Algorithm.InitialState), initialSolver)
+                let finishedState = GetChildState(algorithmsElement, nameof(Algorithm.FinishedState), initialSolver)
+                from algorithmElement in algorithmsElement.Elements("Algorithm")
+                select (algorithmElement, baseName, initialState, finishedState))
+            .Aggregate(
+                initialSolver,
+                (solver, info) => solver.WithAlgorithmTemplate(AlgorithmParser.Parse(
+                    info.baseName,
+                    info.initialState,
+                    info.finishedState,
+                    info.algorithmElement,
+                    solver)));
 
         private static Solver SolverWithAlgorithms(Solver initialSolver, XDocument document)
             => (from algorithmsElement in document.Root.Elements("Algorithms")
@@ -36,7 +53,7 @@ namespace RubiksCubeTrainer.Solver3x3
                 select (algorithmElement, baseName, initialState, finishedState))
             .Aggregate(
                 initialSolver,
-                (solver, info) => solver.With(AlgorithmParser.Parse(
+                (solver, info) => solver.WithAlgorithm(AlgorithmParser.Parse(
                     info.baseName,
                     info.initialState,
                     info.finishedState,

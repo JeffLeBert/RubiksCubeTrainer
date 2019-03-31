@@ -25,11 +25,11 @@ namespace RubiksCubeTrainer.Solver3x3
                 ? expression.Substring(2, expression.Length - 3)
                 : expression.Substring(1, expression.Length - 2);
 
-            var (name, colors) = ExpressionParser.ParseInner(expression.Trim());
+            var (name, colors) = ParseInner(expression.Trim());
             return (name, isNot, colors);
         }
 
-        private static (string Name, PuzzleColor[] Colors) ParseInner(string expression)
+        public static (string Name, PuzzleColor[] Colors) ParseInner(string expression)
             => Parse(expression.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
 
         private static (string Name, PuzzleColor[] Colors) Parse(string[] parts)
