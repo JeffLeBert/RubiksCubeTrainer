@@ -18,8 +18,9 @@ namespace RubiksCubeTrainer.Solver3x3
         public (bool FoundSolution, string Description, IEnumerable<SolveWalkerState> States) FindSolution(Puzzle puzzle)
         {
             this.Visit(puzzle);
+            var messageWithCount = $"{this.message}\r\nAlgorithms tried: {this.AlgorithmsTried.ToString()}.";
 
-            return (this.bestSolutionLength < int.MaxValue, this.message, this.bestSolution);
+            return (this.bestSolutionLength < int.MaxValue, messageWithCount, this.bestSolution);
         }
 
         protected override void AtMaximumDepth()
