@@ -90,16 +90,16 @@ namespace RubiksCubeTrainer.Puzzle3x3
             var builder = ImmutableDictionary.CreateBuilder<Location, Location>();
 
             // Up corners.
-            BuildLocations(UpFrontLeft, LeftFrontUp, FrontLeftUp);
-            BuildLocations(UpFrontRight, FrontRightUp, RightFrontUp);
-            BuildLocations(UpBackRight, RightBackUp, BackRightUp);
-            BuildLocations(UpBackLeft, BackLeftUp, LeftBackUp);
+            BuildLocations(UpLeftFront, LeftFrontUp, FrontLeftUp);
+            BuildLocations(UpRightFront, FrontRightUp, RightFrontUp);
+            BuildLocations(UpRightBack, RightBackUp, BackRightUp);
+            BuildLocations(UpLeftBack, BackLeftUp, LeftBackUp);
 
             // Down corners.
-            BuildLocations(FrontLeftDown, LeftFrontDown, DownFrontLeft);
-            BuildLocations(FrontRightDown, DownFrontRight, RightFrontDown);
-            BuildLocations(BackLeftDown, DownBackLeft, LeftBackDown);
-            BuildLocations(BackRightDown, RightBackDown, DownBackRight);
+            BuildLocations(FrontLeftDown, LeftFrontDown, DownLeftFront);
+            BuildLocations(FrontRightDown, DownRightFront, RightFrontDown);
+            BuildLocations(BackLeftDown, DownLeftBack, LeftBackDown);
+            BuildLocations(BackRightDown, RightBackDown, DownRightBack);
 
             return builder.ToImmutable();
 

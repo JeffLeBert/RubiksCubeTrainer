@@ -572,6 +572,7 @@
     <State Name="LeftBackSolved">LeftBack Blue Orange, LeftBackDown Blue Orange White</State>
     <State Name="RightFrontSolved">RightFront Green Red, RightFrontDown Green Red White</State>
     <State Name="RightBackSolved">RightBack Green Orange, RightBackDown Green White Orange</State>
+    <State Name="Solved">{Blocks.LeftFrontSolved}, {Blocks.LeftBackSolved}, {Blocks.RightFrontSolved}, {Blocks.RightBackSolved}</State>
   </States>
 
   <AlgorithmTemplates Name="MoveToFrontDown">
@@ -777,9 +778,9 @@
       <InitialState>FrontLeftDown White C1 C2</InitialState>
       <Moves>F U F'</Moves>
     </Algorithm>
-    <Algorithm Name="DownFrontLeft">
+    <Algorithm Name="DownLeftFront">
       <Description>Move Down Front Left corner to top</Description>
-      <InitialState>DownFrontLeft White C1 C2</InitialState>
+      <InitialState>DownLeftFront White C1 C2</InitialState>
       <Moves>L' U' L</Moves>
     </Algorithm>
 
@@ -793,9 +794,9 @@
       <InitialState>FrontRightDown White C1 C2</InitialState>
       <Moves>F' U' F</Moves>
     </Algorithm>
-    <Algorithm Name="DownFrontRight">
+    <Algorithm Name="DownRightFront">
       <Description>Move Down Front Right corner to top</Description>
-      <InitialState>DownFrontRight White C1 C2</InitialState>
+      <InitialState>DownRightFront White C1 C2</InitialState>
       <Moves>R U R'</Moves>
     </Algorithm>
 
@@ -809,9 +810,9 @@
       <InitialState>BackLeftDown White C1 C2</InitialState>
       <Moves>L U' L'</Moves>
     </Algorithm>
-    <Algorithm Name="DownBackLeft">
+    <Algorithm Name="DownLeftBack">
       <Description>Move Down Back Left corner to top</Description>
-      <InitialState>DownBackLeft White C1 C2</InitialState>
+      <InitialState>DownLeftBack White C1 C2</InitialState>
       <Moves>L U L'</Moves>
     </Algorithm>
 
@@ -825,9 +826,9 @@
       <InitialState>BackRightDown White C1 C2</InitialState>
       <Moves>R' U R U</Moves>
     </Algorithm>
-    <Algorithm Name="DownBackRight">
+    <Algorithm Name="DownRightBack">
       <Description>Move Down Back Right corner to top</Description>
-      <InitialState>DownBackRight White C1 C2</InitialState>
+      <InitialState>DownRightBack White C1 C2</InitialState>
       <Moves>R' U' R</Moves>
     </Algorithm>
 
@@ -844,87 +845,87 @@
       <Moves>U, U'</Moves>
     </Algorithm>
 
-    <Algorithm Name="UpFrontLeft_LeftFrontNotSolved">
+    <Algorithm Name="UpLeftFront_LeftFrontNotSolved">
       <Description>Rotate white Left Front Up corner out</Description>
-      <InitialState>UpFrontLeft White C1 C2, !{Blocks.LeftFrontSolved}</InitialState>
+      <InitialState>UpLeftFront White C1 C2, !{Blocks.LeftFrontSolved}</InitialState>
       <Moves>L' U L</Moves>
     </Algorithm>
-    <Algorithm Name="UpFrontLeft_RightFrontNotSolved">
+    <Algorithm Name="UpLeftFront_RightFrontNotSolved">
       <Description>Rotate white Left Front Up corner out</Description>
-      <InitialState>UpFrontLeft White C1 C2, !{Blocks.RightFrontSolved}</InitialState>
+      <InitialState>UpLeftFront White C1 C2, !{Blocks.RightFrontSolved}</InitialState>
       <Moves>U' R U' R'</Moves>
     </Algorithm>
-    <Algorithm Name="UpFrontLeft_LeftBackNotSolved">
+    <Algorithm Name="UpLeftFront_LeftBackNotSolved">
       <Description>Rotate white Left Front Up corner out</Description>
-      <InitialState>UpFrontLeft White C1 C2, !{Blocks.LeftBackSolved}</InitialState>
+      <InitialState>UpLeftFront White C1 C2, !{Blocks.LeftBackSolved}</InitialState>
       <Moves>U L U' L'</Moves>
     </Algorithm>
-    <Algorithm Name="UpFrontLeft_RightBackNotSolved">
+    <Algorithm Name="UpLeftFront_RightBackNotSolved">
       <Description>Rotate white Left Front Up corner out</Description>
-      <InitialState>UpFrontLeft White C1 C2, !{Blocks.RightBackSolved}</InitialState>
+      <InitialState>UpLeftFront White C1 C2, !{Blocks.RightBackSolved}</InitialState>
       <Moves>U2 R' U R</Moves>
     </Algorithm>
 
-    <Algorithm Name="UpBackLeft_LeftFrontNotSolved">
+    <Algorithm Name="UpLeftBack_LeftFrontNotSolved">
       <Description>Rotate white Left Back Up corner out</Description>
-      <InitialState>UpBackLeft White C1 C2, !{Blocks.LeftFrontSolved}</InitialState>
+      <InitialState>UpLeftBack White C1 C2, !{Blocks.LeftFrontSolved}</InitialState>
       <Moves>U' L' U L</Moves>
     </Algorithm>
-    <Algorithm Name="UpBackLeft_RightFrontNotSolved">
+    <Algorithm Name="UpLeftBack_RightFrontNotSolved">
       <Description>Rotate white Left Back Up corner out</Description>
-      <InitialState>UpBackLeft White C1 C2, !{Blocks.RightFrontSolved}</InitialState>
+      <InitialState>UpLeftBack White C1 C2, !{Blocks.RightFrontSolved}</InitialState>
       <Moves>U2 R U' R'</Moves>
     </Algorithm>
-    <Algorithm Name="UpBackLeft_LeftBackNotSolved">
+    <Algorithm Name="UpLeftBack_LeftBackNotSolved">
       <Description>Rotate white Left Back Up corner out</Description>
-      <InitialState>UpBackLeft White C1 C2, !{Blocks.LeftBackSolved}</InitialState>
+      <InitialState>UpLeftBack White C1 C2, !{Blocks.LeftBackSolved}</InitialState>
       <Moves>L U' L'</Moves>
     </Algorithm>
-    <Algorithm Name="UpBackLeft_RightBackNotSolved">
+    <Algorithm Name="UpLeftBack_RightBackNotSolved">
       <Description>Rotate white Left Back Up corner out</Description>
-      <InitialState>UpBackLeft White C1 C2, !{Blocks.RightBackSolved}</InitialState>
+      <InitialState>UpLeftBack White C1 C2, !{Blocks.RightBackSolved}</InitialState>
       <Moves>U R U R'</Moves>
     </Algorithm>
 
-    <Algorithm Name="UpBackRight_LeftFrontNotSolved">
+    <Algorithm Name="UpRightBack_LeftFrontNotSolved">
       <Description>Rotate white Right Back Up corner out</Description>
-      <InitialState>UpBackRight White C1 C2, !{Blocks.LeftFrontSolved}</InitialState>
+      <InitialState>UpRightBack White C1 C2, !{Blocks.LeftFrontSolved}</InitialState>
       <Moves>U2 R' U R</Moves>
     </Algorithm>
-    <Algorithm Name="UpBackRight_RightFrontNotSolved">
+    <Algorithm Name="UpRightBack_RightFrontNotSolved">
       <Description>Rotate white Right Back Up corner out</Description>
-      <InitialState>UpBackRight White C1 C2, !{Blocks.RightFrontSolved}</InitialState>
+      <InitialState>UpRightBack White C1 C2, !{Blocks.RightFrontSolved}</InitialState>
       <Moves>U R U' R'</Moves>
     </Algorithm>
-    <Algorithm Name="UpBackRight_LeftBackNotSolved">
+    <Algorithm Name="UpRightBack_LeftBackNotSolved">
       <Description>Rotate white Right Back Up corner out</Description>
-      <InitialState>UpBackRight White C1 C2, !{Blocks.LeftBackSolved}</InitialState>
+      <InitialState>UpRightBack White C1 C2, !{Blocks.LeftBackSolved}</InitialState>
       <Moves>U R' U' R</Moves>
     </Algorithm>
-    <Algorithm Name="UpBackRight_RightBackNotSolved">
+    <Algorithm Name="UpRightBack_RightBackNotSolved">
       <Description>Rotate white Right Back Up corner out</Description>
-      <InitialState>UpBackRight White C1 C2, !{Blocks.RightBackSolved}</InitialState>
+      <InitialState>UpRightBack White C1 C2, !{Blocks.RightBackSolved}</InitialState>
       <Moves>R' U R</Moves>
     </Algorithm>
 
-    <Algorithm Name="UpFrontRight_LeftFrontNotSolved">
+    <Algorithm Name="UpRightFront_LeftFrontNotSolved">
       <Description>Rotate white Right Front Up corner out</Description>
-      <InitialState>UpFrontRight White C1 C2, !{Blocks.LeftFrontSolved}</InitialState>
+      <InitialState>UpRightFront White C1 C2, !{Blocks.LeftFrontSolved}</InitialState>
       <Moves>U L' U L</Moves>
     </Algorithm>
-    <Algorithm Name="UpFrontRight_RightFrontNotSolved">
+    <Algorithm Name="UpRightFront_RightFrontNotSolved">
       <Description>Rotate white Right Front Up corner out</Description>
-      <InitialState>UpFrontRight White C1 C2, !{Blocks.RightFrontSolved}</InitialState>
+      <InitialState>UpRightFront White C1 C2, !{Blocks.RightFrontSolved}</InitialState>
       <Moves>R U' R'</Moves>
     </Algorithm>
-    <Algorithm Name="UpFrontRight_LeftBackNotSolved">
+    <Algorithm Name="UpRightFront_LeftBackNotSolved">
       <Description>Rotate white Right Front Up corner out</Description>
-      <InitialState>UpFrontRight White C1 C2, !{Blocks.LeftBackSolved}</InitialState>
+      <InitialState>UpRightFront White C1 C2, !{Blocks.LeftBackSolved}</InitialState>
       <Moves>U2 L U' L'</Moves>
     </Algorithm>
-    <Algorithm Name="UpFrontRight_RightBackNotSolved">
+    <Algorithm Name="UpRightFront_RightBackNotSolved">
       <Description>Rotate white Right Front Up corner out</Description>
-      <InitialState>UpFrontRight White C1 C2, !{Blocks.RightBackSolved}</InitialState>
+      <InitialState>UpRightFront White C1 C2, !{Blocks.RightBackSolved}</InitialState>
       <Moves>U' R' U R'</Moves>
     </Algorithm>
   </AlgorithmTemplates>
@@ -935,29 +936,29 @@
 
     <Algorithm Name="LeftFrontDown" Base="UpFacingOut.LeftFrontDown Red Blue" />
     <Algorithm Name="FrontLeftDown" Base="UpFacingOut.FrontLeftDown Red Blue" />
-    <Algorithm Name="DownFrontLeft" Base="UpFacingOut.DownFrontLeft Red Blue" />
+    <Algorithm Name="DownLeftFront" Base="UpFacingOut.DownLeftFront Red Blue" />
 
     <Algorithm Name="RightFrontDown" Base="UpFacingOut.RightFrontDown Red Blue" />
     <Algorithm Name="FrontRightDown" Base="UpFacingOut.FrontRightDown Red Blue" />
-    <Algorithm Name="DownFrontRight" Base="UpFacingOut.DownFrontRight Red Blue" />
+    <Algorithm Name="DownRightFront" Base="UpFacingOut.DownRightFront Red Blue" />
 
     <Algorithm Name="LeftBackDown" Base="UpFacingOut.LeftBackDown Red Blue" />
     <Algorithm Name="BackLeftDown" Base="UpFacingOut.BackLeftDown Red Blue" />
-    <Algorithm Name="DownBackLeft" Base="UpFacingOut.DownBackLeft Red Blue" />
+    <Algorithm Name="DownLeftBack" Base="UpFacingOut.DownLeftBack Red Blue" />
 
     <Algorithm Name="RightBackDown" Base="UpFacingOut.RightBackDown Red Blue" />
     <Algorithm Name="BackRightDown" Base="UpFacingOut.BackRightDown Red Blue" />
-    <Algorithm Name="DownBackRight" Base="UpFacingOut.DownBackRight Red Blue" />
+    <Algorithm Name="DownRightBack" Base="UpFacingOut.DownRightBack Red Blue" />
 
     <Algorithm Name="AlreadyAtTop" Base="UpFacingOut.AlreadyAtTop Red Blue" />
 
-    <Algorithm Name="UpFrontLeft" Base="UpFacingOut.UpFrontLeft_LeftFrontNotSolved Red Blue" />
+    <Algorithm Name="UpLeftFront" Base="UpFacingOut.UpLeftFront_LeftFrontNotSolved Red Blue" />
 
-    <Algorithm Name="UpFrontRight" Base="UpFacingOut.UpFrontRight_LeftFrontNotSolved Red Blue" />
+    <Algorithm Name="UpRightFront" Base="UpFacingOut.UpRightFront_LeftFrontNotSolved Red Blue" />
 
-    <Algorithm Name="UpBackLeft" Base="UpFacingOut.UpBackLeft_LeftFrontNotSolved Red Blue" />
+    <Algorithm Name="UpLeftBack" Base="UpFacingOut.UpLeftBack_LeftFrontNotSolved Red Blue" />
 
-    <Algorithm Name="UpBackRight" Base="UpFacingOut.UpBackRight_LeftFrontNotSolved Red Blue" />
+    <Algorithm Name="UpRightBack" Base="UpFacingOut.UpRightBack_LeftFrontNotSolved Red Blue" />
   </Algorithms>
 
   <Algorithms Name="WhiteBlueOrangeCornerToTopFacingOut">
@@ -966,29 +967,29 @@
 
     <Algorithm Name="LeftFrontDown" Base="UpFacingOut.LeftFrontDown Blue Orange" />
     <Algorithm Name="FrontLeftDown" Base="UpFacingOut.FrontLeftDown Blue Orange" />
-    <Algorithm Name="DownFrontLeft" Base="UpFacingOut.DownFrontLeft Blue Orange" />
+    <Algorithm Name="DownLeftFront" Base="UpFacingOut.DownLeftFront Blue Orange" />
 
     <Algorithm Name="RightFrontDown" Base="UpFacingOut.RightFrontDown Blue Orange" />
     <Algorithm Name="FrontRightDown" Base="UpFacingOut.FrontRightDown Blue Orange" />
-    <Algorithm Name="DownFrontRight" Base="UpFacingOut.DownFrontRight Blue Orange" />
+    <Algorithm Name="DownRightFront" Base="UpFacingOut.DownRightFront Blue Orange" />
 
     <Algorithm Name="LeftBackDown" Base="UpFacingOut.LeftBackDown Blue Orange" />
     <Algorithm Name="BackLeftDown" Base="UpFacingOut.BackLeftDown Blue Orange" />
-    <Algorithm Name="DownBackLeft" Base="UpFacingOut.DownBackLeft Blue Orange" />
+    <Algorithm Name="DownLeftBack" Base="UpFacingOut.DownLeftBack Blue Orange" />
 
     <Algorithm Name="RightBackDown" Base="UpFacingOut.RightBackDown Blue Orange" />
     <Algorithm Name="BackRightDown" Base="UpFacingOut.BackRightDown Blue Orange" />
-    <Algorithm Name="DownBackRight" Base="UpFacingOut.DownBackRight Blue Orange" />
+    <Algorithm Name="DownRightBack" Base="UpFacingOut.DownRightBack Blue Orange" />
 
     <Algorithm Name="AlreadyAtTop" Base="UpFacingOut.AlreadyAtTop Blue Orange" />
 
-    <Algorithm Name="UpFrontLeft" Base="UpFacingOut.UpFrontLeft_LeftBackNotSolved Blue Orange" />
+    <Algorithm Name="UpLeftFront" Base="UpFacingOut.UpLeftFront_LeftBackNotSolved Blue Orange" />
 
-    <Algorithm Name="UpFrontRight" Base="UpFacingOut.UpFrontRight_LeftBackNotSolved Blue Orange" />
+    <Algorithm Name="UpRightFront" Base="UpFacingOut.UpRightFront_LeftBackNotSolved Blue Orange" />
 
-    <Algorithm Name="UpBackLeft" Base="UpFacingOut.UpBackLeft_LeftBackNotSolved Blue Orange" />
+    <Algorithm Name="UpLeftBack" Base="UpFacingOut.UpLeftBack_LeftBackNotSolved Blue Orange" />
 
-    <Algorithm Name="UpBackRight" Base="UpFacingOut.UpBackRight_LeftBackNotSolved Blue Orange" />
+    <Algorithm Name="UpRightBack" Base="UpFacingOut.UpRightBack_LeftBackNotSolved Blue Orange" />
   </Algorithms>
 
   <Algorithms Name="WhiteGreenRedCornerToTopFacingOut">
@@ -997,29 +998,29 @@
 
     <Algorithm Name="LeftFrontDown" Base="UpFacingOut.LeftFrontDown Green Red" />
     <Algorithm Name="FrontLeftDown" Base="UpFacingOut.FrontLeftDown Green Red" />
-    <Algorithm Name="DownFrontLeft" Base="UpFacingOut.DownFrontLeft Green Red" />
+    <Algorithm Name="DownLeftFront" Base="UpFacingOut.DownLeftFront Green Red" />
 
     <Algorithm Name="RightFrontDown" Base="UpFacingOut.RightFrontDown Green Red" />
     <Algorithm Name="FrontRightDown" Base="UpFacingOut.FrontRightDown Green Red" />
-    <Algorithm Name="DownFrontRight" Base="UpFacingOut.DownFrontRight Green Red" />
+    <Algorithm Name="DownRightFront" Base="UpFacingOut.DownRightFront Green Red" />
 
     <Algorithm Name="LeftBackDown" Base="UpFacingOut.LeftBackDown Green Red" />
     <Algorithm Name="BackLeftDown" Base="UpFacingOut.BackLeftDown Green Red" />
-    <Algorithm Name="DownBackLeft" Base="UpFacingOut.DownBackLeft Green Red" />
+    <Algorithm Name="DownLeftBack" Base="UpFacingOut.DownLeftBack Green Red" />
 
     <Algorithm Name="RightBackDown" Base="UpFacingOut.RightBackDown Green Red" />
     <Algorithm Name="BackRightDown" Base="UpFacingOut.BackRightDown Green Red" />
-    <Algorithm Name="DownBackRight" Base="UpFacingOut.DownBackRight Green Red" />
+    <Algorithm Name="DownRightBack" Base="UpFacingOut.DownRightBack Green Red" />
 
     <Algorithm Name="AlreadyAtTop" Base="UpFacingOut.AlreadyAtTop Green Red" />
 
-    <Algorithm Name="UpFrontLeft" Base="UpFacingOut.UpFrontLeft_RightFrontNotSolved Green Red" />
+    <Algorithm Name="UpLeftFront" Base="UpFacingOut.UpLeftFront_RightFrontNotSolved Green Red" />
 
-    <Algorithm Name="UpFrontRight" Base="UpFacingOut.UpFrontRight_RightFrontNotSolved Green Red" />
+    <Algorithm Name="UpRightFront" Base="UpFacingOut.UpRightFront_RightFrontNotSolved Green Red" />
 
-    <Algorithm Name="UpBackLeft" Base="UpFacingOut.UpBackLeft_RightFrontNotSolved Green Red" />
+    <Algorithm Name="UpLeftBack" Base="UpFacingOut.UpLeftBack_RightFrontNotSolved Green Red" />
 
-    <Algorithm Name="UpBackRight" Base="UpFacingOut.UpBackRight_RightFrontNotSolved Green Red" />
+    <Algorithm Name="UpRightBack" Base="UpFacingOut.UpRightBack_RightFrontNotSolved Green Red" />
   </Algorithms>
 
   <Algorithms Name="WhiteOrangeGreenCornerToTopFacingOut">
@@ -1028,29 +1029,29 @@
 
     <Algorithm Name="LeftFrontDown" Base="UpFacingOut.LeftFrontDown Orange Green" />
     <Algorithm Name="FrontLeftDown" Base="UpFacingOut.FrontLeftDown Orange Green" />
-    <Algorithm Name="DownFrontLeft" Base="UpFacingOut.DownFrontLeft Orange Green" />
+    <Algorithm Name="DownLeftFront" Base="UpFacingOut.DownLeftFront Orange Green" />
 
     <Algorithm Name="RightFrontDown" Base="UpFacingOut.RightFrontDown Orange Green" />
     <Algorithm Name="FrontRightDown" Base="UpFacingOut.FrontRightDown Orange Green" />
-    <Algorithm Name="DownFrontRight" Base="UpFacingOut.DownFrontRight Orange Green" />
+    <Algorithm Name="DownRightFront" Base="UpFacingOut.DownRightFront Orange Green" />
 
     <Algorithm Name="LeftBackDown" Base="UpFacingOut.LeftBackDown Orange Green" />
     <Algorithm Name="BackLeftDown" Base="UpFacingOut.BackLeftDown Orange Green" />
-    <Algorithm Name="DownBackLeft" Base="UpFacingOut.DownBackLeft Orange Green" />
+    <Algorithm Name="DownLeftBack" Base="UpFacingOut.DownLeftBack Orange Green" />
 
     <Algorithm Name="RightBackDown" Base="UpFacingOut.RightBackDown Orange Green" />
     <Algorithm Name="BackRightDown" Base="UpFacingOut.BackRightDown Orange Green" />
-    <Algorithm Name="DownBackRight" Base="UpFacingOut.DownBackRight Orange Green" />
+    <Algorithm Name="DownRightBack" Base="UpFacingOut.DownRightBack Orange Green" />
 
     <Algorithm Name="AlreadyAtTop" Base="UpFacingOut.AlreadyAtTop Orange Green" />
 
-    <Algorithm Name="UpFrontLeft" Base="UpFacingOut.UpFrontLeft_RightBackNotSolved Orange Green" />
+    <Algorithm Name="UpLeftFront" Base="UpFacingOut.UpLeftFront_RightBackNotSolved Orange Green" />
 
-    <Algorithm Name="UpFrontRight" Base="UpFacingOut.UpFrontRight_RightBackNotSolved Orange Green" />
+    <Algorithm Name="UpRightFront" Base="UpFacingOut.UpRightFront_RightBackNotSolved Orange Green" />
 
-    <Algorithm Name="UpBackLeft" Base="UpFacingOut.UpBackLeft_RightBackNotSolved Orange Green" />
+    <Algorithm Name="UpLeftBack" Base="UpFacingOut.UpLeftBack_RightBackNotSolved Orange Green" />
 
-    <Algorithm Name="UpBackRight" Base="UpFacingOut.UpBackRight_RightBackNotSolved Orange Green" />
+    <Algorithm Name="UpRightBack" Base="UpFacingOut.UpRightBack_RightBackNotSolved Orange Green" />
   </Algorithms>
 
   <AlgorithmTemplates Name="JoinLeftPair">
@@ -1163,13 +1164,13 @@
 
     <Algorithm Name="LeftFrontUp" Base="JoinLeftPair.FrontUp Green Red" />
     <Algorithm Name="LeftFrontUpFlip" Base="JoinLeftPair.FrontUpFlip Green Red" />
-    
+
     <Algorithm Name="RightFrontUp" Base="JoinRightPair.FrontUp Green Red" />
     <Algorithm Name="RightFrontUpFlip" Base="JoinRightPair.FrontUpFlip Green Red" />
-    
+
     <Algorithm Name="LeftBackUp" Base="JoinLeftPair.BackUpFlip Green Red" />
     <Algorithm Name="LeftBackUpFlip" Base="JoinLeftPair.BackUp Green Red" />
-  
+
     <Algorithm Name="RightBackUp" Base="JoinRightPair.BackUp Green Red" />
     <Algorithm Name="RightBackUpFlip" Base="JoinRightPair.BackUpFlip Green Red" />
   </Algorithms>
@@ -1186,13 +1187,13 @@
 
     <Algorithm Name="LeftFrontUp" Base="JoinLeftPair.FrontUp Orange Green" />
     <Algorithm Name="LeftFrontUpFlip" Base="JoinLeftPair.FrontUpFlip Orange Green" />
-    
+
     <Algorithm Name="RightFrontUp" Base="JoinRightPair.FrontUp Orange Green" />
     <Algorithm Name="RightFrontUpFlip" Base="JoinRightPair.FrontUpFlip Orange Green" />
-    
+
     <Algorithm Name="LeftBackUp" Base="JoinLeftPair.BackUp Orange Green" />
     <Algorithm Name="LeftBackUpFlip" Base="JoinLeftPair.BackUpFlip Orange Green" />
-    
+
     <Algorithm Name="RightBackUp" Base="JoinRightPair.BackUp Orange Green" />
     <Algorithm Name="RightBackUpFlip" Base="JoinRightPair.BackUpFlip Orange Green" />
   </Algorithms>
@@ -1351,58 +1352,119 @@
 
   <!-- Top four corners facing up steps -->
 
-  <!--<States>
-    <State Name="LeftAndRightBlocksSolved">{RightDown.Solved}, {Blocks.RightFrontSolved}, {RightBlock.BackPairSolved}</State>
-    <State Name="TopCornersFacingUpSolved">
-      {LeftAndRightBlocksSolved},
-      UpBackLeft Yellow,
-      UpBackRight Yellow,
-      UpFrontLeft Yellow,
-      UpFrontRight Yellow
+  <States Name="TopCorners">
+    <State Name="AllYellowUp">
+      UpLeftBack Yellow,
+      UpRightBack Yellow,
+      UpLeftFront Yellow,
+      UpRightFront Yellow
     </State>
+    <State Name="Solved">{Blocks.Solved}, {TopCorners.AllYellowUp}</State>
   </States>
 
-  <Step Name="NoTopCornersFacingUp">
-    <InitialState>
-      {LeftAndRightBlocksSolved},
-      !UpBackLeft Yellow,
-      !UpBackRight Yellow,
-      !UpFrontLeft Yellow,
-      !UpFrontRight Yellow
-    </InitialState>
+  <Algorithms Name="TopCorners">
+    <InitialState>{Blocks.Solved}, !{TopCorners.AllYellowUp}</InitialState>
+    <FinishedState>{Blocks.Solved}</FinishedState>
 
-    <Algorithm>
-      <Description>No corners yellow up</Description>
-      <InitialState>RightFrontUp Yellow</InitialState>
+    <!--
+      If no corners are yellow up then rotate such that the right front corner is yellow pointing forwards.
+    -->
+    <Algorithm Name="RotateToRightUpFrontFacingOut1">
+      <InitialState>!UpLeftBack Yellow, !UpRightBack Yellow, FrontLeftUp Yellow, FrontRightUp Yellow</InitialState>
+      <Moves>U'</Moves>
+    </Algorithm>
+    <Algorithm Name="RotateToRightUpFrontFacingOut3">
+      <InitialState>
+        <Or>
+          <State>!UpLeftBack Yellow, BackRightUp Yellow, !UpLeftFront Yellow, FrontRightUp Yellow</State>
+          <State>!UpLeftBack Yellow, BackRightUp Yellow, !UpLeftFront Yellow, RightFrontUp Yellow</State>
+        </Or>
+      </InitialState>
+      <Moves>U</Moves>
+    </Algorithm>
+
+    <!-- One corner is yellow up. Rotate so it is in the front right. -->
+    <Algorithm Name="RotateSingleYellowCorner1">
+      <InitialState>!UpLeftBack Yellow, UpRightBack Yellow, !UpLeftFront Yellow, !UpRightFront Yellow</InitialState>
+      <Moves>U</Moves>
+    </Algorithm>
+    <Algorithm Name="RotateSingleYellowCorner2">
+      <InitialState>UpLeftBack Yellow, !UpRightBack Yellow, !UpLeftFront Yellow, !UpRightFront Yellow</InitialState>
+      <Moves>U2</Moves>
+    </Algorithm>
+    <Algorithm Name="RotateSingleYellowCorner3">
+      <InitialState>!UpLeftBack Yellow, !UpRightBack Yellow, UpLeftFront Yellow, !UpRightFront Yellow</InitialState>
+      <Moves>U'</Moves>
+    </Algorithm>
+
+    <!-- If two corners are yellow up on the same side, then rotate so that the RightFrontUp is pointing forwards. -->
+    <Algorithm Name="RotateTwoSameSideUp1">
+      <InitialState>UpLeftBack Yellow, UpRightBack Yellow, LeftFrontUp Yellow</InitialState>
+      <Moves>U'</Moves>
+    </Algorithm>
+    <Algorithm Name="RotateTwoSameSideUp2">
+      <InitialState>
+        <Or>
+          <State>UpLeftBack Yellow, UpLeftFront Yellow, RightFrontUp Yellow</State>
+          <State>UpLeftFront Yellow, UpRightFront Yellow, RightBackUp Yellow</State>
+          <State>UpRightFront Yellow, UpRightBack Yellow, LeftFrontUp Yellow</State>
+        </Or>
+      </InitialState>
+      <Moves>U</Moves>
+    </Algorithm>
+    <Algorithm Name="RotateTwoSameSideUp3">
+      <InitialState>
+        <Or>
+          <State>UpLeftFront Yellow, UpRightFront Yellow, BackLeftUp Yellow</State>
+          <State>UpRightFront Yellow, UpRightBack Yellow, BackLeftUp Yellow</State>
+        </Or>
+      </InitialState>
+      <Moves>U2</Moves>
+    </Algorithm>
+
+    <!-- If two diagonal corners are yellow up then rotate so that the RightFrontUp is pointing forwards. -->
+    <Algorithm Name="RotateTwoDiaganolsUp1">
+      <InitialState>UpLeftBack Yellow, FrontLeftUp Yellow, UpRightFront Yellow</InitialState>
+      <Moves>U</Moves>
+    </Algorithm>
+    <Algorithm Name="RotateTwoDiaganolsUp2">
+      <InitialState>BackLeftUp Yellow, UpRightBack Yellow, UpLeftFront Yellow</InitialState>
+      <Moves>U2</Moves>
+    </Algorithm>
+    <Algorithm Name="RotateTwoDiaganolsUp3">
+      <InitialState>UpLeftBack Yellow, LeftFrontUp Yellow, UpRightFront Yellow</InitialState>
+      <Moves>U'</Moves>
+    </Algorithm>
+
+    <Algorithm Name="RotateCorners">
+      <InitialState>
+        <Or>
+          <!-- Nothing up. Front right yellow outwards. -->
+          <State>!UpLeftBack Yellow, !UpRightBack Yellow, !UpLeftFront Yellow, RightFrontUp Yellow</State>
+          <!-- Only front right up. -->
+          <State>!UpLeftBack Yellow, !UpRightBack Yellow, !UpLeftFront Yellow, UpRightFront Yellow</State>
+          <!-- Two up, same side. -->
+          <State>UpLeftBack Yellow, UpRightBack Yellow, FrontRightUp Yellow</State>
+          <State>UpLeftBack Yellow, UpLeftFront Yellow, FrontRightUp Yellow</State>
+          <!-- Two up, diagonal. -->
+          <State>LeftBackUp Yellow, UpRightBack Yellow, FrontRightUp Yellow</State>
+        </Or>
+      </InitialState>
+      <FinishedState>{TopCorners.Solved}</FinishedState>
       <Moves>L' U' L U' L' U2 L</Moves>
     </Algorithm>
 
-    <Algorithm>
-      <Description>No corners yellow up</Description>
-      <InitialState>FrontLeftUp Yellow</InitialState>
-      <Moves>U' L' U' L U' L' U2 L</Moves>
+    <Algorithm Name="RotateCorners2">
+      <InitialState>
+        <!-- Need to rotate "backwards". -->
+        <State>!UpLeftBack Yellow, !UpRightBack Yellow, LeftFrontUp Yellow, UpRightFront Yellow</State>
+      </InitialState>
+      <FinishedState>{TopCorners.Solved}</FinishedState>
+      <Moves>U R U R' U R U2 R'</Moves>
     </Algorithm>
-
-    <Algorithm>
-      <Description>No corners yellow up</Description>
-      <InitialState>LeftBackUp Yellow</InitialState>
-      <Moves>U2 L' U' L U' L' U2 L</Moves>
-    </Algorithm>
-
-    <FinishedState>
-      {TopCornersFacingUpSolved}
-      <Or>
-        <State>UpBackLeft Yellow</State>
-        <State>UpBackRight Yellow</State>
-        <State>UpFrontLeft Yellow</State>
-        <State>UpFrontRight Yellow</State>
-      </Or>
-    </FinishedState>
-  </Step>-->
+  </Algorithms>
 
   <States>
-    <State Name="Solved">
-      {LeftRightDown.Solved}, {Blocks.LeftFrontSolved}, {Blocks.LeftBackSolved}, {Blocks.RightFrontSolved}, {Blocks.RightBackSolved}
-    </State>
+    <State Name="Solved">{TopCorners.Solved}</State>
   </States>
 </Solver>

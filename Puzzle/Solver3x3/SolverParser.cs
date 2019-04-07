@@ -7,15 +7,15 @@ namespace RubiksCubeTrainer.Solver3x3
     public static class SolverParser
     {
         public static Solver ParseFromEmbeddedResource(string name)
-        {
-            var document = GetSolverDocument(name);
+            => ParseFromEmbeddedResource(XDocument.Load(GetSolverStream(name)));
 
-            var solver = SolverWithPuzzleStates(Solver.Empty, document);
-            solver = SolverWithAlgorithmTemplates(solver, document);
-            return SolverWithAlgorithms(solver, document);
-        }
+        private static Solver ParseFromEmbeddedResource(XDocument document)
+            => Solver.Empty
+                .SolverWithPuzzleStates(document)
+                .SolverWithAlgorithmTemplates(document)
+                .SolverWithAlgorithms(document);
 
-        private static Solver SolverWithPuzzleStates(Solver initialSolver, XDocument document)
+        private static Solver SolverWithPuzzleStates(this Solver initialSolver, XDocument document)
             => (from statesElement in document.Root.Elements("States")
                 let baseName = statesElement.Attribute("Name")?.Value
                 from stateElement in statesElement.Elements("State")
@@ -28,7 +28,7 @@ namespace RubiksCubeTrainer.Solver3x3
                     return solver.WithState(name, state);
                 });
 
-        private static Solver SolverWithAlgorithmTemplates(Solver initialSolver, XDocument document)
+        private static Solver SolverWithAlgorithmTemplates(this Solver initialSolver, XDocument document)
             => (from algorithmsElement in document.Root.Elements("AlgorithmTemplates")
                 let baseName = algorithmsElement.Attribute("Name")?.Value
                 let initialState = GetChildState(algorithmsElement, nameof(Algorithm.InitialState), initialSolver)
@@ -44,7 +44,7 @@ namespace RubiksCubeTrainer.Solver3x3
                     info.algorithmElement,
                     solver)));
 
-        private static Solver SolverWithAlgorithms(Solver initialSolver, XDocument document)
+        private static Solver SolverWithAlgorithms(this Solver initialSolver, XDocument document)
             => (from algorithmsElement in document.Root.Elements("Algorithms")
                 let baseName = algorithmsElement.Attribute("Name")?.Value
                 let initialState = GetChildState(algorithmsElement, nameof(Algorithm.InitialState), initialSolver)
@@ -59,9 +59,6 @@ namespace RubiksCubeTrainer.Solver3x3
                     info.finishedState,
                     info.algorithmElement,
                     solver)));
-
-        private static XDocument GetSolverDocument(string name)
-            => XDocument.Load(GetSolverStream(name));
 
         private static Stream GetSolverStream(string name)
             => typeof(Solver).Assembly.GetManifestResourceStream(typeof(Solver), name + ".xml");

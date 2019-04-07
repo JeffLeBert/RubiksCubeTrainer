@@ -72,7 +72,7 @@ namespace RubiksCubeTrainer.Solver3x3
                 StateParser.Parse(null, null, new XElement("State", "LeftFrontDown Blue White Red"), null).State);
 
             Assert.Equal(Location.LeftFrontDown, state.Location);
-            Assert.Equal(Location.DownFrontLeft, state.Location2);
+            Assert.Equal(Location.DownLeftFront, state.Location2);
             Assert.Equal(Location.FrontLeftDown, state.Location3);
             Assert.Equal(PuzzleColor.Blue, state.Color);
             Assert.Equal(PuzzleColor.White, state.Color2);

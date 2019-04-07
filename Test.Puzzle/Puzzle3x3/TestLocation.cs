@@ -60,10 +60,10 @@ namespace RubiksCubeTrainer.Puzzle3x3
         public static IEnumerable<object[]> AllCorners()
         => new[]
         {
-                new object[] { Location.UpFrontLeft },
-                new object[] { Location.UpFrontRight },
-                new object[] { Location.UpBackLeft },
-                new object[] { Location.UpBackRight },
+                new object[] { Location.UpLeftFront },
+                new object[] { Location.UpRightFront },
+                new object[] { Location.UpLeftBack },
+                new object[] { Location.UpRightBack },
                 new object[] { Location.FrontLeftDown },
                 new object[] { Location.FrontRightDown },
                 new object[] { Location.BackLeftDown },

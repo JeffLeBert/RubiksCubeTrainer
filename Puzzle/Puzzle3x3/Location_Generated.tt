@@ -19,13 +19,13 @@ var locations = new (string name, string location)[]
 
     ( "Down", "FaceName.Down, 0, 0, -1" ),
     ( "DownFront", "FaceName.Down, 0, -1, -1" ),
-    ( "DownFrontLeft", "FaceName.Down, -1, -1, -1" ),
-    ( "DownFrontRight", "FaceName.Down, 1, -1, -1" ),
+    ( "DownLeftFront", "FaceName.Down, -1, -1, -1" ),
+    ( "DownRightFront", "FaceName.Down, 1, -1, -1" ),
     ( "DownLeft", "FaceName.Down, -1, 0, -1" ),
     ( "DownRight", "FaceName.Down, 1, 0, -1" ),
     ( "DownBack", "FaceName.Down, 0, 1, -1" ),
-    ( "DownBackLeft", "FaceName.Down, -1, 1, -1" ),
-    ( "DownBackRight", "FaceName.Down, 1, 1, -1" ),
+    ( "DownLeftBack", "FaceName.Down, -1, 1, -1" ),
+    ( "DownRightBack", "FaceName.Down, 1, 1, -1" ),
     
 	( "Front", "FaceName.Front, 0, -1, 0" ),
     ( "FrontLeft", "FaceName.Front, -1, -1, 0" ),
@@ -59,11 +59,11 @@ var locations = new (string name, string location)[]
     
 	( "Up", "FaceName.Up, 0, 0, 1" ),
     ( "UpBack", "FaceName.Up, 0, 1, 1" ),
-    ( "UpBackLeft", "FaceName.Up, -1, 1, 1" ),
-    ( "UpBackRight", "FaceName.Up, 1, 1, 1" ),
+    ( "UpLeftBack", "FaceName.Up, -1, 1, 1" ),
+    ( "UpRightBack", "FaceName.Up, 1, 1, 1" ),
     ( "UpFront", "FaceName.Up, 0, -1, 1" ),
-    ( "UpFrontLeft", "FaceName.Up, -1, -1, 1" ),
-    ( "UpFrontRight", "FaceName.Up, 1, -1, 1" ),
+    ( "UpLeftFront", "FaceName.Up, -1, -1, 1" ),
+    ( "UpRightFront", "FaceName.Up, 1, -1, 1" ),
     ( "UpLeft", "FaceName.Up, -1, 0, 1" ),
     ( "UpRight", "FaceName.Up, 1, 0, 1" )
 };
